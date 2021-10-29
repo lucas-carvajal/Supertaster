@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Supertaster</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="cookbooks">Cookbooks</string>
+    <string name="add">Add</string>
+    <string name="weeklySchedule">Weekly Schedule</string>
+    <string name="shoppingList">Shopping List</string>
+</resources>
