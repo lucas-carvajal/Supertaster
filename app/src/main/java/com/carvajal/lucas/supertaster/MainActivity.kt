@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SupertasterTheme {
-                SupertasterApp().SupertasterApp()
+                SupertasterApp().SupertasterAppScreen()
             }
         }
     }
