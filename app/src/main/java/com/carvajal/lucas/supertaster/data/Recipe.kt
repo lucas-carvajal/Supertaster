@@ -12,5 +12,5 @@ data class Recipe(
     @ColumnInfo(name = "type_of_meal") val typeOfMeal: String,
     @ColumnInfo(name = "servings") val servings: Int,
     @ColumnInfo(name = "prep_time") val prepTime: Int,
-    @ColumnInfo(name = "cook_time") val cookTime: String,
+    @ColumnInfo(name = "cook_time") val cookTime: Int,
 )

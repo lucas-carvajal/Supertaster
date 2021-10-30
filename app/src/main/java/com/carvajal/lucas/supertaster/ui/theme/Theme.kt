@@ -12,7 +12,15 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 private val DarkColorPalette = darkColors(
     primary = Mint60,
     primaryVariant = Mint50,
-    secondary = Seafoam80
+    secondary = Seafoam80,
+
+    // Other default colors to override
+    background = Color.Black,
+    surface = Color.White,
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
 )
 
 private val LightColorPalette = lightColors(
@@ -22,16 +30,16 @@ private val LightColorPalette = lightColors(
 
     primary = Mint70,
     primaryVariant = Mint60,
-    secondary = Seafoam90
+    secondary = Seafoam90,
 
-    /* Other default colors to override
+    // Other default colors to override
     background = Color.White,
     surface = Color.White,
     onPrimary = Color.White,
     onSecondary = Color.Black,
     onBackground = Color.Black,
     onSurface = Color.Black,
-    */
+
 )
 
 @Composable

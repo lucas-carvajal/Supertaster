@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -34,6 +35,7 @@ class SupertasterApp {
         val navController = rememberNavController()
 
         Scaffold(
+            modifier = Modifier.background(MaterialTheme.colors.surface),
             bottomBar = {
                 BottomNavigation {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -1,4 +1,4 @@
-package com.carvajal.lucas.supertaster.ui
+package com.carvajal.lucas.supertaster.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ fun WeeklyScheduleScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Red),
+            .background(Color.Black),
         contentAlignment = Alignment.Center
     ) {
         Text(
