@@ -1,4 +1,4 @@
-package com.carvajal.lucas.supertaster.ui
+package com.carvajal.lucas.supertaster.composables
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 
 class SupertasterApp {

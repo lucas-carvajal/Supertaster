@@ -1,10 +1,13 @@
 package com.carvajal.lucas.supertaster.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Mint60,
@@ -36,10 +39,15 @@ fun SupertasterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
+    val systemUiController = rememberSystemUiController()
+    val colors: Colors
+
+    if (darkTheme) {
+        colors = DarkColorPalette
+        systemUiController.setSystemBarsColor(RedPink85)
     } else {
-        LightColorPalette
+        colors = LightColorPalette
+        systemUiController.setSystemBarsColor(RedPink95)
     }
 
     MaterialTheme(

@@ -11,3 +11,6 @@ val Mint60 = Color(0xFF349974)
 val Mint50 = Color(0xFF2b8061)
 val Seafoam90 = Color(0xFF91e6bc)
 val Seafoam80 = Color(0xFF81cca7)
+
+val RedPink95 = Color(0xFFf22951)
+val RedPink85 = Color(0xFFd92549)
