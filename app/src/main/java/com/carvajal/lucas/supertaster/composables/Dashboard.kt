@@ -1,15 +1,21 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +29,14 @@ import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 
 
-val mainCardElevation = 3.dp
-val nestedCardElevation = 1.dp
+val mainCardElevation = 5.dp
+val nestedCardElevation = 3.dp
 
 @Composable
 fun DashboardScreen() {
@@ -37,11 +47,12 @@ fun DashboardScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
-            .background(MaterialTheme.colors.surface),
+//            .background(MaterialTheme.colors.surface),
     ) {
-        Column() {
+        Column {
             TopRow(viewModel = viewModel, context = context)
             SuggestionsCard(viewModel.getSuggestions(), context = context)
+            SearchCard()
         }
     }
 }
@@ -52,7 +63,6 @@ fun TopRow(viewModel: DashboardViewModel, context: Context) {
     Row (verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = viewModel.getGreeting(),
-            color = MaterialTheme.colors.onSurface,
             fontSize = MaterialTheme.typography.h5.fontSize
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -80,7 +90,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, context: Context) {
             Text(
                 "Suggestions for you",
                 fontSize = MaterialTheme.typography.h6.fontSize,
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(10.dp, 5.dp)
             )
             Row (
                 modifier = Modifier
@@ -98,7 +108,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, context: Context) {
 fun RecipeCard(recipe: Recipe, context: Context) {
     Card (
         modifier = Modifier
-            .padding(5.dp)
+            .padding(10.dp)
             .width(140.dp)
             .height(210.dp),
         elevation = nestedCardElevation,
@@ -112,11 +122,13 @@ fun RecipeCard(recipe: Recipe, context: Context) {
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .padding(5.dp)
                     .clip(RoundedCornerShape(5.dp))
                     .weight(0.1f)
                 )
             Text(
                 text = recipe.title,
+                modifier = Modifier.padding(start = 5.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -127,7 +139,56 @@ fun RecipeCard(recipe: Recipe, context: Context) {
 
 @Composable
 fun SearchCard() {
-    //TODO
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 20.dp),
+        elevation = mainCardElevation
+    ) {
+        Column{
+            SearchBarCard()
+            //TODO 3 search Toggles: cooking time, ingredients, cuisine
+        }
+    }
+}
+
+@Composable
+fun SearchBarCard() {
+    var searchTerm by remember { mutableStateOf("")}
+
+    Card(
+        elevation = nestedCardElevation,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(5.dp))
+            .padding(10.dp, 10.dp)
+    ) {
+        TextField(
+            value = searchTerm,
+            onValueChange = { newSearchTerm ->
+                searchTerm = newSearchTerm
+            },
+            singleLine = true,
+            placeholder = { Text("Search Recipes") },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colors.surface
+            ),
+            trailingIcon = {
+                IconButton(onClick = {
+                    /*TODO make it search*/
+                    Log.d("TEST TAG", "searched: $searchTerm")
+                }) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                }
+            },
+            keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    /*TODO make it search*/
+                    Log.d("TEST TAG", "searched: $searchTerm")
+                }
+            )
+        )
+    }
 }
 
 
@@ -137,10 +198,12 @@ fun AllRecipesCard() {
 }
 
 
-@Preview
+@Preview(
+    showBackground = true
+)
 @Composable
 fun DashboardScreenPreview() {
-    SupertasterTheme {
+    SupertasterTheme() {
         DashboardScreen()
     }
 }

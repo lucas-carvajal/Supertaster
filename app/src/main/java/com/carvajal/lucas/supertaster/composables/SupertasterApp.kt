@@ -35,7 +35,6 @@ class SupertasterApp {
         val navController = rememberNavController()
 
         Scaffold(
-            modifier = Modifier.background(MaterialTheme.colors.surface),
             bottomBar = {
                 BottomNavigation {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
