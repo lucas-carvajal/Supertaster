@@ -31,7 +31,7 @@ import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 
 
@@ -47,11 +47,10 @@ fun DashboardScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
-//            .background(MaterialTheme.colors.surface),
     ) {
         Column {
             TopRow(viewModel = viewModel, context = context)
-            SuggestionsCard(viewModel.getSuggestions(), context = context)
+            SuggestionsCard(viewModel.getSuggestions())
             SearchCard()
         }
     }
@@ -63,7 +62,8 @@ fun TopRow(viewModel: DashboardViewModel, context: Context) {
     Row (verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = viewModel.getGreeting(),
-            fontSize = MaterialTheme.typography.h5.fontSize
+            fontSize = MaterialTheme.typography.h5.fontSize,
+            fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -78,7 +78,7 @@ fun TopRow(viewModel: DashboardViewModel, context: Context) {
 
 
 @Composable
-fun SuggestionsCard(recipeSuggestions: List<Recipe>, context: Context) {
+fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
     val scrollState = rememberScrollState()
 
     Card(modifier = Modifier
@@ -97,7 +97,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, context: Context) {
                     .horizontalScroll(scrollState)
             ) {
                 recipeSuggestions.forEach { recipe ->
-                    RecipeCard(recipe = recipe, context = context)
+                    RecipeCard(recipe = recipe)
                 }
             }
         }
@@ -105,7 +105,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, context: Context) {
 }
 
 @Composable
-fun RecipeCard(recipe: Recipe, context: Context) {
+fun RecipeCard(recipe: Recipe) {
     Card (
         modifier = Modifier
             .padding(10.dp)

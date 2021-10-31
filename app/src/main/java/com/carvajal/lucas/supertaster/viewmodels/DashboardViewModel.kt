@@ -7,7 +7,7 @@ class DashboardViewModel : ViewModel() {
 
     fun getGreeting() : String {
         //TODO
-        return "Good Morning"
+        return "GOOD MORNING"
     }
 
     fun getSuggestions(): List<Recipe> {
