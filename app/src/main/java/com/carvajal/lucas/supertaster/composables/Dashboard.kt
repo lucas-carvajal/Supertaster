@@ -11,8 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 
@@ -97,7 +97,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
                     .horizontalScroll(scrollState)
             ) {
                 recipeSuggestions.forEach { recipe ->
-                    RecipeCard(recipe = recipe)
+                    RecipeCard(recipe = recipe, { /* TODO navigate to recipe */})
                 }
             }
         }
@@ -105,12 +105,13 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
 }
 
 @Composable
-fun RecipeCard(recipe: Recipe) {
+fun RecipeCard(recipe: Recipe, action: () -> Unit) {
     Card (
         modifier = Modifier
             .padding(10.dp)
             .width(140.dp)
-            .height(210.dp),
+            .height(210.dp)
+            .clickable { action() },
         elevation = nestedCardElevation,
     ) {
         Column(
@@ -144,9 +145,30 @@ fun SearchCard() {
         .padding(top = 20.dp),
         elevation = mainCardElevation
     ) {
-        Column{
+        Column {
             SearchBarCard()
-            //TODO 3 search Toggles: cooking time, ingredients, cuisine
+            Row {
+                //TODO 3 search Toggles: cooking time, ingredients, cuisine
+                SearchButton(
+                    Modifier
+                        .weight(1f)
+                        .padding(10.dp),"Time", Icons.Filled.Alarm) {
+                    //TODO make it search by time
+                }
+                SearchButton(
+                    Modifier
+                        .weight(1f)
+                        .padding(10.dp),"Ingredients", Icons.Filled.LunchDining) {
+                    //TODO make it search by time
+                }
+                SearchButton(
+                    Modifier
+                        .weight(1f)
+                        .padding(10.dp),"Cuisine", Icons.Filled.Language) {
+                    //TODO make it search by time
+                }
+            }
+
         }
     }
 }
@@ -189,6 +211,31 @@ fun SearchBarCard() {
             )
         )
     }
+}
+
+@Composable
+fun SearchButton(modifier: Modifier, text: String, icon: ImageVector, action: () -> Unit) {
+    Card(modifier = modifier
+        .aspectRatio(1f)
+        .clickable { action() },
+        elevation = nestedCardElevation
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(5.dp)) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(4f)
+                    .padding(10.dp)
+            )
+            Text(
+                text = text,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+
 }
 
 
