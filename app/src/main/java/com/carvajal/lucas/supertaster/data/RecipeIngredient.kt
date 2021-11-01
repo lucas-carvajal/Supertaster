@@ -10,7 +10,7 @@ import androidx.room.ForeignKey
         ForeignKey(entity = Recipe::class, parentColumns = ["id"], childColumns = ["recipe_id"])
     ]
 )
-class RecipeIngredient(
+data class RecipeIngredient(
     @ColumnInfo(name = "recipe_id") val recipeId: Int,
     @ColumnInfo(name = "ingredient") val ingredient: String,
     @ColumnInfo(name = "amount") val amount: String,

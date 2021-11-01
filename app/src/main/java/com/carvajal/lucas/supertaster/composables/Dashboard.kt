@@ -52,31 +52,13 @@ fun DashboardScreen() {
         Column (modifier = Modifier
             .verticalScroll(scrollState)
         ) {
-            TopRow(viewModel = viewModel, context = context)
+            TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
+                Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show()
+            }
             SuggestionsCard(viewModel.getSuggestions())
             SearchCard()
             AllRecipesCard(viewModel.getSampleRecipes())
             Spacer(Modifier.padding(5.dp))
-        }
-    }
-}
-
-
-@Composable
-fun TopRow(viewModel: DashboardViewModel, context: Context) {
-    Row (verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = viewModel.getGreeting(),
-            fontSize = MaterialTheme.typography.h5.fontSize,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        IconButton(
-            modifier = Modifier.border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
-            onClick = {
-                Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show()
-            }) {
-                Icon(Icons.Default.Person, contentDescription = "", tint = MaterialTheme.colors.onSurface)
         }
     }
 }
@@ -286,20 +268,10 @@ fun AllRecipesCard(recipes: List<Recipe>) {
 }
 
 
-@Preview(
-    showBackground = true
-)
+@Preview(showBackground = true)
 @Composable
 fun DashboardScreenPreview() {
     SupertasterTheme() {
         DashboardScreen()
     }
 }
-
-//@Preview
-//@Composable
-//fun TopRowPreview() {
-//    SupertasterTheme {
-//        TopRow(DashboardViewModel(), LocalContext.current)
-//    }
-//}

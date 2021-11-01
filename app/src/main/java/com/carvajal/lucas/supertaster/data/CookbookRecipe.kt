@@ -5,14 +5,13 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 
 @Entity(
-    tableName = "recipe_steps",
+    tableName = "cookbook_recipes",
     foreignKeys = [
+        ForeignKey(entity = Cookbook::class, parentColumns = ["id"], childColumns = ["cookbook_id"]),
         ForeignKey(entity = Recipe::class, parentColumns = ["id"], childColumns = ["recipe_id"])
     ]
 )
-data class RecipeStep(
+data class CookbookRecipe(
+    @ColumnInfo(name = "cookbook_id") val cookbookId: Int,
     @ColumnInfo(name = "recipe_id") val recipeId: Int,
-    @ColumnInfo(name = "sequence") val sequence: Int,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "extraNotes") val extraNotes: String,
 )

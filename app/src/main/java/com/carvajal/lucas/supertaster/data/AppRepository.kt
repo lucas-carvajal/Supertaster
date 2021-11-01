@@ -1,10 +1,14 @@
 package com.carvajal.lucas.supertaster.data
 
+import androidx.room.Query
+
 class AppRepository(
     private val recipeDao: RecipeDao,
     private val recipeImageDao: RecipeImageDao,
     private val recipeIngredientDao: RecipeIngredientDao,
-    private val recipeStepDao: RecipeStepDao
+    private val recipeStepDao: RecipeStepDao,
+    private val cookbookDao: CookbookDao,
+    private val cookbookRecipeDao: CookbookRecipeDao
     ) {
 
     // Recipe
@@ -46,4 +50,22 @@ class AppRepository(
         recipeStepDao.addRecipeStep(recipeStep)
     }
 
+
+    // Cookbook
+    fun addCookbook(cookbook: Cookbook) {
+        cookbookDao.addCookbook(cookbook)
+    }
+    fun getAllRecipeIngredients(): List<Cookbook> {
+        return cookbookDao.getAllCookbooks()
+    }
+
+
+    // CookbookRecipe
+    fun addCookbookRecipe(cookbookRecipe: CookbookRecipe) {
+        cookbookRecipeDao.addCookbookRecipe(cookbookRecipe)
+    }
+
+    fun getAllCookbookRecipes(cookbookId: Int): List<CookbookRecipe> {
+        return cookbookRecipeDao.getAllCookbookRecipes(cookbookId)
+    }
 }
