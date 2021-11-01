@@ -19,4 +19,15 @@ class DashboardViewModel : ViewModel() {
             Recipe(id = 0, title = "Tacos al Pastor ", "Mexican", "Snack", 2, 25, 15)
         )
     }
+
+    fun getSampleRecipes(): List<Recipe> {
+        //TODO
+        return listOf(
+            Recipe(id = 0, title = "Stuffed Paprika", "Mediterranean", "Lunch", 4, 5, 5),
+            Recipe(id = 0, title = "Burritos", "Mexican", "Lunch", 6, 25, 45),
+            Recipe(id = 0, title = "Noodle Soup with Chicken", "Chinese", "Lunch", 4, 45, 105),
+            Recipe(id = 0, title = "Chicken in Lemon Coconut Sauce ", "Sri Lankan", "Dinner", 2, 25, 15),
+            Recipe(id = 0, title = "Swedish Meatballs ", "Swedish", "Dinner", 2, 25, 15)
+        )
+    }
 }

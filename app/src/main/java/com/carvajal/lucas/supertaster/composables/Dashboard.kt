@@ -42,16 +42,21 @@ val nestedCardElevation = 3.dp
 fun DashboardScreen() {
     val viewModel = DashboardViewModel()
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Column {
+        Column (modifier = Modifier
+            .verticalScroll(scrollState)
+        ) {
             TopRow(viewModel = viewModel, context = context)
             SuggestionsCard(viewModel.getSuggestions())
             SearchCard()
+            AllRecipesCard(viewModel.getSampleRecipes())
+            Spacer(Modifier.padding(5.dp))
         }
     }
 }
@@ -90,6 +95,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
             Text(
                 "Suggestions for you",
                 fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp, 5.dp)
             )
             Row (
@@ -131,6 +137,7 @@ fun RecipeCard(recipe: Recipe, action: () -> Unit) {
                 text = recipe.title,
                 modifier = Modifier.padding(start = 5.dp),
                 maxLines = 1,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -148,7 +155,6 @@ fun SearchCard() {
         Column {
             SearchBarCard()
             Row {
-                //TODO 3 search Toggles: cooking time, ingredients, cuisine
                 SearchButton(
                     Modifier
                         .weight(1f)
@@ -231,6 +237,7 @@ fun SearchButton(modifier: Modifier, text: String, icon: ImageVector, action: ()
             )
             Text(
                 text = text,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -240,8 +247,42 @@ fun SearchButton(modifier: Modifier, text: String, icon: ImageVector, action: ()
 
 
 @Composable
-fun AllRecipesCard() {
-    //TODO
+fun AllRecipesCard(recipes: List<Recipe>) {
+    val scrollState = rememberScrollState()
+
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 20.dp),
+        elevation = mainCardElevation
+    ){
+        Column {
+            Text(
+                "All Recipes",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp, 5.dp)
+            )
+            Row (
+                modifier = Modifier
+                    .horizontalScroll(scrollState),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                recipes.forEach { recipe ->
+                    RecipeCard(recipe = recipe, { /* TODO navigate to recipe */})
+                }
+                Box(modifier = Modifier.padding(start = 45.dp, end = 55.dp)) {
+                    IconButton(
+                        modifier = Modifier
+                            .border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
+                        onClick = {
+                            //TODO open all recipes page
+                        }) {
+                        Icon(Icons.Default.MoreHoriz, contentDescription = "", tint = MaterialTheme.colors.onSurface)
+                    }
+                }
+            }
+        }
+    }
 }
 
 
