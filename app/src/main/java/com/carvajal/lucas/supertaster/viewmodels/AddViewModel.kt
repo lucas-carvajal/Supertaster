@@ -13,4 +13,8 @@ class AddViewModel : ViewModel() {
         )
     }
 
+    fun getMealTypes(): List<String> {
+        return listOf("-", "Breakfast", "Lunch", "Dinner", "Snack")
+    }
+
 }
