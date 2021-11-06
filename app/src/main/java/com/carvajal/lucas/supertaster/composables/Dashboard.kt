@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import com.carvajal.lucas.supertaster.ui.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -55,6 +54,7 @@ fun DashboardScreen(mAuth: FirebaseAuth) {
         ) {
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
                 Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show()
+                //TODO add navigation to Profile.kt
             }
             SuggestionsCard(viewModel.getSuggestions())
             SearchCard()
