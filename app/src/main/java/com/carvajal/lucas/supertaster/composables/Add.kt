@@ -1,16 +1,29 @@
 package com.carvajal.lucas.supertaster.composables
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
+import kotlin.math.exp
 
 @Composable
 fun AddScreen() {
@@ -37,17 +50,30 @@ fun AddScreen() {
                 SingleInputField(title, { title = it },"Title")
             }
             Section(title = "Photos") {
-                PhotoRow()
+                PhotoRow(viewModel.getPhotos())
             }
             Section(title = "Cuisine") {
                 SingleInputField(cuisine, { title = it }, "Cuisine")
             }
             Section(title = "Type of Meal") {
-                ChooseTypeOfMealButton()
+                ChooseTypeOfMealButton(viewModel.getMealTypes())
             }
             Section(title = "Servings") {
                 ServingsRow()
             }
+            Section(title = "Prep Time") {
+                PrepTimeRow()
+            }
+            Section(title = "Cook Time") {
+                CookTimeRow()
+            }
+            Section(title = "Ingredients") {
+                IngredientsSection()
+            }
+            Section(title = "Steps") {
+                StepsSection()
+            }
+            //TODO Save Button
         }
     }
 }
@@ -79,17 +105,104 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 }
 
 @Composable
-fun PhotoRow() {
-    //TODO
+fun PhotoRow(photos: List<Int>) {
+    LazyRow {
+        items(photos) { photo ->
+            Card(
+                modifier = Modifier.padding(10.dp),
+                elevation = nestedCardElevation
+            ) {
+                Image(
+                    painter = painterResource(id = photo),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .width(80.dp)
+                        .aspectRatio(1f)
+                        .clickable { /* TODO make it delete photo */ }
+                )
+            }
+        }
+        item {
+            Card(
+                modifier = Modifier.padding(10.dp),
+                elevation = nestedCardElevation
+            ) {
+                Image(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .width(80.dp)
+                        .aspectRatio(1f)
+                        .clickable { /* TODO make it add photos */ }
+                )
+            }
+        }
+    }
 }
 
 @Composable
-fun ChooseTypeOfMealButton() {
-    //TODO
+fun ChooseTypeOfMealButton(mealTypes: List<String>) {
+    var expanded by remember { mutableStateOf(false) }
+    val disabledValue = 0
+    var selectedIndex by remember { mutableStateOf(0) }
+
+    Card(
+        elevation = nestedCardElevation,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp)
+    ) {
+        Text(
+            mealTypes[selectedIndex],
+            modifier = Modifier
+                .clickable { expanded = true }
+                .padding(10.dp)
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            mealTypes.forEachIndexed { index, mealType ->
+                DropdownMenuItem(
+                    onClick = {
+                        selectedIndex = index
+                        expanded = false
+                    }
+                ) {
+                    Text(text = mealType)
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun ServingsRow() {
+    //TODO
+}
+
+@Composable
+fun PrepTimeRow() {
+    //TODO
+}
+
+@Composable
+fun CookTimeRow() {
+    //TODO
+}
+
+@Composable
+fun IngredientsSection() {
+    //TODO
+}
+
+@Composable
+fun StepsSection() {
     //TODO
 }
 
