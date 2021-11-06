@@ -1,6 +1,5 @@
 package com.carvajal.lucas.supertaster.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -19,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class SupertasterApp {
 
@@ -31,7 +31,7 @@ class SupertasterApp {
     )
 
     @Composable
-    fun SupertasterAppScreen() {
+    fun SupertasterAppScreen(mAuth: FirebaseAuth) {
         val navController = rememberNavController()
 
         Scaffold(
@@ -46,7 +46,7 @@ class SupertasterApp {
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
-                composable(BottomBarScreen.Dashboard.route) { DashboardScreen() }
+                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(mAuth) }
                 composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen() }
                 composable(BottomBarScreen.Add.route) { AddScreen() }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }

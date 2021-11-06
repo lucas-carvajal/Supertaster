@@ -32,13 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import com.carvajal.lucas.supertaster.ui.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 
 
 val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(mAuth: FirebaseAuth) {
     val viewModel = DashboardViewModel()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -271,6 +273,6 @@ fun AllRecipesCard(recipes: List<Recipe>) {
 @Composable
 fun DashboardScreenPreview() {
     SupertasterTheme() {
-        DashboardScreen()
+        DashboardScreen(FirebaseAuth.getInstance())
     }
 }
