@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
@@ -32,6 +33,7 @@ fun AddScreen() {
 
     var title by remember { mutableStateOf("")}
     var cuisine by remember { mutableStateOf("") }
+    var servings by remember { mutableStateOf(2) }
 
     Box(
         modifier = Modifier
@@ -53,13 +55,20 @@ fun AddScreen() {
                 PhotoRow(viewModel.getPhotos())
             }
             Section(title = "Cuisine") {
-                SingleInputField(cuisine, { title = it }, "Cuisine")
+                SingleInputField(cuisine, { cuisine = it }, "Cuisine")
             }
             Section(title = "Type of Meal") {
                 ChooseTypeOfMealButton(viewModel.getMealTypes())
             }
             Section(title = "Servings") {
-                ServingsRow()
+                ServingsRow(servings,
+                    { servings++ },
+                    {
+                        if (servings != 1) {
+                            servings--
+                        }
+                    }
+                )
             }
             Section(title = "Prep Time") {
                 PrepTimeRow()
@@ -147,7 +156,6 @@ fun PhotoRow(photos: List<Int>) {
 @Composable
 fun ChooseTypeOfMealButton(mealTypes: List<String>) {
     var expanded by remember { mutableStateOf(false) }
-    val disabledValue = 0
     var selectedIndex by remember { mutableStateOf(0) }
 
     Card(
@@ -182,8 +190,51 @@ fun ChooseTypeOfMealButton(mealTypes: List<String>) {
 }
 
 @Composable
-fun ServingsRow() {
-    //TODO
+fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = { decrementServings() },
+//            elevation = ButtonDefaults.elevation(
+//                defaultElevation = nestedCardElevation,
+//                pressedElevation = nestedCardElevation + 2.dp,
+//                disabledElevation = 0.dp
+//            ),
+            modifier = Modifier.weight(3f)
+        ) {
+            Text(
+                text = "-",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Card(
+            elevation = nestedCardElevation,
+            modifier = Modifier
+                .height(42.dp)
+                .padding(10.dp, 0.dp)
+                .weight(9f)
+        ) {
+            Text(
+                text = servings.toString(),
+                fontSize = MaterialTheme.typography.h5.fontSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = { incrementServings() },
+            Modifier.weight(3f)
+        ) {
+            Text(
+                text = "+",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    }
 }
 
 @Composable
