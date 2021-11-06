@@ -197,11 +197,6 @@ fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings:
     ) {
         Button(
             onClick = { decrementServings() },
-//            elevation = ButtonDefaults.elevation(
-//                defaultElevation = nestedCardElevation,
-//                pressedElevation = nestedCardElevation + 2.dp,
-//                disabledElevation = 0.dp
-//            ),
             modifier = Modifier.weight(3f)
         ) {
             Text(
