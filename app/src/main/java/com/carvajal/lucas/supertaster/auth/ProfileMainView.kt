@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
@@ -20,8 +21,8 @@ fun ProfileMainView(navController: NavController) {
     val mAuth = FirebaseAuth.getInstance()
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
@@ -29,27 +30,27 @@ fun ProfileMainView(navController: NavController) {
         Column {
             if (viewModel.isLoggedIn.value == true) {
                 Text(
-                    text = "Signed in with: ${mAuth.currentUser.email}",
+                    text = "Signed in with:",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Text(
+                    text = mAuth.currentUser.email,
                     modifier = Modifier.padding(10.dp)
                 )
                 Button(
                     onClick = {
                         viewModel.signOutUser()
+                        navController.navigate("profileMainView") {
+                            launchSingleTop = true
+                        }
                         Log.i("PROFILEMAINVIEW", viewModel.isLoggedIn.toString())
                         //TODO recompose
                     },
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(15.dp)
                 ) {
                     Text(text = "Sign Out")
                 }
-
-                //TODO remove
-                Button(onClick = {
-                    Log.i("PROFILEMAINVIEW", viewModel.isLoggedIn.value.toString())
-                }) {
-                    Text(text = "Test Bool")
-                }
-
             } else {
                 Button(
                     onClick = { navController.navigate("signIn") },
