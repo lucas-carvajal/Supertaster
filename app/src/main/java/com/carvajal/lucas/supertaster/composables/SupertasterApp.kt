@@ -12,10 +12,12 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -46,11 +48,12 @@ class SupertasterApp {
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
-                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(mAuth) }
+                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(mAuth, navController) }
                 composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen() }
                 composable(BottomBarScreen.Add.route) { AddScreen() }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }
                 composable(BottomBarScreen.ShoppingList.route) { ShoppingListScreen() }
+                composable("profile") { Profile() }
             }
         }
     }

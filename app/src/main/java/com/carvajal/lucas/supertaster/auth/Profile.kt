@@ -8,34 +8,29 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.carvajal.lucas.supertaster.auth.ProfileMainView
+import com.carvajal.lucas.supertaster.auth.SignIn
+import com.carvajal.lucas.supertaster.auth.SignUp
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun Profile(mAuth: FirebaseAuth) {
-    val viewModel = ProfileViewModel(mAuth)
+fun Profile() {
+    val navController = rememberNavController()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
-    ) {
-        Column {
-            if (viewModel.isLoggedIn()) {
-                Button(onClick = { viewModel.signOut() }) {
-                    Text(text = "Sign Out")
-                }
-            } else {
-                Button(onClick = { viewModel.signIn() }) {
-                    Text(text = "Sign In")
-                }
-            }
-        }
+    NavHost(navController = navController, startDestination = "profileMainView") {
+        composable("profileMainView") { ProfileMainView(navController) }
+        composable("signUp") { SignUp(navController) }
+        composable("signIn") { SignIn(navController) }
     }
 }
 
@@ -44,6 +39,6 @@ fun Profile(mAuth: FirebaseAuth) {
 @Composable
 fun ProfileScreenPreview() {
     SupertasterTheme() {
-        Profile(FirebaseAuth.getInstance())
+        Profile()
     }
 }

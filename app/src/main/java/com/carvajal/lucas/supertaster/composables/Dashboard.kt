@@ -1,7 +1,7 @@
 package com.carvajal.lucas.supertaster.composables
 
+import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -32,6 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.navigation.NavController
+import com.carvajal.lucas.supertaster.ui.ProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -39,7 +41,7 @@ val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
 
 @Composable
-fun DashboardScreen(mAuth: FirebaseAuth) {
+fun DashboardScreen(mAuth: FirebaseAuth, navController: NavController) {
     val viewModel = DashboardViewModel()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -53,8 +55,7 @@ fun DashboardScreen(mAuth: FirebaseAuth) {
             .verticalScroll(scrollState)
         ) {
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
-                Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show()
-                //TODO add navigation to Profile.kt
+                context.startActivity(Intent(context, ProfileActivity::class.java))
             }
             SuggestionsCard(viewModel.getSuggestions())
             SearchCard()
@@ -273,6 +274,6 @@ fun AllRecipesCard(recipes: List<Recipe>) {
 @Composable
 fun DashboardScreenPreview() {
     SupertasterTheme() {
-        DashboardScreen(FirebaseAuth.getInstance())
+//        DashboardScreen(FirebaseAuth.getInstance(), NavController())
     }
 }
