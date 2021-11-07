@@ -7,19 +7,15 @@ import androidx.lifecycle.ViewModel
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 
-class ProfileViewModel(mAuth: FirebaseAuth): ViewModel() {
+class ProfileViewModel(private val mAuth: FirebaseAuth): ViewModel() {
 
-    val mAuth = mAuth
-
-    private val _isLoggedIn = MutableLiveData<Boolean>(mAuth.currentUser != null)
-    val isLoggedIn: LiveData<Boolean>
-        get() = _isLoggedIn
+    var isLoggedIn = mAuth.currentUser != null
 
     fun signUpUser(email: String, password: String, isSuccessful: () -> Unit, isNotSuccessful: () -> Unit) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    _isLoggedIn.value = true
+                    isLoggedIn = true
                     isSuccessful()
                 } else {
                     isNotSuccessful()
@@ -31,7 +27,7 @@ class ProfileViewModel(mAuth: FirebaseAuth): ViewModel() {
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener() {task ->
                 if (task.isSuccessful) {
-                    _isLoggedIn.value = true
+                    isLoggedIn = true
                     isSuccessful()
                 } else {
                     isNotSuccessful()
@@ -41,7 +37,7 @@ class ProfileViewModel(mAuth: FirebaseAuth): ViewModel() {
 
     fun signOutUser() {
         mAuth.signOut()
-        _isLoggedIn.value = false
+        isLoggedIn = false
     }
 
 
