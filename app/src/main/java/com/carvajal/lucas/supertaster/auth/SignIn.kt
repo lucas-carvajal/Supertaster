@@ -73,9 +73,11 @@ fun SignIn(navController: NavController) {
             )
 
             Button(onClick = {
-                viewModel.signInUser(email, password,{
+                viewModel.signInUser(email.trim(), password.trim(),{
                     Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
-                    navController.navigate("profileMainView")
+                    navController.navigate("profileMainView") {
+                        popUpTo("profileMainView") {inclusive = true}
+                    }
                 },{
                     Toast.makeText(context, "FAIL", Toast.LENGTH_SHORT).show()
                     email = ""
