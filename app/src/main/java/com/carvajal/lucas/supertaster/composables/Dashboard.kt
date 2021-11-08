@@ -41,8 +41,7 @@ val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
 
 @Composable
-fun DashboardScreen(mAuth: FirebaseAuth, navController: NavController) {
-    val viewModel = DashboardViewModel()
+fun DashboardScreen(viewModel: DashboardViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 

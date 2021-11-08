@@ -27,8 +27,7 @@ import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 import kotlin.math.exp
 
 @Composable
-fun AddScreen() {
-    val viewModel = AddViewModel()
+fun AddScreen(viewModel: AddViewModel) {
     val scrollState = rememberScrollState()
 
     var title by remember { mutableStateOf("")}
@@ -257,6 +256,6 @@ fun StepsSection() {
 @Composable
 fun AddScreenPreview() {
     SupertasterTheme {
-        AddScreen()
+        AddScreen(AddViewModel())
     }
 }

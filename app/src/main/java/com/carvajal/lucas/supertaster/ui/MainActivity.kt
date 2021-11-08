@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SupertasterTheme {
-                SupertasterApp().SupertasterAppScreen(mAuth)
+                SupertasterApp().SupertasterAppScreen()
             }
         }
     }

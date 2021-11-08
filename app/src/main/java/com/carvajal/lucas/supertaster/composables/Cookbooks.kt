@@ -20,8 +20,7 @@ import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 
 @Composable
-fun CookbooksScreen() {
-    val viewModel = CookbookViewModel()
+fun CookbooksScreen(viewModel: CookbookViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     
@@ -74,6 +73,6 @@ fun CookbookEntry(cookbook: Cookbook) {
 @Composable
 fun CookbooksScreenPreview() {
     SupertasterTheme {
-        CookbooksScreen()
+        CookbooksScreen(CookbookViewModel())
     }
 }

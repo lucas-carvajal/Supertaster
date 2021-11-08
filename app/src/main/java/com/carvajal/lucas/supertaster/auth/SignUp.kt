@@ -14,7 +14,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SignUp(

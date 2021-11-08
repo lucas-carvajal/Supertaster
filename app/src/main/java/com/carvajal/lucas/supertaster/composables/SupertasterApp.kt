@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -20,6 +21,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
+import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
+import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
+import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class SupertasterApp {
@@ -33,8 +37,12 @@ class SupertasterApp {
     )
 
     @Composable
-    fun SupertasterAppScreen(mAuth: FirebaseAuth) {
+    fun SupertasterAppScreen() {
         val navController = rememberNavController()
+
+        val dashboardViewModel: DashboardViewModel = viewModel()
+        val cookbookViewModel: CookbookViewModel = viewModel()
+        val addViewModel: AddViewModel = viewModel()
 
         Scaffold(
             bottomBar = {
@@ -48,9 +56,9 @@ class SupertasterApp {
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
-                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(mAuth, navController) }
-                composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen() }
-                composable(BottomBarScreen.Add.route) { AddScreen() }
+                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(dashboardViewModel) }
+                composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen(cookbookViewModel) }
+                composable(BottomBarScreen.Add.route) { AddScreen(addViewModel) }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }
                 composable(BottomBarScreen.ShoppingList.route) { ShoppingListScreen() }
                 composable("profile") { Profile() }
