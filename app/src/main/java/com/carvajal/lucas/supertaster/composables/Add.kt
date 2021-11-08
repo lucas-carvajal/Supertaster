@@ -33,6 +33,8 @@ fun AddScreen(viewModel: AddViewModel) {
     var title by remember { mutableStateOf("")}
     var cuisine by remember { mutableStateOf("") }
     var servings by remember { mutableStateOf(2) }
+    var prepTime by remember { mutableStateOf(5) }
+    var cookTime by remember { mutableStateOf(5) }
 
     Box(
         modifier = Modifier
@@ -70,10 +72,24 @@ fun AddScreen(viewModel: AddViewModel) {
                 )
             }
             Section(title = "Prep Time") {
-                PrepTimeRow()
+                PrepTimeRow(prepTime,
+                    { prepTime += 5},
+                    {
+                        if (prepTime != 0) {
+                            prepTime -= 5
+                        }
+                    }
+                )
             }
             Section(title = "Cook Time") {
-                CookTimeRow()
+                CookTimeRow(cookTime,
+                    { cookTime += 5},
+                    {
+                        if (cookTime != 0) {
+                            cookTime -= 5
+                        }
+                    }
+                )
             }
             Section(title = "Ingredients") {
                 IngredientsSection()
@@ -191,7 +207,7 @@ fun ChooseTypeOfMealButton(mealTypes: List<String>) {
 @Composable
 fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -232,13 +248,89 @@ fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings:
 }
 
 @Composable
-fun PrepTimeRow() {
-    //TODO
+fun PrepTimeRow(prepTime: Int, incrementPrepTime: () -> Unit, decrementPrepTime: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = { decrementPrepTime() },
+            modifier = Modifier.weight(3f)
+        ) {
+            Text(
+                text = "-",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Card(
+            elevation = nestedCardElevation,
+            modifier = Modifier
+                .height(42.dp)
+                .padding(10.dp, 0.dp)
+                .weight(9f)
+        ) {
+            Text(
+                text = "${prepTime.toString()} min",
+                fontSize = MaterialTheme.typography.h5.fontSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = { incrementPrepTime() },
+            Modifier.weight(3f)
+        ) {
+            Text(
+                text = "+",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    }
 }
 
 @Composable
-fun CookTimeRow() {
-    //TODO
+fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = { decrementCookTime() },
+            modifier = Modifier.weight(3f)
+        ) {
+            Text(
+                text = "-",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Card(
+            elevation = nestedCardElevation,
+            modifier = Modifier
+                .height(42.dp)
+                .padding(10.dp, 0.dp)
+                .weight(9f)
+        ) {
+            Text(
+                text = "${cookTime.toString()} min",
+                fontSize = MaterialTheme.typography.h5.fontSize,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = { incrementCookTime() },
+            Modifier.weight(3f)
+        ) {
+            Text(
+                text = "+",
+                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    }
 }
 
 @Composable
