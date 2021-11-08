@@ -81,6 +81,9 @@ dependencies {
     // Navigation Component
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
+    // Compose ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
+
     // FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 

@@ -17,8 +17,10 @@ import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun SignUp(navController: NavController) {
-    val viewModel = ProfileViewModel(FirebaseAuth.getInstance())
+fun SignUp(
+    navController: NavController,
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val context = LocalContext.current
 
     var email by remember { mutableStateOf("") }
@@ -73,16 +75,20 @@ fun SignUp(navController: NavController) {
             )
 
             Button(onClick = {
-                viewModel.signUpUser(email.trim(), password.trim(),{
-                    Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                    navController.navigate("profileMainView") {
-                        popUpTo("profileMainView") {inclusive = true}
-                    }
-                },{
-                    Toast.makeText(context, "FAIL", Toast.LENGTH_SHORT).show()
-                    email = ""
-                    password = ""
-                })
+                if (email != "" && password != "") {
+                    viewModel.signUpUser(email.trim(), password.trim(),{
+                        Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                        navController.navigate("profileMainView") {
+                            popUpTo("profileMainView") {inclusive = true}
+                        }
+                    },{
+                        Toast.makeText(context, "There is a problem with your email or password", Toast.LENGTH_SHORT).show()
+                        email = ""
+                        password = ""
+                    })
+                } else {
+                    Toast.makeText(context, "Password or email cannot be empty", Toast.LENGTH_SHORT).show()
+                }
             }) {
                 Text(text = "Sign Up")
             }

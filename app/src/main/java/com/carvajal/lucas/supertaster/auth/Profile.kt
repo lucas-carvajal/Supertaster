@@ -24,13 +24,15 @@ import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun Profile() {
+fun Profile(
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "profileMainView") {
-        composable("profileMainView") { ProfileMainView(navController) }
-        composable("signUp") { SignUp(navController) }
-        composable("signIn") { SignIn(navController) }
+        composable("profileMainView") { ProfileMainView(navController, viewModel) }
+        composable("signUp") { SignUp(navController, viewModel) }
+        composable("signIn") { SignIn(navController, viewModel) }
     }
 }
 

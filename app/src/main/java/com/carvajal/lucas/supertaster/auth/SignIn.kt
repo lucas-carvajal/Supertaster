@@ -12,13 +12,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun SignIn(navController: NavController) {
-    val viewModel = ProfileViewModel(FirebaseAuth.getInstance())
+fun SignIn(
+    navController: NavController,
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val context = LocalContext.current
 
     var email by remember { mutableStateOf("") }
@@ -73,16 +76,20 @@ fun SignIn(navController: NavController) {
             )
 
             Button(onClick = {
-                viewModel.signInUser(email.trim(), password.trim(),{
-                    Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
-                    navController.navigate("profileMainView") {
-                        popUpTo("profileMainView") {inclusive = true}
-                    }
-                },{
-                    Toast.makeText(context, "FAIL", Toast.LENGTH_SHORT).show()
-                    email = ""
-                    password = ""
-                })
+                if (email != "" && password != "") {
+                    viewModel.signInUser(email.trim(), password.trim(),{
+                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                        navController.navigate("profileMainView") {
+                            popUpTo("profileMainView") {inclusive = true}
+                        }
+                    },{
+                        Toast.makeText(context, "Your email or password do not match", Toast.LENGTH_SHORT).show()
+                        email = ""
+                        password = ""
+                    })
+                } else {
+                    Toast.makeText(context, "Password or email cannot be empty", Toast.LENGTH_SHORT).show()
+                }
             }) {
                 Text(text = "Sign In")
             }

@@ -12,9 +12,10 @@ import com.carvajal.lucas.supertaster.viewmodels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun ProfileMainView(navController: NavController) {
-    val viewModel = ProfileViewModel(FirebaseAuth.getInstance())
-
+fun ProfileMainView(
+    navController: NavController,
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val mAuth = FirebaseAuth.getInstance()
 
     Column(
