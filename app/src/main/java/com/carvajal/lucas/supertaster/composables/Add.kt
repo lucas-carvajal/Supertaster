@@ -30,11 +30,11 @@ fun AddScreen(viewModel: AddViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-    var title by remember { mutableStateOf("")}
-    var cuisine by remember { mutableStateOf("") }
-    var servings by remember { mutableStateOf(2) }
-    var prepTime by remember { mutableStateOf(5) }
-    var cookTime by remember { mutableStateOf(5) }
+    var title by remember { mutableStateOf(viewModel.title)}
+    var cuisine by remember { mutableStateOf(viewModel.cuisine) }
+    var servings by remember { mutableStateOf(viewModel.servings) }
+    var prepTime by remember { mutableStateOf(viewModel.prepTime) }
+    var cookTime by remember { mutableStateOf(viewModel.cookTime) }
 
     Box(
         modifier = Modifier
@@ -50,43 +50,69 @@ fun AddScreen(viewModel: AddViewModel) {
                 fontWeight = FontWeight.Bold
             )
             Section(title = "Title") {
-                SingleInputField(title, { title = it },"Title")
+                SingleInputField(
+                    title,
+                    {
+                        title = it
+                        viewModel.title = it
+                    },
+                    "Title"
+                )
             }
             Section(title = "Photos") {
-                PhotoRow(viewModel.getPhotos())
+                PhotoRow(viewModel)
             }
             Section(title = "Cuisine") {
-                SingleInputField(cuisine, { cuisine = it }, "Cuisine")
+                SingleInputField(
+                    cuisine,
+                    {
+                        cuisine = it
+                        viewModel.cuisine = it
+                    },
+                    "Cuisine"
+                )
             }
             Section(title = "Type of Meal") {
-                ChooseTypeOfMealButton(viewModel.getMealTypes())
+                ChooseTypeOfMealButton(viewModel)
             }
             Section(title = "Servings") {
                 ServingsRow(servings,
-                    { servings++ },
+                    {
+                        servings++
+                        viewModel.servings++
+                    },
                     {
                         if (servings != 1) {
                             servings--
+                            viewModel.servings--
                         }
                     }
                 )
             }
             Section(title = "Prep Time") {
                 PrepTimeRow(prepTime,
-                    { prepTime += 5},
+                    {
+                        prepTime += 5
+                        viewModel.prepTime += 5
+                    },
                     {
                         if (prepTime != 0) {
                             prepTime -= 5
+                            viewModel.prepTime -= 5
                         }
                     }
                 )
             }
             Section(title = "Cook Time") {
                 CookTimeRow(cookTime,
-                    { cookTime += 5},
+                    {
+                        cookTime += 5
+                        viewModel.cookTime += 5
+                    },
                     {
                         if (cookTime != 0) {
                             cookTime -= 5
+                            viewModel.cookTime -= 5
                         }
                     }
                 )
@@ -148,7 +174,9 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 }
 
 @Composable
-fun PhotoRow(photos: List<Int>) {
+fun PhotoRow(viewModel: AddViewModel) {
+    val photos: List<Int> = viewModel.getPhotos()
+
     LazyRow {
         items(photos) { photo ->
             Card(
@@ -188,9 +216,11 @@ fun PhotoRow(photos: List<Int>) {
 }
 
 @Composable
-fun ChooseTypeOfMealButton(mealTypes: List<String>) {
+fun ChooseTypeOfMealButton(viewModel: AddViewModel) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex) }
+
+    val mealTypes = viewModel.getMealTypes()
 
     Card(
         elevation = nestedCardElevation,
@@ -199,7 +229,7 @@ fun ChooseTypeOfMealButton(mealTypes: List<String>) {
             .padding(top = 10.dp)
     ) {
         Text(
-            mealTypes[selectedIndex],
+            mealTypes[typeOfMealIndex],
             modifier = Modifier
                 .clickable { expanded = true }
                 .padding(10.dp)
@@ -212,7 +242,8 @@ fun ChooseTypeOfMealButton(mealTypes: List<String>) {
             mealTypes.forEachIndexed { index, mealType ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedIndex = index
+                        typeOfMealIndex = index
+                        viewModel.typeOfMealIndex = index
                         expanded = false
                     }
                 ) {

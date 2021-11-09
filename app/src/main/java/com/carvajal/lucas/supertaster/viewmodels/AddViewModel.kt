@@ -5,6 +5,13 @@ import com.carvajal.lucas.supertaster.R
 
 class AddViewModel : ViewModel() {
 
+    var title: String = ""
+    var cuisine: String = ""
+    var typeOfMealIndex: Int = 0
+    var servings: Int = 2
+    var prepTime: Int = 5
+    var cookTime: Int = 5
+
     private var ingredients: MutableList<Pair<String, String>> = mutableListOf()
     private var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
