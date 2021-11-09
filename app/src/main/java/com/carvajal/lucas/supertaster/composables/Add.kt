@@ -90,7 +90,7 @@ fun AddScreen(viewModel: AddViewModel) {
                 IngredientsSection(viewModel)
             }
             Section(title = "Steps") {
-                StepsSection()
+                StepsSection(viewModel)
             }
             //TODO Save Button
         }
@@ -402,8 +402,78 @@ fun IngredientsSection(viewModel: AddViewModel) {
 }
 
 @Composable
-fun StepsSection() {
-    //TODO
+fun StepsSection(viewModel: AddViewModel) {
+    var steps: List<Triple<Int, String, String>> by rememberSaveable { mutableStateOf( viewModel.getSteps() ) }
+    
+    Column(modifier = Modifier.padding(top = 10.dp)) {
+        steps.forEachIndexed { index, recipeStep ->
+            var description by remember { mutableStateOf(recipeStep.second) }
+            var extraNotes by remember { mutableStateOf(recipeStep.third) }
+
+            Card(
+                modifier = Modifier.padding(10.dp),
+                elevation = nestedCardElevation
+            ) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                ) {
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { newDescription ->
+                            description = newDescription
+
+                            val newStep = Triple(
+                                recipeStep.first, newDescription, recipeStep.third
+                            )
+
+                            var newStepsList: MutableList<Triple<Int, String, String>> = steps.toMutableList()
+                            newStepsList[index] = newStep
+                            steps = newStepsList
+                            viewModel.setSteps(steps as MutableList<Triple<Int, String, String>>)
+                        },
+                        singleLine = false,
+                        label = { Text(text = "Step ${recipeStep.first} - Description")},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = extraNotes,
+                        onValueChange = { newExtraNotes ->
+                            extraNotes = newExtraNotes
+
+                            val newStep = Triple(
+                                recipeStep.first, recipeStep.second, newExtraNotes
+                            )
+
+                            var newStepsList: MutableList<Triple<Int, String, String>> = steps.toMutableList()
+                            newStepsList[index] = newStep
+                            steps = newStepsList
+                            viewModel.setSteps(steps as MutableList<Triple<Int, String, String>>)
+                        },
+                        singleLine = false,
+                        label = { Text(text = "Step ${recipeStep.first} - Extra Notes")},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp)
+                    )
+                }
+            }
+        }
+
+        Button(onClick = {
+            steps = steps + Triple(steps.size + 1, "", "")
+            viewModel.setSteps(steps as MutableList<Triple<Int, String, String>>)
+        },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            Text(text = "+")
+        }
+    }
 }
 
 
