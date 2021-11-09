@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 import kotlin.math.exp
@@ -92,7 +93,7 @@ fun AddScreen(viewModel: AddViewModel) {
                 )
             }
             Section(title = "Ingredients") {
-                IngredientsSection()
+                IngredientsSection(viewModel)
             }
             Section(title = "Steps") {
                 StepsSection()
@@ -207,7 +208,9 @@ fun ChooseTypeOfMealButton(mealTypes: List<String>) {
 @Composable
 fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -250,7 +253,9 @@ fun ServingsRow(servings: Int, incrementServings: () -> Unit, decrementServings:
 @Composable
 fun PrepTimeRow(prepTime: Int, incrementPrepTime: () -> Unit, decrementPrepTime: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -293,7 +298,9 @@ fun PrepTimeRow(prepTime: Int, incrementPrepTime: () -> Unit, decrementPrepTime:
 @Composable
 fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
@@ -334,8 +341,61 @@ fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime:
 }
 
 @Composable
-fun IngredientsSection() {
-    //TODO
+fun IngredientsSection(viewModel: AddViewModel) {
+    Column(modifier = Modifier.padding(top = 10.dp)) {
+        val ingredients = viewModel.ingredients
+
+        ingredients.forEachIndexed { index, recipeIngredient ->
+            var name by remember { mutableStateOf(recipeIngredient.ingredient) }
+            var amount by remember { mutableStateOf(recipeIngredient.amount) }
+            
+            Row(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { newName ->
+                        name = newName
+                        viewModel.changeIngredient(RecipeIngredient(
+                            recipeId = recipeIngredient.recipeId,
+                            ingredient = newName,
+                            amount = recipeIngredient.amount
+                        ), index)
+                    },
+                    singleLine = true,
+                    label = { Text(text = "Ingredient")},
+                    modifier = Modifier
+                        .weight(5f)
+                        .padding(5.dp)
+                )
+
+                OutlinedTextField(
+                    value = amount,
+                    onValueChange = { newAmount ->
+                        amount = newAmount
+                        viewModel.changeIngredient(RecipeIngredient(
+                            recipeId = recipeIngredient.recipeId,
+                            ingredient = recipeIngredient.ingredient,
+                            amount = newAmount
+                        ), index)
+                    },
+                    singleLine = true,
+                    label = { Text(text = "Amount")},
+                    modifier = Modifier
+                        .weight(3f)
+                        .padding(5.dp)
+                )
+            }
+        }
+
+        Button(onClick = {
+                  viewModel.addIngredient(RecipeIngredient(0, "", ""))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            Text(text = "+")
+        }
+    }
 }
 
 @Composable
