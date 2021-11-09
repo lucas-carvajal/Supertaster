@@ -90,7 +90,7 @@ fun SignIn(
                 } else {
                     Toast.makeText(context, "Password or email cannot be empty", Toast.LENGTH_SHORT).show()
                 }
-            }) {
+            }, modifier = Modifier.padding(10.dp)) {
                 Text(text = "Sign In")
             }
         }
