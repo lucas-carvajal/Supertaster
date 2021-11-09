@@ -2,30 +2,24 @@ package com.carvajal.lucas.supertaster.composables
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
-import kotlin.math.exp
 
 @Composable
 fun AddScreen(viewModel: AddViewModel) {
@@ -342,23 +336,27 @@ fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime:
 
 @Composable
 fun IngredientsSection(viewModel: AddViewModel) {
+    var ingredients: List<Pair<String, String>> by rememberSaveable { mutableStateOf( viewModel.getIngredients() ) }
+
     Column(modifier = Modifier.padding(top = 10.dp)) {
-        val ingredients = viewModel.ingredients
 
         ingredients.forEachIndexed { index, recipeIngredient ->
-            var name by remember { mutableStateOf(recipeIngredient.ingredient) }
-            var amount by remember { mutableStateOf(recipeIngredient.amount) }
+            var name by remember { mutableStateOf(recipeIngredient.first) }
+            var amount by remember { mutableStateOf(recipeIngredient.second) }
             
             Row(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { newName ->
                         name = newName
-                        viewModel.changeIngredient(RecipeIngredient(
-                            recipeId = recipeIngredient.recipeId,
-                            ingredient = newName,
-                            amount = recipeIngredient.amount
-                        ), index)
+                        val newIngredient = Pair(
+                            newName, recipeIngredient.second
+                        )
+
+                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
+                        newIngredientsList[index] = newIngredient
+                        ingredients = newIngredientsList
+                        viewModel.setIngredients(ingredients as MutableList<Pair<String, String>>)
                     },
                     singleLine = true,
                     label = { Text(text = "Ingredient")},
@@ -371,11 +369,15 @@ fun IngredientsSection(viewModel: AddViewModel) {
                     value = amount,
                     onValueChange = { newAmount ->
                         amount = newAmount
-                        viewModel.changeIngredient(RecipeIngredient(
-                            recipeId = recipeIngredient.recipeId,
-                            ingredient = recipeIngredient.ingredient,
-                            amount = newAmount
-                        ), index)
+
+                        val newIngredient = Pair(
+                            recipeIngredient.first, newAmount
+                        )
+
+                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
+                        newIngredientsList[index] = newIngredient
+                        ingredients = newIngredientsList
+                        viewModel.setIngredients(ingredients as MutableList<Pair<String, String>>)
                     },
                     singleLine = true,
                     label = { Text(text = "Amount")},
@@ -387,7 +389,8 @@ fun IngredientsSection(viewModel: AddViewModel) {
         }
 
         Button(onClick = {
-                  viewModel.addIngredient(RecipeIngredient(0, "", ""))
+                ingredients = ingredients + Pair("", "")
+                viewModel.setIngredients(ingredients as MutableList<Pair<String, String>>)
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,13 +1,11 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
-import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import com.carvajal.lucas.supertaster.R
-import com.carvajal.lucas.supertaster.data.RecipeIngredient
 
 class AddViewModel : ViewModel() {
 
-    var ingredients: ArrayList<RecipeIngredient> = arrayListOf()
+    private var ingredients: MutableList<Pair<String, String>> = mutableListOf()
 
     fun getPhotos(): List<Int> {
         //TODO
@@ -21,16 +19,11 @@ class AddViewModel : ViewModel() {
         return listOf("-", "Breakfast", "Lunch", "Dinner", "Snack")
     }
 
-//    fun getIngredientsList(): List<RecipeIngredient> {
-//        return ingredients
-//    }
-
-    fun addIngredient(newIngredient: RecipeIngredient) {
-        ingredients.add(newIngredient)
+    fun getIngredients(): MutableList<Pair<String, String>> {
+        return ingredients
     }
 
-    fun changeIngredient(newIngredient: RecipeIngredient, index: Int) {
-        ingredients[index] = newIngredient
+    fun setIngredients(newIngredientsList: MutableList<Pair<String, String>>) {
+        ingredients = newIngredientsList
     }
-
 }
