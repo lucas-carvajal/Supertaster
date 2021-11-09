@@ -35,4 +35,9 @@ class AddViewModel : ViewModel() {
     fun setSteps(newStepsList: MutableList<Triple<Int, String, String>>) {
         steps = newStepsList
     }
+
+    fun saveRecipe(): Boolean {
+        //TODO
+        return true
+    }
 }

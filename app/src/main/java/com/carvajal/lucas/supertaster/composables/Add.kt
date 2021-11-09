@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,17 +13,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 
 @Composable
 fun AddScreen(viewModel: AddViewModel) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState()
 
     var title by remember { mutableStateOf("")}
@@ -92,7 +97,26 @@ fun AddScreen(viewModel: AddViewModel) {
             Section(title = "Steps") {
                 StepsSection(viewModel)
             }
-            //TODO Save Button
+
+            Button(onClick = {
+                val success = viewModel.saveRecipe()
+                if (success) {
+                    Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
+                    cleanup()
+                } else {
+                    Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
+                }
+            },
+                colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = "Save Recipe",
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -474,6 +498,10 @@ fun StepsSection(viewModel: AddViewModel) {
             Text(text = "+")
         }
     }
+}
+
+private fun cleanup() {
+    //TODO reset all values in viewModel and here
 }
 
 
