@@ -11,7 +11,7 @@ import androidx.room.ForeignKey
     ]
 )
 data class RecipeIngredient(
-    @ColumnInfo(name = "recipe_id") val recipeId: Int,
+    @ColumnInfo(name = "recipe_id") val recipeId: Long,
     @ColumnInfo(name = "ingredient") val ingredient: String,
     @ColumnInfo(name = "amount") val amount: String,
 )

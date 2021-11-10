@@ -125,7 +125,7 @@ fun AddScreen(viewModel: AddViewModel) {
             }
 
             Button(onClick = {
-                val success = viewModel.saveRecipe()
+                val success = viewModel.saveRecipe(context)
                 if (success) {
                     Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
                     cleanup()

@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface CookbookDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addCookbook(vararg cookbook: Cookbook)
+    fun addCookbook(vararg cookbook: Cookbook): Long
 
     @Query("SELECT * FROM cookbooks")
     fun getAllCookbooks(): List<Cookbook>

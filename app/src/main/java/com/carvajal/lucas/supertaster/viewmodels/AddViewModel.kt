@@ -1,9 +1,14 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.data.AppDatabase
+import com.carvajal.lucas.supertaster.data.AppRepository
 
 class AddViewModel : ViewModel() {
+
+    private var appRepository: AppRepository? = null
 
     var title: String = ""
     var cuisine: String = ""
@@ -12,6 +17,7 @@ class AddViewModel : ViewModel() {
     var prepTime: Int = 5
     var cookTime: Int = 5
 
+    private var recipePhotos: MutableList<String> = mutableListOf() //TODO
     private var ingredients: MutableList<Pair<String, String>> = mutableListOf()
     private var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
@@ -19,7 +25,6 @@ class AddViewModel : ViewModel() {
         //TODO
         return listOf(
             R.drawable.tacos_al_pastor,
-            R.drawable.tacos_al_pastor
         )
     }
 
@@ -43,8 +48,32 @@ class AddViewModel : ViewModel() {
         steps = newStepsList
     }
 
-    fun saveRecipe(): Boolean {
-        //TODO
+    fun saveRecipe(context: Context): Boolean {
+        if (appRepository == null) {
+            initRepository(context)
+        }
+
+
+
         return true
+    }
+
+
+    private fun initRepository(context: Context) {
+        val recipeDao = AppDatabase.getDatabase(context).recipeDao()
+        val recipeImageDao = AppDatabase.getDatabase(context).recipeImageDao()
+        val recipeIngredientDao = AppDatabase.getDatabase(context).recipeIngredientDao()
+        val recipeStepDao = AppDatabase.getDatabase(context).recipeStepDao()
+        val cookbookDao = AppDatabase.getDatabase(context).cookbookDao()
+        val cookbookRecipeDao = AppDatabase.getDatabase(context).cookbookRecipeDao()
+
+        appRepository = AppRepository(
+            recipeDao,
+            recipeImageDao,
+            recipeIngredientDao,
+            recipeStepDao,
+            cookbookDao,
+            cookbookRecipeDao
+        )
     }
 }

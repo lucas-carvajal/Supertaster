@@ -1,6 +1,5 @@
 package com.carvajal.lucas.supertaster.data
 
-import androidx.room.Query
 
 class AppRepository(
     private val recipeDao: RecipeDao,
@@ -16,8 +15,8 @@ class AppRepository(
         return recipeDao.getAllRecipes()
     }
 
-    fun addRecipe(recipe: Recipe) {
-        recipeDao.addRecipe(recipe)
+    fun addRecipe(recipe: Recipe): Long {
+        return recipeDao.addRecipe(recipe)
     }
 
 
@@ -26,8 +25,8 @@ class AppRepository(
         return recipeImageDao.getAllRecipeImages(id)
     }
 
-    fun addRecipes(recipeImage: RecipeImage) {
-        recipeImageDao.addRecipeImage(recipeImage)
+    fun addRecipes(recipeImage: RecipeImage): Long {
+        return recipeImageDao.addRecipeImage(recipeImage)
     }
 
 
@@ -36,8 +35,8 @@ class AppRepository(
         return recipeIngredientDao.getAllRecipeIngredients(id)
     }
 
-    fun addRecipeIngredient(recipeIngredient: RecipeIngredient) {
-        recipeIngredientDao.addRecipeIngredient(recipeIngredient)
+    fun addRecipeIngredient(recipeIngredient: RecipeIngredient): Long {
+        return recipeIngredientDao.addRecipeIngredient(recipeIngredient)
     }
 
 
@@ -46,26 +45,28 @@ class AppRepository(
         return recipeStepDao.getAllRecipeSteps(id)
     }
 
-    fun addRecipeStep(recipeStep: RecipeStep) {
-        recipeStepDao.addRecipeStep(recipeStep)
+    fun addRecipeStep(recipeStep: RecipeStep): Long {
+        return recipeStepDao.addRecipeStep(recipeStep)
     }
 
 
     // Cookbook
-    fun addCookbook(cookbook: Cookbook) {
-        cookbookDao.addCookbook(cookbook)
-    }
     fun getAllRecipeIngredients(): List<Cookbook> {
         return cookbookDao.getAllCookbooks()
     }
 
-
-    // CookbookRecipe
-    fun addCookbookRecipe(cookbookRecipe: CookbookRecipe) {
-        cookbookRecipeDao.addCookbookRecipe(cookbookRecipe)
+    fun addCookbook(cookbook: Cookbook): Long {
+        return cookbookDao.addCookbook(cookbook)
     }
 
+
+    // CookbookRecipe
     fun getAllCookbookRecipes(cookbookId: Int): List<CookbookRecipe> {
         return cookbookRecipeDao.getAllCookbookRecipes(cookbookId)
     }
+
+    fun addCookbookRecipe(cookbookRecipe: CookbookRecipe): Long {
+        return cookbookRecipeDao.addCookbookRecipe(cookbookRecipe)
+    }
+
 }

@@ -11,7 +11,7 @@ import androidx.room.ForeignKey
     ]
 )
 data class RecipeStep(
-    @ColumnInfo(name = "recipe_id") val recipeId: Int,
+    @ColumnInfo(name = "recipe_id") val recipeId: Long,
     @ColumnInfo(name = "sequence") val sequence: Int,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "extraNotes") val extraNotes: String,
