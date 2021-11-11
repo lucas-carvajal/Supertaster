@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.*
+import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -63,7 +64,7 @@ class AddViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val recipeId = appRepository?.addRecipe(
                 Recipe(
-                    0,
+                    UniqueIdGenerator.generateLongId(),
                     title,
                     cuisine,
                     mealTypes[typeOfMealIndex],
@@ -74,15 +75,15 @@ class AddViewModel : ViewModel() {
             )
 
             recipePhotos.forEach { photo ->
-                appRepository?.addRecipeImage(RecipeImage(0, recipeId!!, photo))
+                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photo))
             }
 
             ingredients.forEach{ ingredient ->
-                appRepository?.addRecipeIngredient(RecipeIngredient(0, recipeId!!, ingredient.first, ingredient.second))
+                appRepository?.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId!!, ingredient.first, ingredient.second))
             }
 
             steps.forEach{ step ->
-                appRepository?.addRecipeStep(RecipeStep(0, recipeId!!, step.first, step.second, step.third))
+                appRepository?.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId!!, step.first, step.second, step.third))
             }
         }
 
@@ -106,7 +107,5 @@ class AddViewModel : ViewModel() {
             cookbookDao,
             cookbookRecipeDao
         )
-
-//        val db = Room.databaseBuilder(context, AppDatabase::class.java, "app_database").build()
     }
 }

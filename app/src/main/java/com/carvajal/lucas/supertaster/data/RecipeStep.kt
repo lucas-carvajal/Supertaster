@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecipeStep(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "recipe_id") val recipeId: Long,
     @ColumnInfo(name = "sequence") val sequence: Int,
     @ColumnInfo(name = "description") val description: String,
