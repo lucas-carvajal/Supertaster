@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface RecipeImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addRecipeImage(vararg recipeImage: RecipeImage): Long
+    fun addRecipeImage(recipeImage: RecipeImage): Long
 
     @Query("SELECT * FROM recipe_images WHERE recipe_id = :recipeId")
     fun getAllRecipeImages(recipeId: Int): List<RecipeImage>

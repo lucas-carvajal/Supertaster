@@ -2,9 +2,12 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
 import com.carvajal.lucas.supertaster.R
-import com.carvajal.lucas.supertaster.data.AppDatabase
-import com.carvajal.lucas.supertaster.data.AppRepository
+import com.carvajal.lucas.supertaster.data.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AddViewModel : ViewModel() {
 
@@ -53,19 +56,47 @@ class AddViewModel : ViewModel() {
             initRepository(context)
         }
 
+        //TODO try catch ?
 
+        val mealTypes = getMealTypes()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val recipeId = appRepository?.addRecipe(
+                Recipe(
+                    0,
+                    title,
+                    cuisine,
+                    mealTypes[typeOfMealIndex],
+                    servings,
+                    prepTime,
+                    cookTime
+                )
+            )
+
+            recipePhotos.forEach { photo ->
+                appRepository?.addRecipeImage(RecipeImage(recipeId!!, photo))
+            }
+
+            ingredients.forEach{ ingredient ->
+                appRepository?.addRecipeIngredient(RecipeIngredient(recipeId!!, ingredient.first, ingredient.second))
+            }
+
+            steps.forEach{ step ->
+                appRepository?.addRecipeStep(RecipeStep(recipeId!!, step.first, step.second, step.third))
+            }
+        }
 
         return true
     }
 
 
     private fun initRepository(context: Context) {
-        val recipeDao = AppDatabase.getDatabase(context).recipeDao()
-        val recipeImageDao = AppDatabase.getDatabase(context).recipeImageDao()
-        val recipeIngredientDao = AppDatabase.getDatabase(context).recipeIngredientDao()
-        val recipeStepDao = AppDatabase.getDatabase(context).recipeStepDao()
-        val cookbookDao = AppDatabase.getDatabase(context).cookbookDao()
-        val cookbookRecipeDao = AppDatabase.getDatabase(context).cookbookRecipeDao()
+        val recipeDao = AppDatabase.getInstance(context).recipeDao()
+        val recipeImageDao = AppDatabase.getInstance(context).recipeImageDao()
+        val recipeIngredientDao = AppDatabase.getInstance(context).recipeIngredientDao()
+        val recipeStepDao = AppDatabase.getInstance(context).recipeStepDao()
+        val cookbookDao = AppDatabase.getInstance(context).cookbookDao()
+        val cookbookRecipeDao = AppDatabase.getInstance(context).cookbookRecipeDao()
 
         appRepository = AppRepository(
             recipeDao,
@@ -75,5 +106,7 @@ class AddViewModel : ViewModel() {
             cookbookDao,
             cookbookRecipeDao
         )
+
+//        val db = Room.databaseBuilder(context, AppDatabase::class.java, "app_database").build()
     }
 }

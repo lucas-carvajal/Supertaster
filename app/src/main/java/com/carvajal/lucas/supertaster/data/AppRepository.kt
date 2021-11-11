@@ -25,7 +25,7 @@ class AppRepository(
         return recipeImageDao.getAllRecipeImages(id)
     }
 
-    fun addRecipes(recipeImage: RecipeImage): Long {
+    fun addRecipeImage(recipeImage: RecipeImage): Long {
         return recipeImageDao.addRecipeImage(recipeImage)
     }
 

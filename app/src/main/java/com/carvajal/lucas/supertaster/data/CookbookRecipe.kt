@@ -3,6 +3,7 @@ package com.carvajal.lucas.supertaster.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "cookbook_recipes",
@@ -12,6 +13,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class CookbookRecipe(
-    @ColumnInfo(name = "cookbook_id") val cookbookId: Long,
+    @PrimaryKey @ColumnInfo(name = "cookbook_id") val cookbookId: Long,
     @ColumnInfo(name = "recipe_id") val recipeId: Int,
 )

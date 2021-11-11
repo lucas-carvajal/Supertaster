@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addRecipe(vararg recipe: Recipe): Long
+    fun addRecipe(recipe: Recipe): Long
 
     @Query("SELECT * FROM recipes")
     fun getAllRecipes(): List<Recipe>
