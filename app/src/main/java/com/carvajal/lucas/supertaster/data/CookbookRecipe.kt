@@ -13,6 +13,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class CookbookRecipe(
-    @PrimaryKey @ColumnInfo(name = "cookbook_id") val cookbookId: Long,
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @ColumnInfo(name = "cookbook_id") val cookbookId: Long,
     @ColumnInfo(name = "recipe_id") val recipeId: Int,
 )

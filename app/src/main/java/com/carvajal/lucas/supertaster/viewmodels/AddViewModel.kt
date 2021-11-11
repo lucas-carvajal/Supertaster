@@ -74,15 +74,15 @@ class AddViewModel : ViewModel() {
             )
 
             recipePhotos.forEach { photo ->
-                appRepository?.addRecipeImage(RecipeImage(recipeId!!, photo))
+                appRepository?.addRecipeImage(RecipeImage(0, recipeId!!, photo))
             }
 
             ingredients.forEach{ ingredient ->
-                appRepository?.addRecipeIngredient(RecipeIngredient(recipeId!!, ingredient.first, ingredient.second))
+                appRepository?.addRecipeIngredient(RecipeIngredient(0, recipeId!!, ingredient.first, ingredient.second))
             }
 
             steps.forEach{ step ->
-                appRepository?.addRecipeStep(RecipeStep(recipeId!!, step.first, step.second, step.third))
+                appRepository?.addRecipeStep(RecipeStep(0, recipeId!!, step.first, step.second, step.third))
             }
         }
 

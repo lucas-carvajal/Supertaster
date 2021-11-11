@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecipeImage(
-    @PrimaryKey @ColumnInfo(name = "recipe_id") val recipeId: Long,
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @ColumnInfo(name = "recipe_id") val recipeId: Long,
     @ColumnInfo(name = "location") val location: String,
 )
