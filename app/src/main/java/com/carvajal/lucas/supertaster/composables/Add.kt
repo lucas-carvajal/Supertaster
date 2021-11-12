@@ -1,5 +1,11 @@
 package com.carvajal.lucas.supertaster.composables
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -24,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
+
+val REQUEST_IMAGE_CAPTURE = 1
 
 @Composable
 fun AddScreen(viewModel: AddViewModel) {
@@ -60,7 +68,7 @@ fun AddScreen(viewModel: AddViewModel) {
                 )
             }
             Section(title = "Photos") {
-                PhotoRow(viewModel)
+                PhotoRow(viewModel, context)
             }
             Section(title = "Cuisine") {
                 SingleInputField(
@@ -174,7 +182,7 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 }
 
 @Composable
-fun PhotoRow(viewModel: AddViewModel) {
+fun PhotoRow(viewModel: AddViewModel, context: Context) {
     val photos: List<Int> = viewModel.getPhotos()
 
     LazyRow {
@@ -208,12 +216,35 @@ fun PhotoRow(viewModel: AddViewModel) {
                         .clip(RoundedCornerShape(5.dp))
                         .width(80.dp)
                         .aspectRatio(1f)
-                        .clickable { /* TODO make it add photos */ }
+                        .clickable { addPhoto(context) }
                 )
             }
         }
     }
 }
+
+private fun addPhoto(context: Context) {
+    // TODO make it add photos
+    val packageManager = context.packageManager
+    val hasCamera = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+
+    if (hasCamera) {
+        dispatchTakePictureIntent(context)
+    } else {
+        Toast.makeText(context, "Camera feature is not available on this device", Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun dispatchTakePictureIntent(context: Context) {
+    val activity: Activity = context as Activity
+    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+    try {
+        activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "Camera app not found", Toast.LENGTH_SHORT).show()
+    }
+}
+
 
 @Composable
 fun ChooseTypeOfMealButton(viewModel: AddViewModel) {
