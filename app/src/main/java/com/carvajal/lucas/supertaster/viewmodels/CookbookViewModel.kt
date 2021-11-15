@@ -1,9 +1,10 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.data.Cookbook
 
-class CookbookViewModel : ViewModel() {
+class CookbookViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun getCookbooks(): List<Cookbook> {
         //TODO

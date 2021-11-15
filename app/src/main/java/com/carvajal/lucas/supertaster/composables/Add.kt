@@ -1,7 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -12,7 +11,6 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -30,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
@@ -589,6 +588,6 @@ private fun cleanup() {
 @Composable
 fun AddScreenPreview() {
     SupertasterTheme {
-        AddScreen(AddViewModel())
+        //AddScreen(AddViewModel())
     }
 }

@@ -2,11 +2,8 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.*
 import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +13,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddViewModel : ViewModel() {
-
-    private var appRepository: AppRepository? = null
+class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     var title: String = ""
     var cuisine: String = ""
@@ -66,16 +61,12 @@ class AddViewModel : ViewModel() {
     }
 
     fun saveRecipe(context: Context): Boolean {
-        if (appRepository == null) {
-            initRepository(context)
-        }
-
         //TODO try catch ?
 
         val mealTypes = getMealTypes()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val recipeId = appRepository?.addRecipe(
+            val recipeId = repository.addRecipe(
                 Recipe(
                     UniqueIdGenerator.generateLongId(),
                     title,
@@ -89,15 +80,15 @@ class AddViewModel : ViewModel() {
 
             recipePhotos.forEach { photo ->
                 val photoLocation = savePhoto(photo, title, context)
-                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photoLocation))
+                repository.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photoLocation))
             }
 
             ingredients.forEach{ ingredient ->
-                appRepository?.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId!!, ingredient.first, ingredient.second))
+                repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId!!, ingredient.first, ingredient.second))
             }
 
             steps.forEach{ step ->
-                appRepository?.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId!!, step.first, step.second, step.third))
+                repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId!!, step.first, step.second, step.third))
             }
         }
         return true
@@ -119,24 +110,5 @@ class AddViewModel : ViewModel() {
         }
 
         return photoPath
-    }
-
-
-    private fun initRepository(context: Context) {
-        val recipeDao = AppDatabase.getInstance(context).recipeDao()
-        val recipeImageDao = AppDatabase.getInstance(context).recipeImageDao()
-        val recipeIngredientDao = AppDatabase.getInstance(context).recipeIngredientDao()
-        val recipeStepDao = AppDatabase.getInstance(context).recipeStepDao()
-        val cookbookDao = AppDatabase.getInstance(context).cookbookDao()
-        val cookbookRecipeDao = AppDatabase.getInstance(context).cookbookRecipeDao()
-
-        appRepository = AppRepository(
-            recipeDao,
-            recipeImageDao,
-            recipeIngredientDao,
-            recipeStepDao,
-            cookbookDao,
-            cookbookRecipeDao
-        )
     }
 }

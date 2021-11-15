@@ -1,9 +1,10 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.data.Recipe
 
-class DashboardViewModel : ViewModel() {
+class DashboardViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun getGreeting() : String {
         //TODO
@@ -21,6 +22,8 @@ class DashboardViewModel : ViewModel() {
     }
 
     fun getSampleRecipes(): List<Recipe> {
+
+
         //TODO
         return listOf(
             Recipe(id = 0, title = "Stuffed Paprika", "Mediterranean", "Lunch", 4, 5, 5),

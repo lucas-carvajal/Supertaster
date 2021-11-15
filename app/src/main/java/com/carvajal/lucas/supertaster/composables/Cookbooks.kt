@@ -73,6 +73,6 @@ fun CookbookEntry(cookbook: Cookbook) {
 @Composable
 fun CookbooksScreenPreview() {
     SupertasterTheme {
-        CookbooksScreen(CookbookViewModel())
+        //CookbooksScreen(CookbookViewModel())
     }
 }

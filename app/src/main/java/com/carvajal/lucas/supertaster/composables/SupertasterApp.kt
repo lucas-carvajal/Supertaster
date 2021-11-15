@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -18,9 +20,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.carvajal.lucas.supertaster.auth.Profile
+import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
+import com.carvajal.lucas.supertaster.viewmodels.AddViewModelFactory
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 
@@ -35,12 +39,12 @@ class SupertasterApp {
     )
 
     @Composable
-    fun SupertasterAppScreen() {
+    fun SupertasterAppScreen(
+        dashboardViewModel: DashboardViewModel,
+        cookbookViewModel: CookbookViewModel,
+        addViewModel: AddViewModel
+    ) {
         val navController = rememberNavController()
-
-        val dashboardViewModel: DashboardViewModel = viewModel()
-        val cookbookViewModel: CookbookViewModel = viewModel()
-        val addViewModel: AddViewModel = viewModel()
 
         Scaffold(
             bottomBar = {
