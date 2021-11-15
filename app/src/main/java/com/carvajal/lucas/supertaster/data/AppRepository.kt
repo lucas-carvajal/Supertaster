@@ -1,5 +1,7 @@
 package com.carvajal.lucas.supertaster.data
 
+import androidx.lifecycle.LiveData
+
 
 class AppRepository(
     private val recipeDao: RecipeDao,
@@ -11,8 +13,12 @@ class AppRepository(
     ) {
 
     // Recipe
-    fun getAllRecipes(): List<Recipe> {
+    fun getAllRecipes(): LiveData<List<Recipe>> {
         return recipeDao.getAllRecipes()
+    }
+
+    fun getRecipeSamples(): LiveData<List<Recipe>> {
+        return recipeDao.getRecipeSamples()
     }
 
     fun addRecipe(recipe: Recipe): Long {
@@ -21,9 +27,10 @@ class AppRepository(
 
 
     // RecipeImage
-    fun getAllRecipeImages(id: Int): List<RecipeImage> {
-        return recipeImageDao.getAllRecipeImages(id)
+    fun getAllRecipeImages(): LiveData<List<RecipeImage>> {
+        return recipeImageDao.getAllRecipeImages()
     }
+
 
     fun addRecipeImage(recipeImage: RecipeImage): Long {
         return recipeImageDao.addRecipeImage(recipeImage)
@@ -31,7 +38,7 @@ class AppRepository(
 
 
     // RecipeIngredient
-    fun getAllRecipeIngredients(id: Int): List<RecipeIngredient> {
+    fun getAllRecipeIngredients(id: Long): List<RecipeIngredient> {
         return recipeIngredientDao.getAllRecipeIngredients(id)
     }
 
@@ -41,7 +48,7 @@ class AppRepository(
 
 
     // RecipeStep
-    fun getAllRecipeSteps(id: Int): List<RecipeStep> {
+    fun getAllRecipeSteps(id: Long): List<RecipeStep> {
         return recipeStepDao.getAllRecipeSteps(id)
     }
 
@@ -61,7 +68,7 @@ class AppRepository(
 
 
     // CookbookRecipe
-    fun getAllCookbookRecipes(cookbookId: Int): List<CookbookRecipe> {
+    fun getAllCookbookRecipes(cookbookId: Long): List<CookbookRecipe> {
         return cookbookRecipeDao.getAllCookbookRecipes(cookbookId)
     }
 

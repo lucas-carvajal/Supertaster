@@ -11,5 +11,5 @@ interface RecipeIngredientDao {
     fun addRecipeIngredient(recipeIngredient: RecipeIngredient): Long
 
     @Query("SELECT * FROM recipe_ingredients WHERE recipe_id = :recipeId")
-    fun getAllRecipeIngredients(recipeId: Int): List<RecipeIngredient>
+    fun getAllRecipeIngredients(recipeId: Long): List<RecipeIngredient>
 }

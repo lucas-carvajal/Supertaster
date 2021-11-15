@@ -11,5 +11,5 @@ interface RecipeStepDao {
     fun addRecipeStep(recipeStep: RecipeStep): Long
 
     @Query("SELECT * FROM recipe_steps WHERE recipe_id = :recipeId")
-    fun getAllRecipeSteps(recipeId: Int): List<RecipeStep>
+    fun getAllRecipeSteps(recipeId: Long): List<RecipeStep>
 }

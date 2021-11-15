@@ -62,7 +62,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun saveRecipe(context: Context): Boolean {
         //TODO try catch ?
-
         val mealTypes = getMealTypes()
 
         viewModelScope.launch(Dispatchers.IO) {

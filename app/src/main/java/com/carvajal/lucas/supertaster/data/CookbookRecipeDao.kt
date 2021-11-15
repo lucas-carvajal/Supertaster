@@ -11,5 +11,5 @@ interface CookbookRecipeDao {
     fun addCookbookRecipe(cookbookRecipe: CookbookRecipe): Long
 
     @Query("SELECT * FROM cookbook_recipes WHERE cookbook_id = :cookbookId")
-    fun getAllCookbookRecipes(cookbookId: Int): List<CookbookRecipe>
+    fun getAllCookbookRecipes(cookbookId: Long): List<CookbookRecipe>
 }

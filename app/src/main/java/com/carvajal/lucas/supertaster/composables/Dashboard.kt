@@ -1,6 +1,8 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -19,29 +21,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
-
 
 val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
+
+
+//TODO have option for when recipe has no image
 
 @Composable
 fun DashboardScreen(viewModel: DashboardViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    val sampleRecipes = viewModel.sampleRecipes.observeAsState(listOf()).value
+    val recipeImages = viewModel.recipeImages.observeAsState(listOf()).value
 
     Box(
         modifier = Modifier
@@ -54,9 +62,9 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
-            SuggestionsCard(viewModel.getSuggestions())
+            SuggestionsCard(viewModel.getSuggestions(), recipeImages)
             SearchCard()
-            AllRecipesCard(viewModel.getSampleRecipes())
+            AllRecipesCard(sampleRecipes, recipeImages)
             Spacer(Modifier.padding(5.dp))
         }
     }
@@ -64,7 +72,7 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
 
 
 @Composable
-fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
+fun SuggestionsCard(recipeSuggestions: List<Recipe>, recipeImages: List<RecipeImage>) {
     val scrollState = rememberScrollState()
 
     Card(modifier = Modifier
@@ -84,7 +92,14 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
                     .horizontalScroll(scrollState)
             ) {
                 recipeSuggestions.forEach { recipe ->
-                    RecipeCard(recipe = recipe, { /* TODO navigate to recipe */})
+                    RecipeCard(
+                        recipe = recipe,
+                        BitmapFactory.decodeFile(
+                            recipeImages.first { it.id == recipe.id }.location
+                        )
+                    ) {
+                    /* TODO navigate to recipe */
+                    }
                 }
             }
         }
@@ -92,7 +107,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>) {
 }
 
 @Composable
-fun RecipeCard(recipe: Recipe, action: () -> Unit) {
+fun RecipeCard(recipe: Recipe, recipeImage: Bitmap, action: () -> Unit) {
     Card (
         modifier = Modifier
             .padding(10.dp)
@@ -106,7 +121,7 @@ fun RecipeCard(recipe: Recipe, action: () -> Unit) {
                 .padding(5.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.tacos_al_pastor),
+                bitmap = recipeImage as ImageBitmap,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -228,7 +243,7 @@ fun SearchButton(modifier: Modifier, text: String, icon: ImageVector, action: ()
 
 
 @Composable
-fun AllRecipesCard(recipes: List<Recipe>) {
+fun AllRecipesCard(recipes: List<Recipe>, recipeImages: List<RecipeImage>) {
     val scrollState = rememberScrollState()
 
     Card(modifier = Modifier
@@ -249,7 +264,14 @@ fun AllRecipesCard(recipes: List<Recipe>) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 recipes.forEach { recipe ->
-                    RecipeCard(recipe = recipe, { /* TODO navigate to recipe */})
+                    RecipeCard(
+                        recipe = recipe,
+                        BitmapFactory.decodeFile(
+                            recipeImages.first { it.id == recipe.id }.location
+                        )
+                    ) {
+                        /* TODO navigate to recipe */
+                    }
                 }
                 Box(modifier = Modifier.padding(start = 45.dp, end = 55.dp)) {
                     IconButton(

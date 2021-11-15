@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,5 +12,8 @@ interface RecipeDao {
     fun addRecipe(recipe: Recipe): Long
 
     @Query("SELECT * FROM recipes")
-    fun getAllRecipes(): List<Recipe>
+    fun getAllRecipes(): LiveData<List<Recipe>>
+
+    @Query("SELECT * FROM recipes LIMIT 5")
+    fun getRecipeSamples(): LiveData<List<Recipe>>
 }
