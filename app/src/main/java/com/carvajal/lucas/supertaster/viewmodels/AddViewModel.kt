@@ -46,7 +46,7 @@ class AddViewModel : ViewModel() {
     }
 
     fun getMealTypes(): List<String> {
-        return listOf("-", "Breakfast", "Lunch", "Dinner", "Snack")
+        return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack",  "Other")
     }
 
     fun getIngredients(): MutableList<Pair<String, String>> {
@@ -100,18 +100,17 @@ class AddViewModel : ViewModel() {
                 appRepository?.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId!!, step.first, step.second, step.third))
             }
         }
-
         return true
     }
 
     @Throws(IOException::class)
     private fun savePhoto(image: Bitmap, recipeTitle: String, context: Context): String {
-        var photoPath: String = ""
+        var photoPath: String
 
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
         val storageDir: File = context.filesDir
         val trimmedRecipeTitle = recipeTitle.filter { !it.isWhitespace() }
-        val file = File.createTempFile(
+        File.createTempFile(
             "JPEG_${timeStamp}_${trimmedRecipeTitle}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */

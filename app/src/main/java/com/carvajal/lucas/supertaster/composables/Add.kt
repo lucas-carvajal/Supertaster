@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -141,12 +140,18 @@ fun AddScreen(viewModel: AddViewModel) {
             }
 
             Button(onClick = {
-                val success = viewModel.saveRecipe(context)
-                if (success) {
-                    Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
-                    cleanup()
+                if (viewModel.title.trim().isEmpty()) {
+                    Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
+                } else if (viewModel.typeOfMealIndex == 0) {
+                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
+                    val success = viewModel.saveRecipe(context)
+                    if (success) {
+                        Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
+                        cleanup()
+                    } else {
+                        Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
+                    }
                 }
             },
                 colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
@@ -208,7 +213,6 @@ fun PhotoRow(viewModel: AddViewModel, context: Context) {
                         .width(80.dp)
                         .aspectRatio(1f)
                         .clickable {
-                            // TODO show photo with option to delete
                             viewModel.deletePhoto(index)
                         }
                 )
