@@ -2,6 +2,7 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Environment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -10,6 +11,10 @@ import com.carvajal.lucas.supertaster.data.*
 import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddViewModel : ViewModel() {
 
@@ -83,8 +88,8 @@ class AddViewModel : ViewModel() {
             )
 
             recipePhotos.forEach { photo ->
-                //TODO store image and save location
-                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, "photo"))
+                val photoLocation = savePhoto(photo, title, context)
+                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photoLocation))
             }
 
             ingredients.forEach{ ingredient ->
@@ -97,6 +102,24 @@ class AddViewModel : ViewModel() {
         }
 
         return true
+    }
+
+    @Throws(IOException::class)
+    private fun savePhoto(image: Bitmap, recipeTitle: String, context: Context): String {
+        var photoPath: String = ""
+
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
+        val storageDir: File = context.filesDir
+        val trimmedRecipeTitle = recipeTitle.filter { !it.isWhitespace() }
+        val file = File.createTempFile(
+            "JPEG_${timeStamp}_${trimmedRecipeTitle}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            photoPath = absolutePath
+        }
+
+        return photoPath
     }
 
 

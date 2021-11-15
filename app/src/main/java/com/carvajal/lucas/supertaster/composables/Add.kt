@@ -191,7 +191,6 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 
 @Composable
 fun PhotoRow(viewModel: AddViewModel, context: Context) {
-    //val photos: List<Bitmap> = viewModel.getPhotos()
     var photos: List<Bitmap> by rememberSaveable { mutableStateOf( viewModel.getPhotos() ) }
 
     LazyRow {
