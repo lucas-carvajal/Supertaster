@@ -13,6 +13,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,12 +35,16 @@ import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 
-val REQUEST_IMAGE_CAPTURE = 1
+const val REQUEST_IMAGE_CAPTURE = 1
+
+private lateinit var addViewModel: AddViewModel
 
 @Composable
 fun AddScreen(viewModel: AddViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    addViewModel = viewModel
 
     var title by remember { mutableStateOf(viewModel.title)}
     var cuisine by remember { mutableStateOf(viewModel.cuisine) }
@@ -185,23 +191,27 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 
 @Composable
 fun PhotoRow(viewModel: AddViewModel, context: Context) {
-    val photos: List<Int> = viewModel.getPhotos()
+    //val photos: List<Bitmap> = viewModel.getPhotos()
+    var photos: List<Bitmap> by rememberSaveable { mutableStateOf( viewModel.getPhotos() ) }
 
     LazyRow {
-        items(photos) { photo ->
+        itemsIndexed(photos) { index, photo ->
             Card(
                 modifier = Modifier.padding(10.dp),
                 elevation = nestedCardElevation
             ) {
                 Image(
-                    painter = painterResource(id = photo),
+                    bitmap = photo.asImageBitmap(),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
                         .width(80.dp)
                         .aspectRatio(1f)
-                        .clickable { /* TODO make it delete photo */ }
+                        .clickable {
+                            // TODO show photo with option to delete
+                            viewModel.deletePhoto(index)
+                        }
                 )
             }
         }
@@ -226,7 +236,6 @@ fun PhotoRow(viewModel: AddViewModel, context: Context) {
 }
 
 private fun addPhoto(context: Context) {
-    // TODO make it add photos
     val packageManager = context.packageManager
     val hasCamera = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
 
@@ -247,11 +256,8 @@ private fun dispatchTakePictureIntent(context: Context) {
     }
 }
 
-fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-        val imageBitmap = data?.extras?.get("data") as Bitmap
-        //imageView.setImageBitmap(imageBitmap)
-    }
+fun addRecipeImage(image: Bitmap) {
+    addViewModel.addPhoto(image)
 }
 
 

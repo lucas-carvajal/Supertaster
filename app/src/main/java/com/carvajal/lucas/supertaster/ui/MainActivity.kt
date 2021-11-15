@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.NavHostController
 import com.carvajal.lucas.supertaster.composables.REQUEST_IMAGE_CAPTURE
 import com.carvajal.lucas.supertaster.composables.SupertasterApp
+import com.carvajal.lucas.supertaster.composables.addRecipeImage
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            //imageView.setImageBitmap(imageBitmap)
+            addRecipeImage(imageBitmap)
         }
     }
 }

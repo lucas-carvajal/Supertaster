@@ -1,6 +1,7 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -21,15 +22,22 @@ class AddViewModel : ViewModel() {
     var prepTime: Int = 5
     var cookTime: Int = 5
 
-    private var recipePhotos: MutableList<String> = mutableListOf() //TODO
+    private var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
     private var ingredients: MutableList<Pair<String, String>> = mutableListOf()
     private var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
-    fun getPhotos(): List<Int> {
+    fun getPhotos(): List<Bitmap> {
         //TODO
-        return listOf(
-            R.drawable.tacos_al_pastor,
-        )
+        //return listOf(R.drawable.tacos_al_pastor)
+        return recipePhotos
+    }
+
+    fun addPhoto(image: Bitmap) {
+        recipePhotos.add(image)
+    }
+
+    fun deletePhoto(index: Int) {
+        recipePhotos.removeAt(index)
     }
 
     fun getMealTypes(): List<String> {
@@ -75,7 +83,8 @@ class AddViewModel : ViewModel() {
             )
 
             recipePhotos.forEach { photo ->
-                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photo))
+                //TODO store image and save location
+                appRepository?.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, "photo"))
             }
 
             ingredients.forEach{ ingredient ->
