@@ -1,10 +1,12 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -242,6 +244,13 @@ private fun dispatchTakePictureIntent(context: Context) {
         activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
     } catch (e: ActivityNotFoundException) {
         Toast.makeText(context, "Camera app not found", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        val imageBitmap = data?.extras?.get("data") as Bitmap
+        //imageView.setImageBitmap(imageBitmap)
     }
 }
 

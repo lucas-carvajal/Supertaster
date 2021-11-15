@@ -26,7 +26,8 @@ fun TopRow(heading: String, icon: ImageVector, action: () -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             modifier = Modifier.border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
-            onClick = { action() }) {
+            onClick = { action() }
+        ) {
             Icon(icon, contentDescription = "", tint = MaterialTheme.colors.onSurface)
         }
     }

@@ -32,9 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
-import com.google.firebase.auth.FirebaseAuth
 
 
 val mainCardElevation = 5.dp
