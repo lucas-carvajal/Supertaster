@@ -9,6 +9,7 @@ import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -100,13 +101,18 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
         val storageDir: File = context.filesDir
         val trimmedRecipeTitle = recipeTitle.filter { !it.isWhitespace() }
-        File.createTempFile(
+        var file = File.createTempFile(
             "JPEG_${timeStamp}_${trimmedRecipeTitle}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
             photoPath = absolutePath
         }
+
+        val out = FileOutputStream(file)
+        image.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        out.flush()
+        out.close()
 
         return photoPath
     }

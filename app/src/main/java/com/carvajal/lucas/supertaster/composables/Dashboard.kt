@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -95,7 +96,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, recipeImages: List<RecipeIm
                     RecipeCard(
                         recipe = recipe,
                         BitmapFactory.decodeFile(
-                            recipeImages.first { it.id == recipe.id }.location
+                            recipeImages.first { it.recipeId == recipe.id }.location
                         )
                     ) {
                     /* TODO navigate to recipe */
@@ -107,7 +108,7 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, recipeImages: List<RecipeIm
 }
 
 @Composable
-fun RecipeCard(recipe: Recipe, recipeImage: Bitmap, action: () -> Unit) {
+fun RecipeCard(recipe: Recipe, recipeImage: Bitmap?, action: () -> Unit) {
     Card (
         modifier = Modifier
             .padding(10.dp)
@@ -120,15 +121,17 @@ fun RecipeCard(recipe: Recipe, recipeImage: Bitmap, action: () -> Unit) {
             modifier = Modifier
                 .padding(5.dp)
         ) {
-            Image(
-                bitmap = recipeImage as ImageBitmap,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .weight(0.1f)
+            if (recipeImage != null) {
+                Image(
+                    bitmap = recipeImage.asImageBitmap(),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .weight(0.1f)
                 )
+            }
             Text(
                 text = recipe.title,
                 modifier = Modifier.padding(start = 5.dp),
@@ -267,7 +270,7 @@ fun AllRecipesCard(recipes: List<Recipe>, recipeImages: List<RecipeImage>) {
                     RecipeCard(
                         recipe = recipe,
                         BitmapFactory.decodeFile(
-                            recipeImages.first { it.id == recipe.id }.location
+                            recipeImages.first { it.recipeId == recipe.id }.location
                         )
                     ) {
                         /* TODO navigate to recipe */
