@@ -21,6 +21,10 @@ class AppRepository(
         return recipeDao.getRecipeSamples()
     }
 
+    fun getRecipe(id: Long): LiveData<Recipe> {
+        return recipeDao.getRecipe(id)
+    }
+
     fun addRecipe(recipe: Recipe): Long {
         return recipeDao.addRecipe(recipe)
     }
