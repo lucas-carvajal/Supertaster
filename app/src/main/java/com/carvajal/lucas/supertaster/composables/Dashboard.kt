@@ -30,11 +30,11 @@ import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
 
@@ -45,7 +45,7 @@ val nestedCardElevation = 3.dp
 //TODO have option for when recipe has no image
 
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel) {
+fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -63,9 +63,9 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
-            SuggestionsCard(viewModel.getSuggestions(), recipeImages)
+            SuggestionsCard(viewModel.getSuggestions(), recipeImages, viewModel, navController)
             SearchCard()
-            AllRecipesCard(sampleRecipes, recipeImages)
+            AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
             Spacer(Modifier.padding(5.dp))
         }
     }
@@ -73,7 +73,12 @@ fun DashboardScreen(viewModel: DashboardViewModel) {
 
 
 @Composable
-fun SuggestionsCard(recipeSuggestions: List<Recipe>, recipeImages: List<RecipeImage>) {
+fun SuggestionsCard(
+    recipeSuggestions: List<Recipe>,
+    recipeImages: List<RecipeImage>,
+    viewModel: DashboardViewModel,
+    navController: NavController
+) {
     val scrollState = rememberScrollState()
 
     Card(modifier = Modifier
@@ -92,14 +97,16 @@ fun SuggestionsCard(recipeSuggestions: List<Recipe>, recipeImages: List<RecipeIm
                 modifier = Modifier
                     .horizontalScroll(scrollState)
             ) {
-                recipeSuggestions.forEach { recipe ->
+                recipeSuggestions.forEachIndexed { index, recipe ->
                     RecipeCard(
                         recipe = recipe,
                         BitmapFactory.decodeFile(
                             recipeImages.first { it.recipeId == recipe.id }.location
                         )
                     ) {
-                    /* TODO navigate to recipe */
+                        val recipeId = recipeSuggestions[index].id
+                        viewModel.setRecipeId(recipeId)
+                        navController.navigate("recipe_view_dashboard")
                     }
                 }
             }
@@ -246,7 +253,12 @@ fun SearchButton(modifier: Modifier, text: String, icon: ImageVector, action: ()
 
 
 @Composable
-fun AllRecipesCard(recipes: List<Recipe>, recipeImages: List<RecipeImage>) {
+fun AllRecipesCard(
+    recipes: List<Recipe>,
+    recipeImages: List<RecipeImage>,
+    viewModel: DashboardViewModel,
+    navController: NavController
+) {
     val scrollState = rememberScrollState()
 
     Card(modifier = Modifier
@@ -266,14 +278,16 @@ fun AllRecipesCard(recipes: List<Recipe>, recipeImages: List<RecipeImage>) {
                     .horizontalScroll(scrollState),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                recipes.forEach { recipe ->
+                recipes.forEachIndexed { index, recipe ->
                     RecipeCard(
                         recipe = recipe,
                         BitmapFactory.decodeFile(
                             recipeImages.first { it.recipeId == recipe.id }.location
                         )
                     ) {
-                        /* TODO navigate to recipe */
+                        val recipeId = recipes[index].id
+                        viewModel.setRecipeId(recipeId)
+                        navController.navigate("recipe_view_dashboard")
                     }
                 }
                 Box(modifier = Modifier.padding(start = 45.dp, end = 55.dp)) {

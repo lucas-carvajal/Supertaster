@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,5 +12,5 @@ interface RecipeStepDao {
     fun addRecipeStep(recipeStep: RecipeStep): Long
 
     @Query("SELECT * FROM recipe_steps WHERE recipe_id = :recipeId")
-    fun getAllRecipeSteps(recipeId: Long): List<RecipeStep>
+    fun getAllRecipeSteps(recipeId: Long): LiveData<List<RecipeStep>>
 }

@@ -1,10 +1,22 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.carvajal.lucas.supertaster.data.AppRepository
-import com.carvajal.lucas.supertaster.data.Cookbook
+import com.carvajal.lucas.supertaster.data.*
 
-class CookbookViewModel(private val repository: AppRepository) : ViewModel() {
+class CookbookViewModel(private val repository: AppRepository) : ViewModel(), AddViewViewModel {
+
+    override lateinit var viewRecipe: LiveData<Recipe>
+    override lateinit var viewRecipeImages: LiveData<List<RecipeImage>>
+    override lateinit var viewRecipeIngredients: LiveData<List<RecipeIngredient>>
+    override lateinit var viewRecipeSteps: LiveData<List<RecipeStep>>
+
+    fun setRecipeId(recipeId: Long) {
+        viewRecipe = repository.getRecipe(recipeId)
+        viewRecipeImages = repository.getRecipeImages(recipeId)
+        viewRecipeIngredients = repository.getAllRecipeIngredients(recipeId)
+        viewRecipeSteps = repository.getAllRecipeSteps(recipeId)
+    }
 
     fun getCookbooks(): List<Cookbook> {
         //TODO

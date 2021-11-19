@@ -17,6 +17,6 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes LIMIT 5")
     fun getRecipeSamples(): LiveData<List<Recipe>>
 
-    @Query("SELECT * FROM recipes WHERE id = :id")
+    @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
     fun getRecipe(id: Long): LiveData<Recipe>
 }

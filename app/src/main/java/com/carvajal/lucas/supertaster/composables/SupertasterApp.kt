@@ -8,9 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -59,12 +56,14 @@ class SupertasterApp {
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
-                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(dashboardViewModel) }
+                composable(BottomBarScreen.Dashboard.route) { DashboardScreen(dashboardViewModel, navController) }
                 composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen(cookbookViewModel) }
                 composable(BottomBarScreen.Add.route) { AddScreen(addViewModel) }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }
                 composable(BottomBarScreen.ShoppingList.route) { ShoppingListScreen() }
                 composable("profile") { Profile() }
+                composable("recipe_view_dashboard") { RecipeView(dashboardViewModel) }
+                composable("recipe_view_cookbooks") { RecipeView(cookbookViewModel) }
             }
         }
     }
