@@ -25,11 +25,11 @@ import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.data.RecipeStep
-import com.carvajal.lucas.supertaster.viewmodels.AddViewViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 
 @Composable
-fun RecipeView(viewModel: AddViewViewModel) {
+fun RecipeView(viewModel: RecipeViewViewModel) {
     val recipe = viewModel.viewRecipe.observeAsState()
     val recipeImages = viewModel.viewRecipeImages.observeAsState()
     val recipeIngredients = viewModel.viewRecipeIngredients.observeAsState()

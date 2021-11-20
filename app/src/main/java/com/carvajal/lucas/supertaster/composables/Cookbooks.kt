@@ -1,6 +1,7 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,12 +16,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.Cookbook
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 
 @Composable
-fun CookbooksScreen(viewModel: CookbookViewModel) {
+fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     
@@ -40,7 +42,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel) {
             }
             if (cookbooks.isNotEmpty()) {
                 cookbooks.forEach { cookbook ->
-                    CookbookEntry(cookbook)
+                    CookbookEntry(cookbook, viewModel, navController)
                 }
             } else {
                 Text(
@@ -54,11 +56,16 @@ fun CookbooksScreen(viewModel: CookbookViewModel) {
 }
 
 @Composable
-fun CookbookEntry(cookbook: Cookbook) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 20.dp),
-        elevation = mainCardElevation
+fun CookbookEntry(cookbook: Cookbook, viewModel: CookbookViewModel, navController: NavController) {
+    Card(
+        elevation = mainCardElevation,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp)
+            .clickable {
+                viewModel.setCurrentCookbook(cookbook.id)
+                navController.navigate("recipe_list_cookbooks")
+            }
     ) {
         Text(
             text = cookbook.name,

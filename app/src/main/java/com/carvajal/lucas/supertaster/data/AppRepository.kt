@@ -66,8 +66,12 @@ class AppRepository(
 
 
     // Cookbook
-    fun getAllRecipeIngredients(): List<Cookbook> {
+    fun getAllCookbooks(): LiveData<List<Cookbook>> {
         return cookbookDao.getAllCookbooks()
+    }
+
+    fun getCookbook(id: Long): LiveData<Cookbook> {
+        return cookbookDao.getCookbook(id)
     }
 
     fun addCookbook(cookbook: Cookbook): Long {
@@ -76,7 +80,7 @@ class AppRepository(
 
 
     // CookbookRecipe
-    fun getAllCookbookRecipes(cookbookId: Long): List<CookbookRecipe> {
+    fun getAllCookbookRecipes(cookbookId: Long): LiveData<List<CookbookRecipe>> {
         return cookbookRecipeDao.getAllCookbookRecipes(cookbookId)
     }
 

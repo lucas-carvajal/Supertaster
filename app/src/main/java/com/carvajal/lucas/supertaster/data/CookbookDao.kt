@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,5 +12,8 @@ interface CookbookDao {
     fun addCookbook(cookbook: Cookbook): Long
 
     @Query("SELECT * FROM cookbooks")
-    fun getAllCookbooks(): List<Cookbook>
+    fun getAllCookbooks(): LiveData<List<Cookbook>>
+
+    @Query("SELECT * FROM cookbooks where id = :id")
+    fun getCookbook(id: Long): LiveData<Cookbook>
 }

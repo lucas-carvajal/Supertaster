@@ -6,7 +6,7 @@ import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.data.RecipeStep
 
-interface AddViewViewModel {
+interface RecipeViewViewModel {
 
     var viewRecipe: LiveData<Recipe>
     var viewRecipeImages: LiveData<List<RecipeImage>>

@@ -57,13 +57,15 @@ class SupertasterApp {
         ) { innerPadding ->
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
                 composable(BottomBarScreen.Dashboard.route) { DashboardScreen(dashboardViewModel, navController) }
-                composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen(cookbookViewModel) }
+                composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen(cookbookViewModel, navController) }
                 composable(BottomBarScreen.Add.route) { AddScreen(addViewModel) }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }
                 composable(BottomBarScreen.ShoppingList.route) { ShoppingListScreen() }
                 composable("profile") { Profile() }
                 composable("recipe_view_dashboard") { RecipeView(dashboardViewModel) }
                 composable("recipe_view_cookbooks") { RecipeView(cookbookViewModel) }
+                composable("recipe_list_all") { AllRecipesListHolder(dashboardViewModel) }
+                composable("recipe_list_cookbooks") { CookbookRecipesListHolder(cookbookViewModel) }
             }
         }
     }

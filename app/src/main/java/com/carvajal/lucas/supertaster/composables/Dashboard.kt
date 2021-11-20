@@ -305,7 +305,7 @@ fun AllRecipesCard(
                         modifier = Modifier
                             .border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
                         onClick = {
-                            //TODO open all recipes page
+                            navController.navigate("recipe_list_all")
                         }) {
                         Icon(Icons.Default.MoreHoriz, contentDescription = "", tint = MaterialTheme.colors.onSurface)
                     }
