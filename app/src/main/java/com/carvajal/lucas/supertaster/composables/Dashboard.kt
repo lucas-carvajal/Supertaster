@@ -100,9 +100,13 @@ fun SuggestionsCard(
                 recipeSuggestions.forEachIndexed { index, recipe ->
                     RecipeCard(
                         recipe = recipe,
-                        BitmapFactory.decodeFile(
-                            recipeImages.first { it.recipeId == recipe.id }.location
-                        )
+                        if (recipeImages.any { it.recipeId == recipe.id }) {
+                            BitmapFactory.decodeFile(
+                                recipeImages.first { it.recipeId == recipe.id }.location
+                            )
+                        } else {
+                            null
+                        }
                     ) {
                         val recipeId = recipeSuggestions[index].id
                         viewModel.setRecipeId(recipeId)
@@ -138,6 +142,8 @@ fun RecipeCard(recipe: Recipe, recipeImage: Bitmap?, action: () -> Unit) {
                         .clip(RoundedCornerShape(5.dp))
                         .weight(0.1f)
                 )
+            } else {
+                //TODO no image ?
             }
             Text(
                 text = recipe.title,
@@ -281,9 +287,13 @@ fun AllRecipesCard(
                 recipes.forEachIndexed { index, recipe ->
                     RecipeCard(
                         recipe = recipe,
-                        BitmapFactory.decodeFile(
-                            recipeImages.first { it.recipeId == recipe.id }.location
-                        )
+                        if (recipeImages.any { it.recipeId == recipe.id }) {
+                            BitmapFactory.decodeFile(
+                                recipeImages.first { it.recipeId == recipe.id }.location
+                            )
+                        } else {
+                            null
+                        }
                     ) {
                         val recipeId = recipes[index].id
                         viewModel.setRecipeId(recipeId)
