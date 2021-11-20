@@ -1,8 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
-import android.content.Intent
 import android.widget.Toast
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +39,7 @@ fun AllRecipesListHolder(viewModel: RecipesListViewModel) {
                 val recipesList = viewModel.listRecipes.observeAsState()
                 val listRecipeImages = viewModel.listRecipeImages.observeAsState()
 
-                RecipesList(recipesList, listRecipeImages)
+                RecipesList(recipesList, listRecipeImages, viewModel)
             }
         }
 
@@ -74,7 +71,7 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel) {
                     recipesList.value?.filter { recipesInCookbook.value!!.contains(it.id) }
                 }
 
-                RecipesList(recipesList, listRecipeImages)
+                RecipesList(recipesList, listRecipeImages, viewModel)
             }
         }
     }
