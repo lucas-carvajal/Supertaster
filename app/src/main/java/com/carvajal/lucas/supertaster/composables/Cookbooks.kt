@@ -5,11 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,13 +23,63 @@ import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.Cookbook
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val openDialog = remember { mutableStateOf(false) }
     
-    val cookbooks = viewModel.getCookbooks()
+    val cookbooks = viewModel.allCookbooks.observeAsState()
+
+    if (openDialog.value) {
+
+        var newCookbookName = remember { mutableStateOf("") }
+
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            title = {
+                Text(
+                    text = "Add new Cookbook",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(5.dp)
+                )
+            },
+            text = {
+                TextField(
+                    value = newCookbookName.value,
+                    onValueChange = { newCookbookName.value = it },
+                    singleLine = true,
+                    modifier = Modifier.padding(5.dp)
+                )
+            },
+            buttons = {
+                Row {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Text(text = "Dismiss")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = {
+                            viewModel.addCookbook(newCookbookName.value)
+                            openDialog.value = false
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Text(text = "Add")
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -38,10 +91,12 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopRow(heading = "MY COOKBOOKS", icon = Icons.Default.Add) {
-                Toast.makeText(context, "Add", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Add", Toast.LENGTH_SHORT).show()
+                openDialog.value = true
             }
-            if (cookbooks.isNotEmpty()) {
-                cookbooks.forEach { cookbook ->
+
+            if (!cookbooks.value.isNullOrEmpty()) {
+                cookbooks.value?.forEach { cookbook ->
                     CookbookEntry(cookbook, viewModel, navController)
                 }
             } else {
@@ -50,6 +105,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
                     modifier = Modifier.padding(top = 30.dp)
                 )
             }
+
             Spacer(Modifier.padding(5.dp))
         }
     }
@@ -74,7 +130,6 @@ fun CookbookEntry(cookbook: Cookbook, viewModel: CookbookViewModel, navControlle
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

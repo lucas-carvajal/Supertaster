@@ -3,9 +3,14 @@ package com.carvajal.lucas.supertaster.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.carvajal.lucas.supertaster.data.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
+
+    val allCookbooks = repository.getAllCookbooks()
 
     // for RecipeViewViewModel
     override lateinit var viewRecipe: LiveData<Recipe>
@@ -32,29 +37,18 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
         recipesInCookbookRaw = repository.getAllCookbookRecipes(repository.getCookbook(id).value?.id ?: -1)
     }
 
+    fun addCookbook(name: String) {
+        val newCookbook = Cookbook(0, name)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addCookbook(newCookbook)
+        }
+    }
+
     fun setRecipeId(recipeId: Long) {
         viewRecipe = repository.getRecipe(recipeId)
         viewRecipeImages = repository.getRecipeImages(recipeId)
         viewRecipeIngredients = repository.getAllRecipeIngredients(recipeId)
         viewRecipeSteps = repository.getAllRecipeSteps(recipeId)
-    }
-
-    fun getCookbooks(): List<Cookbook> {
-//        return repository.getAllCookbooks()
-        //TODO
-        return listOf(
-            Cookbook(0, "Burgers"),
-            Cookbook(1, "Thai"),
-            Cookbook(2, "Soups"),
-            Cookbook(3, "BBQ"),
-            Cookbook(4, "French"),
-            Cookbook(5, "One Pot"),
-            Cookbook(6, "Mediterranean"),
-            Cookbook(7, "Steak"),
-            Cookbook(8, "Noodles"),
-            Cookbook(9, "Pastries"),
-            Cookbook(9, "Sushi")
-        )
     }
 
 }
