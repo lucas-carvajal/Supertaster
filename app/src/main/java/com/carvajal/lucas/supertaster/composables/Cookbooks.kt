@@ -8,11 +8,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,51 +31,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
     val cookbooks = viewModel.allCookbooks.observeAsState()
 
     if (openDialog.value) {
-
-        var newCookbookName = remember { mutableStateOf("") }
-
-        AlertDialog(
-            onDismissRequest = { openDialog.value = false },
-            title = {
-                Text(
-                    text = "Add new Cookbook",
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(5.dp)
-                )
-            },
-            text = {
-                TextField(
-                    value = newCookbookName.value,
-                    onValueChange = { newCookbookName.value = it },
-                    singleLine = true,
-                    modifier = Modifier.padding(5.dp)
-                )
-            },
-            buttons = {
-                Row {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = {
-                            openDialog.value = false
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Text(text = "Dismiss")
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = {
-                            viewModel.addCookbook(newCookbookName.value)
-                            openDialog.value = false
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Text(text = "Add")
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        )
+        NewCookbookDialog(viewModel, openDialog)
     }
 
     Box(
@@ -129,6 +82,54 @@ fun CookbookEntry(cookbook: Cookbook, viewModel: CookbookViewModel, navControlle
             modifier = Modifier.padding(20.dp)
         )
     }
+}
+
+@Composable
+fun NewCookbookDialog(viewModel: CookbookViewModel, openDialog: MutableState<Boolean>) {
+    var newCookbookName = remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { openDialog.value = false },
+        title = {
+            Text(
+                text = "Add new Cookbook",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(5.dp)
+            )
+        },
+        text = {
+            TextField(
+                value = newCookbookName.value,
+                onValueChange = { newCookbookName.value = it },
+                singleLine = true,
+                modifier = Modifier.padding(5.dp)
+            )
+        },
+        buttons = {
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    },
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text(text = "Dismiss")
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        viewModel.addCookbook(newCookbookName.value)
+                        openDialog.value = false
+                    },
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text(text = "Add")
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

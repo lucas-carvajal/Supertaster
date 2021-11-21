@@ -9,8 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +36,12 @@ fun RecipeView(viewModel: RecipeViewViewModel) {
 
     val scrollState = rememberScrollState()
 
+    val openDialog = remember { mutableStateOf(false) }
+
+    if (openDialog.value) {
+        AddToCookbook(viewModel, openDialog)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +55,11 @@ fun RecipeView(viewModel: RecipeViewViewModel) {
             }
             PhotoSlideshow(recipeImages as State<List<RecipeImage>>)
             Divider(modifier = Modifier.padding(0.dp, 10.dp))
-            ActionButtonsRow()
+            ActionButtonsRow(
+                addAction = {
+                    openDialog.value = true
+                }
+            )
             Divider(modifier = Modifier.padding(0.dp, 10.dp))
             TypeAndCuisineRow(recipe)
             Divider(modifier = Modifier.padding(0.dp, 10.dp))
@@ -103,7 +112,9 @@ fun PhotoSlideshow(photos: State<List<RecipeImage>?>) {
 }
 
 @Composable
-fun ActionButtonsRow() {
+fun ActionButtonsRow(
+    addAction: () -> Unit
+) {
     val context = LocalContext.current
 
     Row {
@@ -111,11 +122,10 @@ fun ActionButtonsRow() {
         IconButton(
             modifier = Modifier.border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
             onClick = {
-                //TODO add to favourites
-                Toast.makeText(context, "Like", Toast.LENGTH_SHORT).show()
+                addAction()
             }
         ) {
-            Icon(Icons.Default.Favorite, contentDescription = "", tint = MaterialTheme.colors.onSurface)
+            Icon(Icons.Default.Add, contentDescription = "", tint = MaterialTheme.colors.onSurface)
         }
         Spacer(Modifier.weight(1f))
         IconButton(
@@ -268,4 +278,32 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
     }
 }
 
+@Composable
+fun AddToCookbook(viewModel: RecipeViewViewModel, openDialog: MutableState<Boolean>){
+    AlertDialog(
+        onDismissRequest = { openDialog.value = false },
+        title = {
+            Text(
+                text = "Add new Cookbook",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(5.dp)
+            )
+        },
+        text = {
+            // TODO List of cookbooks with onclick to add
+        },
+        buttons = {
+            Row {
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    },
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text(text = "Dismiss")
+                }
+            }
+        }
+    )
+}
 

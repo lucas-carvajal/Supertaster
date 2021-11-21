@@ -82,10 +82,10 @@ fun RecipeListItem(recipe: Recipe, recipeImages: List<RecipeImage>?) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth()
                     )
-                    ActionButtonsRow()
+                    //TODO
+                    //ActionButtonsRow()
                 }
             }
         }
-
     }
 }
