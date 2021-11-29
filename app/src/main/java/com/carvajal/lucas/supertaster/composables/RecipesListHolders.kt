@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Transformations
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
 
@@ -52,24 +53,33 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
+    val cookbook = viewModel.getCurrentCoookbook().observeAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
         Column {
-            TopRow(heading = viewModel.getCookbookTitle(), icon = Icons.Default.Edit) {
+            TopRow(heading = cookbook.value?.name ?: "Error", icon = Icons.Default.Edit) {
                 //TODO edit the list
                 Toast.makeText(context, "Edit the List", Toast.LENGTH_SHORT).show()
             }
             Column(modifier = Modifier.verticalScroll(scrollState)) {
-                val recipesList = viewModel.listRecipes.observeAsState()
                 val listRecipeImages = viewModel.listRecipeImages.observeAsState()
                 val recipesInCookbook = viewModel.recipesInCookbook.observeAsState()
 
-                if (!recipesList.value.isNullOrEmpty()) {
-                    recipesList.value?.filter { recipesInCookbook.value!!.contains(it.id) }
-                }
+                val test = recipesInCookbook.value
+
+                val recipesList = Transformations.map(viewModel.listRecipes) {
+                    if (!recipesInCookbook.value.isNullOrEmpty()) {
+                        it.filter { recipe ->
+                            recipesInCookbook.value!!.contains(recipe.id)
+                        }
+                    } else {
+                        it
+                    }
+                }.observeAsState()
 
                 RecipesList(recipesList, listRecipeImages, viewModel)
             }

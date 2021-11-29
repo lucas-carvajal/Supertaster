@@ -44,7 +44,6 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopRow(heading = "MY COOKBOOKS", icon = Icons.Default.Add) {
-//                Toast.makeText(context, "Add", Toast.LENGTH_SHORT).show()
                 openDialog.value = true
             }
 

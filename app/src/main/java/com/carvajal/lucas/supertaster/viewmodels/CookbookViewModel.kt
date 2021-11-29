@@ -1,16 +1,12 @@
 package com.carvajal.lucas.supertaster.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.carvajal.lucas.supertaster.data.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
 
-    val allCookbooks = repository.getAllCookbooks()
+    override val allCookbooks = repository.getAllCookbooks()
 
     // for RecipeViewViewModel
     override lateinit var viewRecipe: LiveData<Recipe>
@@ -18,23 +14,25 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
     override lateinit var viewRecipeIngredients: LiveData<List<RecipeIngredient>>
     override lateinit var viewRecipeSteps: LiveData<List<RecipeStep>>
 
-    lateinit var currentCookbook: LiveData<Cookbook>
-    private var recipesInCookbookRaw: LiveData<List<CookbookRecipe>> = repository.getAllCookbookRecipes(-1)
+    private var currentCookbookId: Long = -1
+
+    var currentCookbook: LiveData<Cookbook> = repository.getCookbook(currentCookbookId)
+    private var recipesInCookbookRaw: LiveData<List<CookbookRecipe>> = repository
+        .getAllCookbookRecipes(currentCookbookId)
     val recipesInCookbook = Transformations.map(recipesInCookbookRaw) { list ->
         list.map { it.recipeId }
+    }
+
+    fun getCurrentCoookbook(): LiveData<Cookbook> {
+        return repository.getCookbook(currentCookbookId)
     }
 
     // for RecipesListViewModel
     override var listRecipes: LiveData<List<Recipe>> = repository.getAllRecipes()
     override var listRecipeImages: LiveData<List<RecipeImage>> = repository.getAllRecipeImages()
 
-    fun getCookbookTitle(): String {
-        return currentCookbook.value?.name ?: "Error"
-    }
-
     fun setCurrentCookbook(id: Long) {
-        currentCookbook = repository.getCookbook(id)
-        recipesInCookbookRaw = repository.getAllCookbookRecipes(repository.getCookbook(id).value?.id ?: -1)
+        currentCookbookId = id
     }
 
     fun addCookbook(name: String) {
@@ -49,6 +47,13 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
         viewRecipeImages = repository.getRecipeImages(recipeId)
         viewRecipeIngredients = repository.getAllRecipeIngredients(recipeId)
         viewRecipeSteps = repository.getAllRecipeSteps(recipeId)
+    }
+
+    override fun addRecipeToCookbook(cookbookId: Long, recipeId: Long) {
+        val newCookbookRecipe = CookbookRecipe(0, cookbookId, recipeId)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addCookbookRecipe(newCookbookRecipe)
+        }
     }
 
 }

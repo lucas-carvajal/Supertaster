@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -29,6 +30,8 @@ import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 @Composable
 fun RecipeView(viewModel: RecipeViewViewModel) {
+    val context = LocalContext.current
+
     val recipe = viewModel.viewRecipe.observeAsState()
     val recipeImages = viewModel.viewRecipeImages.observeAsState()
     val recipeIngredients = viewModel.viewRecipeIngredients.observeAsState()
@@ -39,7 +42,7 @@ fun RecipeView(viewModel: RecipeViewViewModel) {
     val openDialog = remember { mutableStateOf(false) }
 
     if (openDialog.value) {
-        AddToCookbook(viewModel, openDialog)
+        AddToCookbook(viewModel, openDialog, recipe, context)
     }
 
     Box(
@@ -263,7 +266,9 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
                         Text(
                             text = step.extraNotes,
                             fontWeight = FontWeight.Light,
-                            modifier = Modifier.padding(start = 10.dp).fillMaxWidth()
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .fillMaxWidth()
                         )
                     }
                 }
@@ -279,18 +284,48 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
 }
 
 @Composable
-fun AddToCookbook(viewModel: RecipeViewViewModel, openDialog: MutableState<Boolean>){
+fun AddToCookbook(
+    viewModel: RecipeViewViewModel,
+    openDialog: MutableState<Boolean>,
+    recipe: State<Recipe?>,
+    context: Context
+){
+    val scrollState = rememberScrollState()
+    val cookbooks = viewModel.allCookbooks.observeAsState().value
+
     AlertDialog(
         onDismissRequest = { openDialog.value = false },
         title = {
             Text(
                 text = "Add new Cookbook",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(5.dp)
             )
         },
         text = {
-            // TODO List of cookbooks with onclick to add
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier
+                    .verticalScroll(scrollState)
+                ) {
+                    Divider()
+                    cookbooks?.forEach{ cookbook ->
+                        Text(
+                            text = cookbook.name,
+                            fontSize = MaterialTheme.typography.h5.fontSize,
+                            modifier = Modifier.clickable{
+                                viewModel.addRecipeToCookbook(cookbook.id, recipe.value?.id ?: 0)
+                                openDialog.value = false
+                                Toast.makeText(
+                                    context,
+                                    "${recipe.value?.title} added to ${cookbook.name}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
+                        Divider()
+                    }
+                }
+            }
+
         },
         buttons = {
             Row {
@@ -298,12 +333,15 @@ fun AddToCookbook(viewModel: RecipeViewViewModel, openDialog: MutableState<Boole
                     onClick = {
                         openDialog.value = false
                     },
-                    modifier = Modifier.padding(5.dp)
                 ) {
-                    Text(text = "Dismiss")
+                    Text(
+                        text = "Dismiss",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
-        }
+        },
     )
 }
 
