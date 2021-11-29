@@ -21,7 +21,7 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
     override var listRecipeImages: LiveData<List<RecipeImage>> = repository.getAllRecipeImages()
     override val allCookbooks: LiveData<List<Cookbook>> = repository.getAllCookbooks()
 
-    fun setRecipeId(recipeId: Long) {
+    override fun setRecipeId(recipeId: Long) {
         viewRecipe = repository.getRecipe(recipeId)
         viewRecipeImages = repository.getRecipeImages(recipeId)
         viewRecipeIngredients = repository.getAllRecipeIngredients(recipeId)

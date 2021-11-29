@@ -3,6 +3,7 @@ package com.carvajal.lucas.supertaster.composables
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,28 +19,46 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
+import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
+import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
 
 @Composable
 fun RecipesList(
     recipesList: State<List<Recipe>?>,
     recipesImageList: State<List<RecipeImage>?>,
-    viewModel: RecipesListViewModel
+    viewModel: RecipesListViewModel,
+    navController: NavController
 ) {
     Column(modifier = Modifier.padding(bottom = 10.dp)) {
         recipesList.value?.forEach { recipe ->
             val recipeImages = recipesImageList.value?.filter { it.recipeId == recipe.id }
-            RecipeListItem(recipe, recipeImages)
+            RecipeListItem(recipe, recipeImages, viewModel, navController)
         }
     }
 }
 
 @Composable
-fun RecipeListItem(recipe: Recipe, recipeImages: List<RecipeImage>?) {
+fun RecipeListItem(
+    recipe: Recipe,
+    recipeImages: List<RecipeImage>?,
+    viewModel: RecipesListViewModel,
+    navController: NavController
+) {
     Card(modifier = Modifier
         .fillMaxWidth()
+        .clickable{
+            viewModel.setRecipeId(recipe.id)
+
+            if (viewModel is DashboardViewModel) {
+                navController.navigate("recipe_view_dashboard")
+            } else if (viewModel is CookbookViewModel) {
+                navController.navigate("recipe_view_cookbooks")
+            }
+        }
         .padding(top = 20.dp),
         elevation = mainCardElevation
     ) {

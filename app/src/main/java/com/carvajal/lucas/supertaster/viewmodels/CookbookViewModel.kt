@@ -42,7 +42,7 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
         }
     }
 
-    fun setRecipeId(recipeId: Long) {
+    override fun setRecipeId(recipeId: Long) {
         viewRecipe = repository.getRecipe(recipeId)
         viewRecipeImages = repository.getRecipeImages(recipeId)
         viewRecipeIngredients = repository.getAllRecipeIngredients(recipeId)

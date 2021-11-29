@@ -64,8 +64,8 @@ class SupertasterApp {
                 composable("profile") { Profile() }
                 composable("recipe_view_dashboard") { RecipeView(dashboardViewModel) }
                 composable("recipe_view_cookbooks") { RecipeView(cookbookViewModel) }
-                composable("recipe_list_all") { AllRecipesListHolder(dashboardViewModel) }
-                composable("recipe_list_cookbooks") { CookbookRecipesListHolder(cookbookViewModel) }
+                composable("recipe_list_all") { AllRecipesListHolder(dashboardViewModel, navController) }
+                composable("recipe_list_cookbooks") { CookbookRecipesListHolder(cookbookViewModel, navController) }
             }
         }
     }

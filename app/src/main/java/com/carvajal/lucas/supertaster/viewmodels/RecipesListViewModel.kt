@@ -10,4 +10,6 @@ interface RecipesListViewModel {
     val listRecipeImages: LiveData<List<RecipeImage>>
     val listRecipes: LiveData<List<Recipe>>
 
+    fun setRecipeId(recipeId: Long)
+
 }

@@ -18,11 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Transformations
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
 
 @Composable
-fun AllRecipesListHolder(viewModel: RecipesListViewModel) {
+fun AllRecipesListHolder(viewModel: RecipesListViewModel, navController: NavController) {
     val scrollState = rememberScrollState()
 
     Box(
@@ -40,7 +41,7 @@ fun AllRecipesListHolder(viewModel: RecipesListViewModel) {
                 val recipesList = viewModel.listRecipes.observeAsState()
                 val listRecipeImages = viewModel.listRecipeImages.observeAsState()
 
-                RecipesList(recipesList, listRecipeImages, viewModel)
+                RecipesList(recipesList, listRecipeImages, viewModel, navController)
             }
         }
 
@@ -49,7 +50,7 @@ fun AllRecipesListHolder(viewModel: RecipesListViewModel) {
 
 
 @Composable
-fun CookbookRecipesListHolder(viewModel: CookbookViewModel) {
+fun CookbookRecipesListHolder(viewModel: CookbookViewModel, navController: NavController) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -69,8 +70,6 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel) {
                 val listRecipeImages = viewModel.listRecipeImages.observeAsState()
                 val recipesInCookbook = viewModel.recipesInCookbook.observeAsState()
 
-                val test = recipesInCookbook.value
-
                 val recipesList = Transformations.map(viewModel.listRecipes) {
                     if (!recipesInCookbook.value.isNullOrEmpty()) {
                         it.filter { recipe ->
@@ -81,7 +80,7 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel) {
                     }
                 }.observeAsState()
 
-                RecipesList(recipesList, listRecipeImages, viewModel)
+                RecipesList(recipesList, listRecipeImages, viewModel, navController)
             }
         }
     }
