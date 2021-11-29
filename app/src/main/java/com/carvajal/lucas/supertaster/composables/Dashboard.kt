@@ -51,6 +51,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
 
     val sampleRecipes = viewModel.sampleRecipes.observeAsState(listOf()).value
     val recipeImages = viewModel.recipeImages.observeAsState(listOf()).value
+    val recipeSuggestions = viewModel.getSuggestions().observeAsState(listOf()).value
 
     Box(
         modifier = Modifier
@@ -63,7 +64,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
-            SuggestionsCard(viewModel.getSuggestions(), recipeImages, viewModel, navController)
+            SuggestionsCard(recipeSuggestions, recipeImages, viewModel, navController)
             SearchCard()
             AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
             Spacer(Modifier.padding(5.dp))

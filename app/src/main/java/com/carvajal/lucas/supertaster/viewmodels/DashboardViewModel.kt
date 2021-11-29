@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.carvajal.lucas.supertaster.data.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
 
@@ -44,9 +46,25 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
         return "GOOD MORNING"
     }
 
-    fun getSuggestions(): List<Recipe> {
+    fun getSuggestions(): LiveData<List<Recipe>> {
+        val format = SimpleDateFormat("HH", Locale.US)
+        val hour: Int = format.format(Date()).toInt()
+
+        val suggestions = when(hour) {
+            in 0..4 -> repository.getRecipeByType("Snack")
+            in 5..9 -> repository.getRecipeByType("Breakfast")
+            in 10..11 -> repository.getRecipeByType("Brunch")
+            in 12..14 -> repository.getRecipeByType("Lunch")
+            in 15..17 -> repository.getRecipeByType("Tea")
+            in 18..20 -> repository.getRecipeByType("Dinner")
+            in 21..24 -> repository.getRecipeByType("Snack")
+            else -> repository.getRecipeByType("Other")
+        }
+
+
+
         //TODO
-        return listOf()
+        return suggestions
     }
 
     override fun addRecipeToCookbook(cookbookId: Long, recipeId: Long) {

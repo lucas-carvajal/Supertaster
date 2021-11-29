@@ -21,6 +21,10 @@ class AppRepository(
         return recipeDao.getRecipeSamples()
     }
 
+    fun getRecipeByType(typeOfMeal: String): LiveData<List<Recipe>> {
+        return recipeDao.getRecipeByType(typeOfMeal)
+    }
+
     fun getRecipe(id: Long): LiveData<Recipe> {
         return recipeDao.getRecipe(id)
     }
