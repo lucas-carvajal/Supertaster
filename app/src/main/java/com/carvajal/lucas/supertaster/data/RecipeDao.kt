@@ -17,7 +17,7 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes LIMIT 5")
     fun getRecipeSamples(): LiveData<List<Recipe>>
 
-    @Query("SELECT * FROM recipes WHERE title LIKE :name")
+    @Query("SELECT * FROM recipes WHERE title LIKE '%' || :name || '%'")
     fun filterRecipesByName(name: String) : LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipes WHERE (prep_time + cook_time) <= :time")

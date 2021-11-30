@@ -1,8 +1,10 @@
 package com.carvajal.lucas.supertaster.composables
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,9 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,16 +26,17 @@ import androidx.compose.ui.unit.dp
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
+import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
@@ -47,6 +48,18 @@ val nestedCardElevation = 3.dp
 fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    val openFilterByTimeDialog = remember { mutableStateOf(false) }
+    val openFilterByCuisineDialog = remember { mutableStateOf(false) }
+
+    if (openFilterByTimeDialog.value) {
+        FilterByTime(viewModel, openFilterByTimeDialog, navController)
+    }
+
+    if (openFilterByCuisineDialog.value) {
+        FilterByCuisine(viewModel, openFilterByTimeDialog, navController)
+    }
+
 
     val sampleRecipes = viewModel.sampleRecipes.observeAsState(listOf()).value
     val recipeImages = viewModel.recipeImages.observeAsState(listOf()).value
@@ -64,7 +77,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
             SuggestionsCard(recipeSuggestions, recipeImages, viewModel, navController)
-            SearchCard(viewModel, navController)
+            SearchCard(viewModel, navController, openFilterByTimeDialog, openFilterByCuisineDialog)
             AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
             Spacer(Modifier.padding(5.dp))
         }
@@ -158,7 +171,12 @@ fun RecipeCard(recipe: Recipe, recipeImage: Bitmap?, action: () -> Unit) {
 
 
 @Composable
-fun SearchCard(viewModel: DashboardViewModel, navController: NavController) {
+fun SearchCard(
+    viewModel: DashboardViewModel,
+    navController: NavController,
+    openFilterByTimeDialog: MutableState<Boolean>,
+    openFilterByCuisineDialog: MutableState<Boolean>
+) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 20.dp),
@@ -172,19 +190,21 @@ fun SearchCard(viewModel: DashboardViewModel, navController: NavController) {
                         .weight(1f)
                         .padding(10.dp),"Time", Icons.Filled.Alarm
                 ) {
-                    //TODO make it search by time
+                    openFilterByTimeDialog.value = true
                 }
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Ingredients", Icons.Filled.LunchDining) {
-                    //TODO make it search by time
+                        .padding(10.dp),"Ingredients", Icons.Filled.LunchDining)
+                {
+                    //TODO make it search by ingredients
                 }
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Cuisine", Icons.Filled.Language) {
-                    //TODO make it search by time
+                        .padding(10.dp),"Cuisine", Icons.Filled.Language)
+                {
+                    openFilterByCuisineDialog.value = true
                 }
             }
 
@@ -215,7 +235,6 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
             ),
             trailingIcon = {
                 IconButton(onClick = {
-                    //TODO make it search
                     viewModel.filterListRecipesByName(searchTerm)
                     navController.navigate("recipe_list_all")
                 }) {
@@ -225,7 +244,8 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
             keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    //TODO copy from above
+                    viewModel.filterListRecipesByName(searchTerm)
+                    navController.navigate("recipe_list_all")
                 }
             )
         )
@@ -316,6 +336,148 @@ fun AllRecipesCard(
         }
     }
 }
+
+
+@Composable
+fun FilterByTime(
+    viewModel: DashboardViewModel,
+    openFilterByTimeDialog: MutableState<Boolean>,
+    navController: NavController
+){
+    var searchTime by remember{ mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = { openFilterByTimeDialog.value = false },
+        title = {
+            Text(
+                text = "Filter recipes by time",
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        text = {
+            Box {
+                Column {
+                    TextField(
+                        value = searchTime,
+                        onValueChange = { newSearchTime ->
+                            searchTime = newSearchTime
+                        },
+                        singleLine = true,
+                        placeholder = { Text("Enter time") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.surface
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Search
+                        )
+                    )
+                }
+            }
+
+        },
+        buttons = {
+            Row (modifier = Modifier.padding(5.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        openFilterByTimeDialog.value = false
+                    },
+                ) {
+                    Text(
+                        text = "Dismiss",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        viewModel.filterRecipesByTime(searchTime.toInt())
+                        navController.navigate("recipe_list_all")
+                    },
+                ) {
+                    Text(
+                        text = "Search",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        },
+    )
+}
+
+
+@Composable
+fun FilterByCuisine(
+    viewModel: DashboardViewModel,
+    openFilterByTimeDialog: MutableState<Boolean>,
+    navController: NavController
+){
+    var searchTerm by remember{ mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = { openFilterByTimeDialog.value = false },
+        title = {
+            Text(
+                text = "Filter recipes by cuisine",
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        text = {
+            Box {
+                Column {
+                    TextField(
+                        value = searchTerm,
+                        onValueChange = { newSearchTerm ->
+                            searchTerm = newSearchTerm
+                        },
+                        singleLine = true,
+                        placeholder = { Text("Enter cuisine") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.surface
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Search
+                        )
+                    )
+                }
+            }
+
+        },
+        buttons = {
+            Row (modifier = Modifier.padding(5.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        openFilterByTimeDialog.value = false
+                    },
+                ) {
+                    Text(
+                        text = "Dismiss",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        viewModel.filterRecipesByCuisine(searchTerm)
+                        navController.navigate("recipe_list_all")
+                    },
+                ) {
+                    Text(
+                        text = "Search",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        },
+    )
+}
+
+
+
+
+
 
 
 @Preview(showBackground = true)
