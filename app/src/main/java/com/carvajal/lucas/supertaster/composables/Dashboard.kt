@@ -3,7 +3,6 @@ package com.carvajal.lucas.supertaster.composables
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -65,7 +64,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
             SuggestionsCard(recipeSuggestions, recipeImages, viewModel, navController)
-            SearchCard()
+            SearchCard(viewModel, navController)
             AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
             Spacer(Modifier.padding(5.dp))
         }
@@ -159,19 +158,20 @@ fun RecipeCard(recipe: Recipe, recipeImage: Bitmap?, action: () -> Unit) {
 
 
 @Composable
-fun SearchCard() {
+fun SearchCard(viewModel: DashboardViewModel, navController: NavController) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 20.dp),
         elevation = mainCardElevation
     ) {
         Column {
-            SearchBarCard()
+            SearchBarCard(viewModel, navController)
             Row {
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Time", Icons.Filled.Alarm) {
+                        .padding(10.dp),"Time", Icons.Filled.Alarm
+                ) {
                     //TODO make it search by time
                 }
                 SearchButton(
@@ -193,8 +193,8 @@ fun SearchCard() {
 }
 
 @Composable
-fun SearchBarCard() {
-    var searchTerm by remember { mutableStateOf("")}
+fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
+    var searchTerm by remember { mutableStateOf("") }
 
     Card(
         elevation = nestedCardElevation,
@@ -215,8 +215,9 @@ fun SearchBarCard() {
             ),
             trailingIcon = {
                 IconButton(onClick = {
-                    /*TODO make it search*/
-                    Log.d("TEST TAG", "searched: $searchTerm")
+                    //TODO make it search
+                    viewModel.filterListRecipesByName(searchTerm)
+                    navController.navigate("recipe_list_all")
                 }) {
                     Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                 }
@@ -224,8 +225,7 @@ fun SearchBarCard() {
             keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    /*TODO make it search*/
-                    Log.d("TEST TAG", "searched: $searchTerm")
+                    //TODO copy from above
                 }
             )
         )
@@ -306,6 +306,7 @@ fun AllRecipesCard(
                         modifier = Modifier
                             .border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
                         onClick = {
+                            viewModel.setListRecipesToAll()
                             navController.navigate("recipe_list_all")
                         }) {
                         Icon(Icons.Default.MoreHoriz, contentDescription = "", tint = MaterialTheme.colors.onSurface)

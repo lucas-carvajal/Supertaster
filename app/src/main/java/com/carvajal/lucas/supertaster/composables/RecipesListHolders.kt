@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
+import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
 
 @Composable

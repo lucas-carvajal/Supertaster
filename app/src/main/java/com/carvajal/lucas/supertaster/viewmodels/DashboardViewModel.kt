@@ -41,6 +41,22 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
         //images.filter {}
     }
 
+    fun setListRecipesToAll() {
+        listRecipes = repository.getAllRecipes()
+    }
+
+    fun filterListRecipesByName(name: String) {
+        listRecipes = repository.filterRecipesByName(name)
+    }
+
+    fun filterRecipesByTime(time: Int) {
+        listRecipes = repository.filterRecipesByTime(time)
+    }
+
+    fun filterRecipesByCuisine(cuisine: String) {
+        listRecipes = repository.filterRecipesByCuisine(cuisine)
+    }
+
     fun getGreeting() : String {
         //TODO
         return "GOOD MORNING"
