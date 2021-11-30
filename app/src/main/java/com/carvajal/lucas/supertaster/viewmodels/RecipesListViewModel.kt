@@ -7,6 +7,8 @@ import com.carvajal.lucas.supertaster.data.RecipeImage
 
 interface RecipesListViewModel {
 
+    var listTitle: String?
+
     val listRecipeImages: LiveData<List<RecipeImage>>
     val listRecipes: LiveData<List<Recipe>>
 

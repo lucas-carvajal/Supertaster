@@ -6,6 +6,8 @@ import kotlinx.coroutines.*
 
 class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
 
+    override var listTitle: String? = null
+
     override val allCookbooks = repository.getAllCookbooks()
 
     // for RecipeViewViewModel

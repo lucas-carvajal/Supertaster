@@ -34,7 +34,7 @@ fun AllRecipesListHolder(viewModel: RecipesListViewModel, navController: NavCont
     ) {
         Column {
             Text(
-                text = "All Recipes",
+                text = viewModel.listTitle ?: "All Recipes",
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )

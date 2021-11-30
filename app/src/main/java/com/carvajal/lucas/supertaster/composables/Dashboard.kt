@@ -1,10 +1,8 @@
 package com.carvajal.lucas.supertaster.composables
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -36,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
-import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 val mainCardElevation = 5.dp
 val nestedCardElevation = 3.dp
@@ -235,6 +232,7 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
             ),
             trailingIcon = {
                 IconButton(onClick = {
+                    viewModel.listTitle = searchTerm
                     viewModel.filterListRecipesByName(searchTerm)
                     navController.navigate("recipe_list_all")
                 }) {
@@ -244,6 +242,7 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
             keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
+                    viewModel.listTitle = searchTerm
                     viewModel.filterListRecipesByName(searchTerm)
                     navController.navigate("recipe_list_all")
                 }
@@ -326,6 +325,7 @@ fun AllRecipesCard(
                         modifier = Modifier
                             .border(2.dp, MaterialTheme.colors.onSurface, shape = CircleShape),
                         onClick = {
+                            viewModel.listTitle = null
                             viewModel.setListRecipesToAll()
                             navController.navigate("recipe_list_all")
                         }) {
@@ -391,6 +391,7 @@ fun FilterByTime(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = {
+                        viewModel.listTitle = "Time: < $searchTime min"
                         viewModel.filterRecipesByTime(searchTime.toInt())
                         navController.navigate("recipe_list_all")
                     },
@@ -459,6 +460,7 @@ fun FilterByCuisine(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = {
+                        viewModel.listTitle = searchTerm
                         viewModel.filterRecipesByCuisine(searchTerm)
                         navController.navigate("recipe_list_all")
                     },

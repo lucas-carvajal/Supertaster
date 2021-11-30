@@ -12,6 +12,8 @@ import java.util.*
 
 class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
 
+    override var listTitle: String? = null
+
     // for RecipeViewViewModel
     override lateinit var viewRecipe: LiveData<Recipe>
     override lateinit var viewRecipeImages: LiveData<List<RecipeImage>>
