@@ -16,10 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
@@ -89,7 +91,7 @@ fun RecipeListItem(
                             .aspectRatio(1f)
                     ) {
                         Text(
-                            text = "No image available",
+                            text = stringResource(R.string.no_image_available),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxSize()
                         )

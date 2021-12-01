@@ -13,10 +13,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Cookbook
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
@@ -43,7 +45,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
             .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopRow(heading = "MY COOKBOOKS", icon = Icons.Default.Add) {
+            TopRow(heading = stringResource(R.string.my_cookbooks_caps), icon = Icons.Default.Add) {
                 openDialog.value = true
             }
 
@@ -53,7 +55,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
                 }
             } else {
                 Text(
-                    text = "Tap the + to create your first cookbook",
+                    text = stringResource(R.string.tap_to_create_first_cookbook),
                     modifier = Modifier.padding(top = 30.dp)
                 )
             }
@@ -91,7 +93,7 @@ fun NewCookbookDialog(viewModel: CookbookViewModel, openDialog: MutableState<Boo
         onDismissRequest = { openDialog.value = false },
         title = {
             Text(
-                text = "Add new Cookbook",
+                text = stringResource(R.string.add_new_cookbook),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(5.dp)
             )
@@ -113,7 +115,7 @@ fun NewCookbookDialog(viewModel: CookbookViewModel, openDialog: MutableState<Boo
                     },
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    Text(text = "Dismiss")
+                    Text(text = stringResource(R.string.dismiss))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
@@ -123,7 +125,7 @@ fun NewCookbookDialog(viewModel: CookbookViewModel, openDialog: MutableState<Boo
                     },
                     modifier = Modifier.padding(5.dp)
                 ) {
-                    Text(text = "Add")
+                    Text(text = stringResource(R.string.add))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }

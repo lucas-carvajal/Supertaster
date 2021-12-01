@@ -18,9 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
@@ -53,7 +55,7 @@ fun RecipeView(viewModel: RecipeViewViewModel) {
         Column(modifier = Modifier
             .verticalScroll(scrollState)
         ) {
-            TopRow(heading = recipe.value?.title ?: "error", icon = Icons.Default.Edit) {
+            TopRow(heading = recipe.value?.title ?: stringResource(R.string.error), icon = Icons.Default.Edit) {
                 // TODO navigate to add view to edit the recipe
             }
             PhotoSlideshow(recipeImages as State<List<RecipeImage>>)
@@ -105,7 +107,7 @@ fun PhotoSlideshow(photos: State<List<RecipeImage>?>) {
                 .padding(10.dp)
         ){
             Text(
-                text = "No images available",
+                text = stringResource(R.string.no_image_available),
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -185,17 +187,17 @@ fun TimeAndServingsRow(recipe: State<Recipe?>) {
         Spacer(modifier = Modifier.weight(1f))
         NumWithDesc(
             number = recipe.value?.servings ?: 0,
-            description = "Servings"
+            description = stringResource(R.string.servings)
         )
         Spacer(modifier = Modifier.weight(1f))
         NumWithDesc(
             number = recipe.value?.prepTime ?: 0,
-            description = "Prep Time"
+            description = stringResource(R.string.prep_time)
         )
         Spacer(modifier = Modifier.weight(1f))
         NumWithDesc(
             number = recipe.value?.cookTime ?: 0,
-            description = "Cook Time"
+            description = stringResource(R.string.cook_time)
         )
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -235,7 +237,7 @@ fun IngredientsList(ingredients: State<List<RecipeIngredient>?>) {
             }
         } else {
             Text(
-                text = "No ingredients available",
+                text = stringResource(R.string.no_ingredients_available),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -275,7 +277,7 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
             }
         } else {
             Text(
-                text = "No steps available",
+                text = stringResource(R.string.no_steps_available),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -297,7 +299,7 @@ fun AddToCookbook(
         onDismissRequest = { openDialog.value = false },
         title = {
             Text(
-                text = "Add new Cookbook",
+                text = stringResource(R.string.add_new_cookbook),
                 fontWeight = FontWeight.Bold,
             )
         },
@@ -335,7 +337,7 @@ fun AddToCookbook(
                     },
                 ) {
                     Text(
-                        text = "Dismiss",
+                        text = stringResource(R.string.dismiss),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )

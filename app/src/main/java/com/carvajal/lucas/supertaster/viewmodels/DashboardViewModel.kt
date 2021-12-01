@@ -79,9 +79,6 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
             else -> repository.getRecipeByType("Other")
         }
 
-
-
-        //TODO
         return suggestions
     }
 

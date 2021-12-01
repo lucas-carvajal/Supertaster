@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
@@ -34,7 +36,7 @@ fun AllRecipesListHolder(viewModel: RecipesListViewModel, navController: NavCont
     ) {
         Column {
             Text(
-                text = viewModel.listTitle ?: "All Recipes",
+                text = viewModel.listTitle ?: stringResource(R.string.all_recipes),
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )
@@ -63,7 +65,7 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel, navController: NavCo
             .padding(10.dp)
     ) {
         Column {
-            TopRow(heading = cookbook.value?.name ?: "Error", icon = Icons.Default.Edit) {
+            TopRow(heading = cookbook.value?.name ?: stringResource(R.string.error), icon = Icons.Default.Edit) {
                 //TODO edit the list
                 Toast.makeText(context, "Edit the List", Toast.LENGTH_SHORT).show()
             }

@@ -27,11 +27,13 @@ import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
 
@@ -54,7 +56,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     }
 
     if (openFilterByCuisineDialog.value) {
-        FilterByCuisine(viewModel, openFilterByTimeDialog, navController)
+        FilterByCuisine(viewModel, openFilterByCuisineDialog, navController)
     }
 
 
@@ -98,7 +100,7 @@ fun SuggestionsCard(
     ){
         Column {
             Text(
-                "Suggestions for you",
+                stringResource(R.string.suggestions_for_you),
                 fontSize = MaterialTheme.typography.h6.fontSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp, 5.dp)
@@ -185,21 +187,21 @@ fun SearchCard(
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Time", Icons.Filled.Alarm
+                        .padding(10.dp), stringResource(R.string.time), Icons.Filled.Alarm
                 ) {
                     openFilterByTimeDialog.value = true
                 }
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Ingredients", Icons.Filled.LunchDining)
+                        .padding(10.dp),stringResource(R.string.ingredients), Icons.Filled.LunchDining)
                 {
                     //TODO make it search by ingredients
                 }
                 SearchButton(
                     Modifier
                         .weight(1f)
-                        .padding(10.dp),"Cuisine", Icons.Filled.Language)
+                        .padding(10.dp), stringResource(R.string.cuisine), Icons.Filled.Language)
                 {
                     openFilterByCuisineDialog.value = true
                 }
@@ -226,7 +228,7 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
                 searchTerm = newSearchTerm
             },
             singleLine = true,
-            placeholder = { Text("Search Recipes") },
+            placeholder = { Text(stringResource(R.string.search_recipes)) },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.surface
             ),
@@ -236,7 +238,7 @@ fun SearchBarCard(viewModel: DashboardViewModel, navController: NavController) {
                     viewModel.filterListRecipesByName(searchTerm)
                     navController.navigate("recipe_list_all")
                 }) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = stringResource(R.string.search))
                 }
             },
             keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
@@ -294,7 +296,7 @@ fun AllRecipesCard(
     ){
         Column {
             Text(
-                "All Recipes",
+                stringResource(R.string.all_recipes),
                 fontSize = MaterialTheme.typography.h6.fontSize,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp, 5.dp)
@@ -349,7 +351,7 @@ fun FilterByTime(
         onDismissRequest = { openFilterByTimeDialog.value = false },
         title = {
             Text(
-                text = "Filter recipes by time",
+                text = stringResource(R.string.filter_recipes_by_time),
                 fontWeight = FontWeight.Bold,
             )
         },
@@ -362,7 +364,7 @@ fun FilterByTime(
                             searchTime = newSearchTime
                         },
                         singleLine = true,
-                        placeholder = { Text("Enter time") },
+                        placeholder = { Text(stringResource(R.string.enter_time)) },
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = MaterialTheme.colors.surface
                         ),
@@ -384,7 +386,7 @@ fun FilterByTime(
                     },
                 ) {
                     Text(
-                        text = "Dismiss",
+                        text = stringResource(R.string.dismiss),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -397,7 +399,7 @@ fun FilterByTime(
                     },
                 ) {
                     Text(
-                        text = "Search",
+                        text = stringResource(R.string.search),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -411,15 +413,15 @@ fun FilterByTime(
 @Composable
 fun FilterByCuisine(
     viewModel: DashboardViewModel,
-    openFilterByTimeDialog: MutableState<Boolean>,
+    openFilterByCuisineDialog: MutableState<Boolean>,
     navController: NavController
 ){
     var searchTerm by remember{ mutableStateOf("") }
     AlertDialog(
-        onDismissRequest = { openFilterByTimeDialog.value = false },
+        onDismissRequest = { openFilterByCuisineDialog.value = false },
         title = {
             Text(
-                text = "Filter recipes by cuisine",
+                text = stringResource(R.string.filter_by_cuisine),
                 fontWeight = FontWeight.Bold,
             )
         },
@@ -432,7 +434,7 @@ fun FilterByCuisine(
                             searchTerm = newSearchTerm
                         },
                         singleLine = true,
-                        placeholder = { Text("Enter cuisine") },
+                        placeholder = { Text(stringResource(R.string.enter_cuisine)) },
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = MaterialTheme.colors.surface
                         ),
@@ -449,11 +451,11 @@ fun FilterByCuisine(
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = {
-                        openFilterByTimeDialog.value = false
+                        openFilterByCuisineDialog.value = false
                     },
                 ) {
                     Text(
-                        text = "Dismiss",
+                        text = stringResource(R.string.dismiss),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -466,7 +468,7 @@ fun FilterByCuisine(
                     },
                 ) {
                     Text(
-                        text = "Search",
+                        text = stringResource(R.string.search),
                         textAlign = TextAlign.Center
                     )
                 }

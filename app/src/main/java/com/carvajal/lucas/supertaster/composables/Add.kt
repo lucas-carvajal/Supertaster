@@ -24,10 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
@@ -59,37 +61,37 @@ fun AddScreen(viewModel: AddViewModel) {
             modifier = Modifier.verticalScroll(scrollState)
         ) {
             Text(
-                text = "ADD A RECIPE",
+                text = stringResource(R.string.add_a_recipe_caps),
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )
-            Section(title = "Title") {
+            Section(title = stringResource(R.string.title)) {
                 SingleInputField(
                     title,
                     {
                         title = it
                         viewModel.title = it
                     },
-                    "Title"
+                    stringResource(R.string.title)
                 )
             }
-            Section(title = "Photos") {
+            Section(title = stringResource(R.string.photos)) {
                 PhotoRow(viewModel, context)
             }
-            Section(title = "Cuisine") {
+            Section(title = stringResource(R.string.cuisine)) {
                 SingleInputField(
                     cuisine,
                     {
                         cuisine = it
                         viewModel.cuisine = it
                     },
-                    "Cuisine"
+                    stringResource(R.string.cuisine)
                 )
             }
-            Section(title = "Type of Meal") {
+            Section(title = stringResource(R.string.type_of_meal)) {
                 ChooseTypeOfMealButton(viewModel)
             }
-            Section(title = "Servings") {
+            Section(title = stringResource(R.string.servings)) {
                 ServingsRow(servings,
                     {
                         servings++
@@ -103,7 +105,7 @@ fun AddScreen(viewModel: AddViewModel) {
                     }
                 )
             }
-            Section(title = "Prep Time") {
+            Section(title = stringResource(R.string.prep_time)) {
                 PrepTimeRow(prepTime,
                     {
                         prepTime += 5
@@ -117,7 +119,7 @@ fun AddScreen(viewModel: AddViewModel) {
                     }
                 )
             }
-            Section(title = "Cook Time") {
+            Section(title = stringResource(R.string.cook_time)) {
                 CookTimeRow(cookTime,
                     {
                         cookTime += 5
@@ -131,10 +133,10 @@ fun AddScreen(viewModel: AddViewModel) {
                     }
                 )
             }
-            Section(title = "Ingredients") {
+            Section(title = stringResource(R.string.ingredients)) {
                 IngredientsSection(viewModel)
             }
-            Section(title = "Steps") {
+            Section(title = stringResource(R.string.steps)) {
                 StepsSection(viewModel)
             }
 
@@ -159,7 +161,7 @@ fun AddScreen(viewModel: AddViewModel) {
                     .padding(10.dp)
             ) {
                 Text(
-                    text = "Save Recipe",
+                    text = stringResource(R.string.save_recipe),
                     color = Color.White
                 )
             }
@@ -462,7 +464,7 @@ fun IngredientsSection(viewModel: AddViewModel) {
                         viewModel.setIngredients(ingredients as MutableList<Pair<String, String>>)
                     },
                     singleLine = true,
-                    label = { Text(text = "Ingredient")},
+                    label = { Text(text = stringResource(R.string.ingredient))},
                     modifier = Modifier
                         .weight(5f)
                         .padding(5.dp)
@@ -483,7 +485,7 @@ fun IngredientsSection(viewModel: AddViewModel) {
                         viewModel.setIngredients(ingredients as MutableList<Pair<String, String>>)
                     },
                     singleLine = true,
-                    label = { Text(text = "Amount")},
+                    label = { Text(text = stringResource(R.string.amount))},
                     modifier = Modifier
                         .weight(3f)
                         .padding(5.dp)
