@@ -17,11 +17,19 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
     override lateinit var viewRecipeSteps: LiveData<List<RecipeStep>>
 
     private var currentCookbookId: Long = -1
+        set(newId: Long) {
+            field = newId
+            currentCookbook = repository.getCookbook(currentCookbookId)
+            recipesInCookbookRaw = repository.getAllCookbookRecipes(currentCookbookId)
+            recipesInCookbook = Transformations.map(recipesInCookbookRaw) { list ->
+                list.map { it.recipeId }
+            }
+        }
 
     var currentCookbook: LiveData<Cookbook> = repository.getCookbook(currentCookbookId)
     private var recipesInCookbookRaw: LiveData<List<CookbookRecipe>> = repository
         .getAllCookbookRecipes(currentCookbookId)
-    val recipesInCookbook = Transformations.map(recipesInCookbookRaw) { list ->
+    var recipesInCookbook = Transformations.map(recipesInCookbookRaw) { list ->
         list.map { it.recipeId }
     }
 
