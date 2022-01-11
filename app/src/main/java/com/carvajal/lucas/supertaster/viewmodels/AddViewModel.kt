@@ -42,7 +42,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
     fun getMealTypes(): List<String> {
-        return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Other")
+        return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
     }
 
     fun getIngredients(): MutableList<Pair<String, String>> {
