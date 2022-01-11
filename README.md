@@ -31,3 +31,8 @@ This project was a project I did for my mobile development class
 * After adding an item in the **Add** screen, clear all fields
 * Make search by ingredients on **Dashboard** work
 * Make 'add' button work in **RecipesList**
+* Fix Images in **Add**: proper resolution, view function, delete function
+* Fix Images in **RecipeView**: make them bigger, view function
+
+* Make shopping list work
+* Make Weekly Schedule work
