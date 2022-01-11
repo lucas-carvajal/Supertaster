@@ -18,7 +18,8 @@ You can also create an account to sync your data across devices.
 * Firebase Authentication and Account Management
 
 ### Disclaimers
-This project was a project I did for my mobile development class
+This was a project I did for my mobile development class.  
+After the class I continued development of the app.
 
 
 ---
