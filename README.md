@@ -34,5 +34,7 @@ This project was a project I did for my mobile development class
 * Fix Images in **Add**: proper resolution, view function, delete function
 * Fix Images in **RecipeView**: make them bigger, view function
 
+---
+
 * Make shopping list work
 * Make Weekly Schedule work
