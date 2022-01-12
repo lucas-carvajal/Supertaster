@@ -23,15 +23,15 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     var prepTime: Int = 5
     var cookTime: Int = 5
 
-    private var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
-    private var ingredients: MutableList<Pair<String, String>> = mutableListOf()
-    private var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
+    var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
+    var ingredients: MutableList<Pair<String, String>> = mutableListOf()
+    var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
-    fun getPhotos(): List<Bitmap> {
-        //TODO
-        //return listOf(R.drawable.tacos_al_pastor)
-        return recipePhotos
-    }
+//    fun getPhotos(): List<Bitmap> {
+//        //TODO
+//        //return listOf(R.drawable.tacos_al_pastor)
+//        return recipePhotos
+//    }
 
     fun addPhoto(image: Bitmap) {
         recipePhotos.add(image)
@@ -45,50 +45,78 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
     }
 
-    fun getIngredients(): MutableList<Pair<String, String>> {
-        return ingredients
-    }
+//    fun getIngredients(): MutableList<Pair<String, String>> {
+//        return ingredients
+//    }
 
-    fun setIngredients(newIngredientsList: MutableList<Pair<String, String>>) {
-        ingredients = newIngredientsList
-    }
+//    fun setIngredients(newIngredientsList: MutableList<Pair<String, String>>) {
+//        ingredients = newIngredientsList
+//    }
 
-    fun getSteps(): MutableList<Triple<Int, String, String>> {
-        return steps
-    }
-
-    fun setSteps(newStepsList: MutableList<Triple<Int, String, String>>) {
-        steps = newStepsList
-    }
+//    fun getSteps(): MutableList<Triple<Int, String, String>> {
+//        return steps
+//    }
+//
+//    fun setSteps(newStepsList: MutableList<Triple<Int, String, String>>) {
+//        steps = newStepsList
+//    }
 
     fun saveRecipe(context: Context): Boolean {
         //TODO try catch ?
         val mealTypes = getMealTypes()
 
+        // save all variables
+        val savedTitle = title
+        val savedCuisine = cuisine
+        val savedTypeOfMealIndex = typeOfMealIndex
+        val savedServings = servings
+        val savedPrepTime = prepTime
+        val savedCookTime = cookTime
+
+        val savedRecipePhotos = recipePhotos
+        val savedIngredients = ingredients
+        val savedSteps = steps
+
+        // cleanup vars for new recipe
+        title = ""
+        cuisine = ""
+        typeOfMealIndex = 0
+        servings = 2
+        prepTime = 5
+        cookTime = 5
+        recipePhotos = recipePhotos.toMutableList().apply { clear() }
+        ingredients = ingredients.toMutableList().apply { clear() }
+        steps = steps.toMutableList().apply { clear() }
+
+        println("RECIPE PHOTOS: $recipePhotos")
+        println("I N G R E D I E N T S: $ingredients")
+        println("STEPS: $steps")
+
+        // submit recipe
         viewModelScope.launch(Dispatchers.IO) {
             val recipeId = repository.addRecipe(
                 Recipe(
                     UniqueIdGenerator.generateLongId(),
-                    title,
-                    cuisine,
-                    mealTypes[typeOfMealIndex],
-                    servings,
-                    prepTime,
-                    cookTime
+                    savedTitle,
+                    savedCuisine,
+                    mealTypes[savedTypeOfMealIndex],
+                    savedServings,
+                    savedPrepTime,
+                    savedCookTime
                 )
             )
 
-            recipePhotos.forEach { photo ->
-                val photoLocation = savePhoto(photo, title, context)
-                repository.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId!!, photoLocation))
+            savedRecipePhotos.forEach { photo ->
+                val photoLocation = savePhoto(photo, savedTitle, context)
+                repository.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId, photoLocation))
             }
 
-            ingredients.forEach{ ingredient ->
-                repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId!!, ingredient.first, ingredient.second))
+            savedIngredients.forEach{ ingredient ->
+                repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId, ingredient.first, ingredient.second))
             }
 
-            steps.forEach{ step ->
-                repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId!!, step.first, step.second, step.third))
+            savedSteps.forEach{ step ->
+                repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId, step.first, step.second, step.third))
             }
         }
         return true
