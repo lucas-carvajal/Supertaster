@@ -2,6 +2,12 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.carvajal.lucas.supertaster.data.*
@@ -24,8 +30,30 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     var cookTime: Int = 5
 
     var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
-    var ingredients: MutableList<Pair<String, String>> = mutableListOf()
+    //var ingredients: List<Pair<String, String>> = mutableListOf()
     var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
+
+
+    private var _ingredients = MutableLiveData(mutableListOf<Pair<String, String>>())
+    var ingredients: LiveData<List<Pair<String, String>>> = _ingredients as LiveData<List<Pair<String, String>>>
+
+    fun addIngredient(newIngredient: Pair<String, String>) {
+        _ingredients.value?.add(newIngredient)
+
+        val ing = ingredients.value
+    }
+
+    fun updateIngredient(index: Int, newIngredient: Pair<String, String>) {
+        _ingredients.value?.set(index, newIngredient)
+    }
+
+    fun removeIngredient(index: Int) {
+        //TODO
+    }
+
+    fun clearIngredients() {
+        _ingredients.value?.clear()
+    }
 
 //    fun getPhotos(): List<Bitmap> {
 //        //TODO
@@ -53,6 +81,8 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 //        ingredients = newIngredientsList
 //    }
 
+
+
 //    fun getSteps(): MutableList<Triple<Int, String, String>> {
 //        return steps
 //    }
@@ -74,7 +104,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val savedCookTime = cookTime
 
         val savedRecipePhotos = recipePhotos
-        val savedIngredients = ingredients
+        val savedIngredients = ingredients.value
         val savedSteps = steps
 
         // cleanup vars for new recipe
@@ -85,7 +115,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         prepTime = 5
         cookTime = 5
         recipePhotos = recipePhotos.toMutableList().apply { clear() }
-        ingredients = ingredients.toMutableList().apply { clear() }
+        _ingredients.value?.clear()
         steps = steps.toMutableList().apply { clear() }
 
         println("RECIPE PHOTOS: $recipePhotos")
@@ -111,7 +141,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                 repository.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId, photoLocation))
             }
 
-            savedIngredients.forEach{ ingredient ->
+            savedIngredients?.forEach{ ingredient ->
                 repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId, ingredient.first, ingredient.second))
             }
 

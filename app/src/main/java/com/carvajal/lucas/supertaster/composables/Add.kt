@@ -30,10 +30,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carvajal.lucas.supertaster.R
-import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 
 const val REQUEST_IMAGE_CAPTURE = 1
 
@@ -443,14 +444,14 @@ fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime:
 
 @Composable
 fun IngredientsSection(viewModel: AddViewModel) {
-    var ingredients: List<Pair<String, String>> by rememberSaveable { mutableStateOf( viewModel.ingredients ) }
+    val ingredients by viewModel.ingredients.observeAsState(listOf())
 
     Column(modifier = Modifier.padding(top = 10.dp)) {
 
         ingredients.forEachIndexed { index, recipeIngredient ->
             var name by remember { mutableStateOf(recipeIngredient.first) }
             var amount by remember { mutableStateOf(recipeIngredient.second) }
-            
+
             Row(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = name,
@@ -460,10 +461,15 @@ fun IngredientsSection(viewModel: AddViewModel) {
                             newName, recipeIngredient.second
                         )
 
-                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
-                        newIngredientsList[index] = newIngredient
-                        ingredients = newIngredientsList
-                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+    //                        ingredients[index] = newIngredient
+    //                        viewModel.ingredients = ingredients
+
+    //                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
+    //                        newIngredientsList[index] = newIngredient
+    //                        ingredients = newIngredientsList
+    //                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+
+                        viewModel.updateIngredient(index, newIngredient)
                     },
                     singleLine = true,
                     label = { Text(text = stringResource(R.string.ingredient))},
@@ -481,10 +487,15 @@ fun IngredientsSection(viewModel: AddViewModel) {
                             recipeIngredient.first, newAmount
                         )
 
-                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
-                        newIngredientsList[index] = newIngredient
-                        ingredients = newIngredientsList
-                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+    //                        ingredients[index] = newIngredient
+    //                        viewModel.ingredients = ingredients
+
+    //                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
+    //                        newIngredientsList[index] = newIngredient
+    //                        ingredients = newIngredientsList
+    //                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+
+                        viewModel.updateIngredient(index, newIngredient)
                     },
                     singleLine = true,
                     label = { Text(text = stringResource(R.string.amount))},
@@ -496,8 +507,16 @@ fun IngredientsSection(viewModel: AddViewModel) {
         }
 
         Button(onClick = {
-                ingredients = ingredients + Pair("", "")
-                viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+//            ingredients.add(Pair("", ""))
+
+            if (ingredients.size > 2) {
+                viewModel.clearIngredients()
+            } else {
+                viewModel.addIngredient(Pair("", ""))
+//                ingredients = (ingredients + Pair("", "")) as MutableList<Pair<String, String>>
+//                viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
+            }
+
             },
             modifier = Modifier
                 .fillMaxWidth()
