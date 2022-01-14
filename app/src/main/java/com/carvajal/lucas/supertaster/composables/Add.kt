@@ -17,8 +17,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -55,8 +53,6 @@ fun AddScreen(viewModel: AddViewModel) {
     var prepTime by remember { mutableStateOf(viewModel.prepTime) }
     var cookTime by remember { mutableStateOf(viewModel.cookTime) }
 
-    var photos by rememberSaveable { mutableStateOf(viewModel.recipePhotos) }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +77,7 @@ fun AddScreen(viewModel: AddViewModel) {
                 )
             }
             Section(title = stringResource(R.string.photos)) {
-                PhotoRow(photos, viewModel, context)
+                PhotoRow(viewModel, context)
             }
             Section(title = stringResource(R.string.cuisine)) {
                 SingleInputField(
@@ -201,7 +197,8 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 }
 
 @Composable
-fun PhotoRow(photos: MutableList<Bitmap>, viewModel: AddViewModel, context: Context) {
+fun PhotoRow(viewModel: AddViewModel, context: Context) {
+    val photos = viewModel.recipePhotos
 
     LazyRow {
         itemsIndexed(photos) { index, photo ->
@@ -217,10 +214,7 @@ fun PhotoRow(photos: MutableList<Bitmap>, viewModel: AddViewModel, context: Cont
                         .clip(RoundedCornerShape(5.dp))
                         .width(80.dp)
                         .aspectRatio(1f)
-                        .clickable {
-                            viewModel.deletePhoto(index)
-                            photos.removeAt(index)
-                        }
+                        .clickable { viewModel.removeRecipePhoto(index) }
                 )
             }
         }
@@ -265,8 +259,8 @@ private fun dispatchTakePictureIntent(context: Context) {
     }
 }
 
-fun addRecipeImage(image: Bitmap) {
-    addViewModel.addPhoto(image)
+fun addRecipeImage(bitmap: Bitmap) {
+    addViewModel.addRecipePhotos(bitmap)
 }
 
 

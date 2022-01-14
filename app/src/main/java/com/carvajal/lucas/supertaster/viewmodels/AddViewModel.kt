@@ -32,13 +32,29 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     var prepTime: Int = 5
     var cookTime: Int = 5
 
-    var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
-    //var ingredients: List<Pair<String, String>> = mutableListOf()
+//    var recipePhotos: MutableList<Bitmap> = mutableListOf()
+//    var ingredients: List<Pair<String, String>> = mutableListOf()
 //    var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
-
+    val recipePhotos = mutableStateListOf<Bitmap>()
     val ingredients = mutableStateListOf<Ingredient>()
     val steps = mutableStateListOf<Step>()
+
+    fun addRecipePhotos(bitmap: Bitmap) {
+        recipePhotos.add(bitmap)
+    }
+
+    fun updateRecipePhotos(index: Int, bitmap: Bitmap) {
+        recipePhotos[index] = bitmap
+    }
+
+    fun removeRecipePhoto(index: Int) {
+        recipePhotos.removeAt(index)
+    }
+
+    private fun clearRecipePhotos() {
+        recipePhotos.clear()
+    }
 
     fun addIngredient(ingredient: Ingredient) {
         ingredients.add(ingredient)
@@ -48,7 +64,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         ingredients[index] = ingredient
     }
 
-    fun clearIngredients() {
+    private fun clearIngredients() {
         ingredients.clear()
     }
 
@@ -60,7 +76,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         steps[index] = step
     }
 
-    fun clearSteps() {
+    private fun clearSteps() {
         steps.clear()
     }
 
@@ -99,13 +115,13 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 //        return recipePhotos
 //    }
 
-    fun addPhoto(image: Bitmap) {
-        recipePhotos.add(image)
-    }
-
-    fun deletePhoto(index: Int) {
-        recipePhotos.removeAt(index)
-    }
+//    fun addPhoto(image: Bitmap) {
+//        recipePhotos.add(image)
+//    }
+//
+//    fun deletePhoto(index: Int) {
+//        recipePhotos.removeAt(index)
+//    }
 
     fun getMealTypes(): List<String> {
         return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
@@ -152,7 +168,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         servings = 2
         prepTime = 5
         cookTime = 5
-        recipePhotos = recipePhotos.toMutableList().apply { clear() }
+        clearRecipePhotos()
         clearIngredients()
         clearSteps()
 
