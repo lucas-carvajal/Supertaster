@@ -144,8 +144,9 @@ fun AddScreen(viewModel: AddViewModel) {
             Button(onClick = {
                 if (viewModel.title.trim().isEmpty()) {
                     Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
-                } else if (viewModel.typeOfMealIndex == 0) {
-                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
+                // TODO comment in again
+//                } else if (viewModel.typeOfMealIndex == 0) {
+//                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
                     val success = viewModel.saveRecipe(context)
                     if (success) {

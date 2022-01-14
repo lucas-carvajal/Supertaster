@@ -32,10 +32,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     var prepTime: Int = 5
     var cookTime: Int = 5
 
-//    var recipePhotos: MutableList<Bitmap> = mutableListOf()
-//    var ingredients: List<Pair<String, String>> = mutableListOf()
-//    var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
-
     val recipePhotos = mutableStateListOf<Bitmap>()
     val ingredients = mutableStateListOf<Ingredient>()
     val steps = mutableStateListOf<Step>()
@@ -81,69 +77,10 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
 
-
-
-
-//    private var _ingredients = MutableLiveData(mutableListOf<Pair<String, String>>())
-//    var ingredients: LiveData<MutableList<Pair<String, String>>> = _ingredients
-//
-//
-//    fun addIngredient(newIngredient: Pair<String, String>) {
-//        _ingredients.value?.add(newIngredient)
-//
-//        val ing = ingredients.value
-//    }
-//
-//    fun updateIngredient(index: Int, newIngredient: Pair<String, String>) {
-//        _ingredients.value?.set(index, newIngredient)
-//    }
-//
-//    fun removeIngredient(index: Int) {
-//        //TODO
-//    }
-//
-//    fun clearIngredients() {
-//        _ingredients.value?.clear()
-//    }
-
-
-    //////////////////////////////////////////////////////////////////
-
-//    fun getPhotos(): List<Bitmap> {
-//        //TODO
-//        //return listOf(R.drawable.tacos_al_pastor)
-//        return recipePhotos
-//    }
-
-//    fun addPhoto(image: Bitmap) {
-//        recipePhotos.add(image)
-//    }
-//
-//    fun deletePhoto(index: Int) {
-//        recipePhotos.removeAt(index)
-//    }
-
     fun getMealTypes(): List<String> {
         return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
     }
 
-//    fun getIngredients(): MutableList<Pair<String, String>> {
-//        return ingredients
-//    }
-
-//    fun setIngredients(newIngredientsList: MutableList<Pair<String, String>>) {
-//        ingredients = newIngredientsList
-//    }
-
-
-
-//    fun getSteps(): MutableList<Triple<Int, String, String>> {
-//        return steps
-//    }
-//
-//    fun setSteps(newStepsList: MutableList<Triple<Int, String, String>>) {
-//        steps = newStepsList
-//    }
 
     fun saveRecipe(context: Context): Boolean {
         //TODO try catch ?
@@ -157,9 +94,9 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val savedPrepTime = prepTime
         val savedCookTime = cookTime
 
-        val savedRecipePhotos = recipePhotos
-        val savedIngredients = ingredients
-        val savedSteps = steps
+        val savedRecipePhotos = recipePhotos.toList()
+        val savedIngredients = ingredients.toList()
+        val savedSteps = steps.toList()
 
         // cleanup vars for new recipe
         title = ""
@@ -191,7 +128,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                 repository.addRecipeImage(RecipeImage(UniqueIdGenerator.generateLongId(), recipeId, photoLocation))
             }
 
-            savedIngredients?.forEach{ ingredient ->
+            savedIngredients.forEach{ ingredient ->
                 repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId, ingredient.name, ingredient.amount))
             }
 
