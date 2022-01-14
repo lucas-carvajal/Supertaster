@@ -17,6 +17,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +34,9 @@ import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import com.carvajal.lucas.supertaster.viewmodels.Ingredient
+import com.carvajal.lucas.supertaster.viewmodels.Step
+
 
 const val REQUEST_IMAGE_CAPTURE = 1
 
@@ -444,31 +446,20 @@ fun CookTimeRow(cookTime: Int, incrementCookTime: () -> Unit, decrementCookTime:
 
 @Composable
 fun IngredientsSection(viewModel: AddViewModel) {
-    val ingredients by viewModel.ingredients.observeAsState(listOf())
+    val ingredients = viewModel.ingredients
 
     Column(modifier = Modifier.padding(top = 10.dp)) {
-
+        
         ingredients.forEachIndexed { index, recipeIngredient ->
-            var name by remember { mutableStateOf(recipeIngredient.first) }
-            var amount by remember { mutableStateOf(recipeIngredient.second) }
+            var name by remember { mutableStateOf(recipeIngredient.name) }
+            var amount by remember { mutableStateOf(recipeIngredient.amount) }
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { newName ->
                         name = newName
-                        val newIngredient = Pair(
-                            newName, recipeIngredient.second
-                        )
-
-    //                        ingredients[index] = newIngredient
-    //                        viewModel.ingredients = ingredients
-
-    //                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
-    //                        newIngredientsList[index] = newIngredient
-    //                        ingredients = newIngredientsList
-    //                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
-
+                        val newIngredient = Ingredient(newName, recipeIngredient.amount)
                         viewModel.updateIngredient(index, newIngredient)
                     },
                     singleLine = true,
@@ -482,19 +473,7 @@ fun IngredientsSection(viewModel: AddViewModel) {
                     value = amount,
                     onValueChange = { newAmount ->
                         amount = newAmount
-
-                        val newIngredient = Pair(
-                            recipeIngredient.first, newAmount
-                        )
-
-    //                        ingredients[index] = newIngredient
-    //                        viewModel.ingredients = ingredients
-
-    //                        var newIngredientsList: MutableList<Pair<String, String>> = ingredients.toMutableList()
-    //                        newIngredientsList[index] = newIngredient
-    //                        ingredients = newIngredientsList
-    //                        viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
-
+                        val newIngredient = Ingredient(recipeIngredient.name, newAmount)
                         viewModel.updateIngredient(index, newIngredient)
                     },
                     singleLine = true,
@@ -507,16 +486,7 @@ fun IngredientsSection(viewModel: AddViewModel) {
         }
 
         Button(onClick = {
-//            ingredients.add(Pair("", ""))
-
-            if (ingredients.size > 2) {
-                viewModel.clearIngredients()
-            } else {
-                viewModel.addIngredient(Pair("", ""))
-//                ingredients = (ingredients + Pair("", "")) as MutableList<Pair<String, String>>
-//                viewModel.ingredients = ingredients as MutableList<Pair<String, String>>
-            }
-
+                viewModel.addIngredient(Ingredient("", ""))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -529,12 +499,12 @@ fun IngredientsSection(viewModel: AddViewModel) {
 
 @Composable
 fun StepsSection(viewModel: AddViewModel) {
-    var steps: List<Triple<Int, String, String>> by rememberSaveable { mutableStateOf( viewModel.steps ) }
+    val steps = viewModel.steps
     
     Column(modifier = Modifier.padding(top = 10.dp)) {
         steps.forEachIndexed { index, recipeStep ->
-            var description by remember { mutableStateOf(recipeStep.second) }
-            var extraNotes by remember { mutableStateOf(recipeStep.third) }
+            var description by remember { mutableStateOf(recipeStep.description) }
+            var extraNotes by remember { mutableStateOf(recipeStep.extraNote) }
 
             Card(
                 modifier = Modifier.padding(10.dp),
@@ -548,18 +518,11 @@ fun StepsSection(viewModel: AddViewModel) {
                         value = description,
                         onValueChange = { newDescription ->
                             description = newDescription
-
-                            val newStep = Triple(
-                                recipeStep.first, newDescription, recipeStep.third
-                            )
-
-                            var newStepsList: MutableList<Triple<Int, String, String>> = steps.toMutableList()
-                            newStepsList[index] = newStep
-                            steps = newStepsList
-                            viewModel.steps = steps as MutableList<Triple<Int, String, String>>
+                            val newStep = Step(recipeStep.sequence, newDescription, recipeStep.extraNote)
+                            viewModel.updateSteps(index, newStep)
                         },
                         singleLine = false,
-                        label = { Text(text = "Step ${recipeStep.first} - Description")},
+                        label = { Text(text = "Step ${recipeStep.sequence} - Description")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(5.dp)
@@ -569,18 +532,11 @@ fun StepsSection(viewModel: AddViewModel) {
                         value = extraNotes,
                         onValueChange = { newExtraNotes ->
                             extraNotes = newExtraNotes
-
-                            val newStep = Triple(
-                                recipeStep.first, recipeStep.second, newExtraNotes
-                            )
-
-                            var newStepsList: MutableList<Triple<Int, String, String>> = steps.toMutableList()
-                            newStepsList[index] = newStep
-                            steps = newStepsList
-                            viewModel.steps = steps as MutableList<Triple<Int, String, String>>
+                            val newStep = Step(recipeStep.sequence, recipeStep.description, newExtraNotes)
+                            viewModel.updateSteps(index, newStep)
                         },
                         singleLine = false,
-                        label = { Text(text = "Step ${recipeStep.first} - Extra Notes")},
+                        label = { Text(text = "Step ${recipeStep.sequence} - Extra Notes")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(5.dp)
@@ -590,8 +546,7 @@ fun StepsSection(viewModel: AddViewModel) {
         }
 
         Button(onClick = {
-            steps = steps + Triple(steps.size + 1, "", "")
-            viewModel.steps = steps as MutableList<Triple<Int, String, String>>
+            viewModel.addStep(Step(steps.size + 1, "", ""))
         },
             modifier = Modifier
                 .fillMaxWidth()

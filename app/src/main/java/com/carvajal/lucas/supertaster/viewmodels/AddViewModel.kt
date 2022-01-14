@@ -20,6 +20,9 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+data class Ingredient(val name: String, val amount: String)
+data class Step(val sequence: Int, val description: String, val extraNote: String)
+
 class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     var title: String = ""
@@ -31,29 +34,64 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     var recipePhotos: MutableList<Bitmap> = mutableListOf() //TODO
     //var ingredients: List<Pair<String, String>> = mutableListOf()
-    var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
+//    var steps: MutableList<Triple<Int, String, String>> = mutableListOf()
 
 
-    private var _ingredients = MutableLiveData(mutableListOf<Pair<String, String>>())
-    var ingredients: LiveData<List<Pair<String, String>>> = _ingredients as LiveData<List<Pair<String, String>>>
+    val ingredients = mutableStateListOf<Ingredient>()
+    val steps = mutableStateListOf<Step>()
 
-    fun addIngredient(newIngredient: Pair<String, String>) {
-        _ingredients.value?.add(newIngredient)
-
-        val ing = ingredients.value
+    fun addIngredient(ingredient: Ingredient) {
+        ingredients.add(ingredient)
     }
 
-    fun updateIngredient(index: Int, newIngredient: Pair<String, String>) {
-        _ingredients.value?.set(index, newIngredient)
-    }
-
-    fun removeIngredient(index: Int) {
-        //TODO
+    fun updateIngredient(index: Int, ingredient: Ingredient) {
+        ingredients[index] = ingredient
     }
 
     fun clearIngredients() {
-        _ingredients.value?.clear()
+        ingredients.clear()
     }
+
+    fun addStep(step: Step) {
+        steps.add(step)
+    }
+
+    fun updateSteps(index: Int, step: Step) {
+        steps[index] = step
+    }
+
+    fun clearSteps() {
+        steps.clear()
+    }
+
+
+
+
+
+//    private var _ingredients = MutableLiveData(mutableListOf<Pair<String, String>>())
+//    var ingredients: LiveData<MutableList<Pair<String, String>>> = _ingredients
+//
+//
+//    fun addIngredient(newIngredient: Pair<String, String>) {
+//        _ingredients.value?.add(newIngredient)
+//
+//        val ing = ingredients.value
+//    }
+//
+//    fun updateIngredient(index: Int, newIngredient: Pair<String, String>) {
+//        _ingredients.value?.set(index, newIngredient)
+//    }
+//
+//    fun removeIngredient(index: Int) {
+//        //TODO
+//    }
+//
+//    fun clearIngredients() {
+//        _ingredients.value?.clear()
+//    }
+
+
+    //////////////////////////////////////////////////////////////////
 
 //    fun getPhotos(): List<Bitmap> {
 //        //TODO
@@ -104,7 +142,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val savedCookTime = cookTime
 
         val savedRecipePhotos = recipePhotos
-        val savedIngredients = ingredients.value
+        val savedIngredients = ingredients
         val savedSteps = steps
 
         // cleanup vars for new recipe
@@ -115,12 +153,8 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         prepTime = 5
         cookTime = 5
         recipePhotos = recipePhotos.toMutableList().apply { clear() }
-        _ingredients.value?.clear()
-        steps = steps.toMutableList().apply { clear() }
-
-        println("RECIPE PHOTOS: $recipePhotos")
-        println("I N G R E D I E N T S: $ingredients")
-        println("STEPS: $steps")
+        clearIngredients()
+        clearSteps()
 
         // submit recipe
         viewModelScope.launch(Dispatchers.IO) {
@@ -142,11 +176,11 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
             }
 
             savedIngredients?.forEach{ ingredient ->
-                repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId, ingredient.first, ingredient.second))
+                repository.addRecipeIngredient(RecipeIngredient(UniqueIdGenerator.generateLongId(), recipeId, ingredient.name, ingredient.amount))
             }
 
             savedSteps.forEach{ step ->
-                repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId, step.first, step.second, step.third))
+                repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId, step.sequence, step.description, step.extraNote))
             }
         }
         return true
