@@ -2,12 +2,7 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.carvajal.lucas.supertaster.data.*
@@ -38,10 +33,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun addRecipePhotos(bitmap: Bitmap) {
         recipePhotos.add(bitmap)
-    }
-
-    fun updateRecipePhotos(index: Int, bitmap: Bitmap) {
-        recipePhotos[index] = bitmap
     }
 
     fun removeRecipePhoto(index: Int) {
