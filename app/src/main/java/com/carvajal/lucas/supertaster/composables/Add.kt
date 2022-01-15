@@ -49,6 +49,7 @@ fun AddScreen(viewModel: AddViewModel) {
 
     var title by remember { mutableStateOf(viewModel.title)}
     var cuisine by remember { mutableStateOf(viewModel.cuisine) }
+    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex) }
     var servings by remember { mutableStateOf(viewModel.servings) }
     var prepTime by remember { mutableStateOf(viewModel.prepTime) }
     var cookTime by remember { mutableStateOf(viewModel.cookTime) }
@@ -90,7 +91,13 @@ fun AddScreen(viewModel: AddViewModel) {
                 )
             }
             Section(title = stringResource(R.string.type_of_meal)) {
-                ChooseTypeOfMealButton(viewModel)
+                ChooseTypeOfMealButton(
+                    typeOfMealIndex,
+                    { index ->
+                        typeOfMealIndex = index
+                        viewModel.typeOfMealIndex = index
+                    },
+                    viewModel)
             }
             Section(title = stringResource(R.string.servings)) {
                 ServingsRow(servings,
@@ -144,14 +151,19 @@ fun AddScreen(viewModel: AddViewModel) {
             Button(onClick = {
                 if (viewModel.title.trim().isEmpty()) {
                     Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
-                // TODO comment in again
-//                } else if (viewModel.typeOfMealIndex == 0) {
-//                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
+                } else if (viewModel.typeOfMealIndex == 0) {
+                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
                     val success = viewModel.saveRecipe(context)
                     if (success) {
                         Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
-                        cleanup()
+
+                        title = ""
+                        cuisine = ""
+                        typeOfMealIndex = 0
+                        servings = 2
+                        prepTime = 5
+                        cookTime = 5
                     } else {
                         Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
                     }
@@ -266,9 +278,8 @@ fun addRecipeImage(bitmap: Bitmap) {
 
 
 @Composable
-fun ChooseTypeOfMealButton(viewModel: AddViewModel) {
+fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int) -> Unit, viewModel: AddViewModel) {
     var expanded by remember { mutableStateOf(false) }
-    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex) }
 
     val mealTypes = viewModel.getMealTypes()
 
@@ -292,8 +303,9 @@ fun ChooseTypeOfMealButton(viewModel: AddViewModel) {
             mealTypes.forEachIndexed { index, mealType ->
                 DropdownMenuItem(
                     onClick = {
-                        typeOfMealIndex = index
-                        viewModel.typeOfMealIndex = index
+                        setTypeOfMealIndex(index)
+//                        typeOfMealIndex = index
+//                        viewModel.typeOfMealIndex = index
                         expanded = false
                     }
                 ) {
