@@ -73,7 +73,26 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
     fun loadData(recipeId: Long) {
-        //TODO load data from repo
+        val recipe = repository.getRecipe(recipeId).value
+
+        title = recipe?.title ?: ""
+        cuisine = recipe?.cuisine ?: ""
+        //TODO cast typeOfMeal to Int
+        //typeOfMealIndex = recipe.value?.typeOfMeal ?: 0
+        servings = recipe?.servings ?: 0
+        prepTime = recipe?.prepTime ?: 0
+        cookTime = recipe?.cookTime ?: 0
+
+        repository.getAllRecipeIngredients(recipeId).value?.map {
+            Ingredient(it.ingredient, it.amount)
+        }?.forEach {
+            ingredients.add(it)
+        }
+
+
+        //TODO
+        //recipePhotos = repository.getRecipeImages(recipeId)
+        //steps = mutableStateListOf<Step>()
     }
 
 

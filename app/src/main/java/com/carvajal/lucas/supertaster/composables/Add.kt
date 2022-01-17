@@ -49,8 +49,9 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
     val scrollState = rememberScrollState()
 
     val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
+
     if (recipeId.toInt() != -1) {
-        Toast.makeText(context, "HALLLAMASHALLA", Toast.LENGTH_SHORT).show()
+        viewModel.loadData(recipeId)
     }
 
     addViewModel = viewModel
