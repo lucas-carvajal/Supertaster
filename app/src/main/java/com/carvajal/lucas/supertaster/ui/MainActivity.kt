@@ -41,7 +41,9 @@ class MainActivity : ComponentActivity() {
                 SupertasterApp().SupertasterAppScreen(
                     dashboardViewModel = dashboardViewModel,
                     cookbookViewModel = cookbookViewModel,
-                    addViewModel = addViewModel
+                    addViewModel = addViewModel,
+                    repository = repository,
+                    mainContext = this
                 )
             }
         }

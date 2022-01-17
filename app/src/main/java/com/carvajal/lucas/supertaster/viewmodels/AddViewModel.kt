@@ -72,6 +72,10 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
     }
 
+    fun loadData(recipeId: Long) {
+        //TODO load data from repo
+    }
+
 
     fun saveRecipe(context: Context): Boolean {
         //TODO try catch ?

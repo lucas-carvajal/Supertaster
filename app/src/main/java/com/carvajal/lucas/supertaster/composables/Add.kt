@@ -28,9 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
+import com.carvajal.lucas.supertaster.util.RecipeViewMode
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 import com.carvajal.lucas.supertaster.viewmodels.Ingredient
 import com.carvajal.lucas.supertaster.viewmodels.Step
@@ -41,9 +44,14 @@ const val REQUEST_IMAGE_CAPTURE = 1
 private lateinit var addViewModel: AddViewModel
 
 @Composable
-fun AddScreen(viewModel: AddViewModel) {
+fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
+    if (recipeId.toInt() != -1) {
+        Toast.makeText(context, "HALLLAMASHALLA", Toast.LENGTH_SHORT).show()
+    }
 
     addViewModel = viewModel
 
@@ -167,6 +175,10 @@ fun AddScreen(viewModel: AddViewModel) {
                     } else {
                         Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
                     }
+
+                    if (viewMode == RecipeViewMode.EDIT) {
+                        navController.popBackStack()
+                    }
                 }
             },
                 colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
@@ -175,7 +187,12 @@ fun AddScreen(viewModel: AddViewModel) {
                     .padding(10.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.save_recipe),
+                    text =
+                        if (viewMode == RecipeViewMode.ADD) {
+                            stringResource(R.string.save_recipe)
+                        } else {
+                            "Save Changes"
+                        },
                     color = Color.White
                 )
             }
@@ -562,10 +579,6 @@ fun StepsSection(viewModel: AddViewModel) {
             Text(text = "+")
         }
     }
-}
-
-private fun cleanup() {
-    //TODO reset all values in viewModel and here
 }
 
 

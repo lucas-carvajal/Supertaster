@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
@@ -31,7 +32,7 @@ import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 
 @Composable
-fun RecipeView(viewModel: RecipeViewViewModel) {
+fun RecipeView(viewModel: RecipeViewViewModel, navController: NavController) {
     val context = LocalContext.current
 
     val recipe = viewModel.viewRecipe.observeAsState()
@@ -56,7 +57,7 @@ fun RecipeView(viewModel: RecipeViewViewModel) {
             .verticalScroll(scrollState)
         ) {
             TopRow(heading = recipe.value?.title ?: stringResource(R.string.error), icon = Icons.Default.Edit) {
-                // TODO navigate to add view to edit the recipe
+                navController.navigate("edit_recipe/${recipe.value?.id}")
             }
             PhotoSlideshow(recipeImages as State<List<RecipeImage>>)
             Divider(modifier = Modifier.padding(0.dp, 10.dp))

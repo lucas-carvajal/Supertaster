@@ -1,5 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -8,19 +9,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.carvajal.lucas.supertaster.auth.Profile
 import com.carvajal.lucas.supertaster.data.AppRepository
 import com.carvajal.lucas.supertaster.ui.*
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
+import com.carvajal.lucas.supertaster.util.RecipeViewMode
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModelFactory
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
@@ -40,7 +45,9 @@ class SupertasterApp {
     fun SupertasterAppScreen(
         dashboardViewModel: DashboardViewModel,
         cookbookViewModel: CookbookViewModel,
-        addViewModel: AddViewModel
+        addViewModel: AddViewModel,
+        repository: AppRepository,
+        mainContext: ComponentActivity
     ) {
         val navController = rememberNavController()
 
@@ -58,14 +65,25 @@ class SupertasterApp {
             NavHost(navController, startDestination = BottomBarScreen.Dashboard.route, Modifier.padding(innerPadding)) {
                 composable(BottomBarScreen.Dashboard.route) { DashboardScreen(dashboardViewModel, navController) }
                 composable(BottomBarScreen.Cookbooks.route) { CookbooksScreen(cookbookViewModel, navController) }
-                composable(BottomBarScreen.Add.route) { AddScreen(addViewModel) }
+                composable(BottomBarScreen.Add.route) { AddScreen(addViewModel, RecipeViewMode.ADD, navController, null) }
                 composable(BottomBarScreen.WeeklySchedule.route) { WeeklyScheduleScreen() }
                 composable(BottomBarScreen.ShoppingList.route) { ShoppingListScreen() }
                 composable("profile") { Profile() }
-                composable("recipe_view_dashboard") { RecipeView(dashboardViewModel) }
-                composable("recipe_view_cookbooks") { RecipeView(cookbookViewModel) }
+                composable("recipe_view_dashboard") { RecipeView(dashboardViewModel, navController) }
+                composable("recipe_view_cookbooks") { RecipeView(cookbookViewModel, navController) }
                 composable("recipe_list_all") { AllRecipesListHolder(dashboardViewModel, navController) }
                 composable("recipe_list_cookbooks") { CookbookRecipesListHolder(cookbookViewModel, navController) }
+                composable(
+                    "edit_recipe/{recipeId}",
+                    arguments = listOf(navArgument("recipeId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    AddScreen(
+                        AddViewModel(repository),
+                        RecipeViewMode.EDIT,
+                        navController,
+                        backStackEntry
+                    )
+                }
             }
         }
     }
