@@ -42,6 +42,10 @@ class AppRepository(
         return recipeDao.getRecipe(id)
     }
 
+    fun getRecipeStatic(id: Long): Recipe {
+        return recipeDao.getRecipeStatic(id)
+    }
+
     fun addRecipe(recipe: Recipe): Long {
         return recipeDao.addRecipe(recipe)
     }

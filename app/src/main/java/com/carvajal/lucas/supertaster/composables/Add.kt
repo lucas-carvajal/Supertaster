@@ -17,6 +17,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,19 +46,60 @@ private lateinit var addViewModel: AddViewModel
 
 @Composable
 fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
-    val context = LocalContext.current
-    val scrollState = rememberScrollState()
 
     val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
 
     if (recipeId.toInt() != -1) {
         viewModel.loadData(recipeId)
+
+        AddScreenLoadingManager(viewModel, viewMode, navController, backStackEntry)
+    } else {
+        AddScreenContent(viewModel, viewMode, navController, backStackEntry)
     }
+}
+
+@Composable
+fun AddScreenLoadingManager(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
+    if (viewModel.isLoading.value){
+        LoadingScreen()
+    } else {
+        AddScreenContent(viewModel, viewMode, navController, backStackEntry)
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
+
+    }
+}
+
+@Composable
+fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
+
+//    val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
+
+//    if (recipeId.toInt() != -1) {
+//        viewModel.loadData(recipeId)
+//    }
 
     addViewModel = viewModel
 
-    var title by remember { mutableStateOf(viewModel.title)}
-    var cuisine by remember { mutableStateOf(viewModel.cuisine) }
+    var title by remember { mutableStateOf(viewModel.title.value) }
+    var cuisine by remember { mutableStateOf(viewModel.cuisine.value) }
     var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex) }
     var servings by remember { mutableStateOf(viewModel.servings) }
     var prepTime by remember { mutableStateOf(viewModel.prepTime) }
@@ -81,7 +123,7 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
                     title,
                     {
                         title = it
-                        viewModel.title = it
+                        viewModel.setTitle(it)
                     },
                     stringResource(R.string.title)
                 )
@@ -94,7 +136,7 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
                     cuisine,
                     {
                         cuisine = it
-                        viewModel.cuisine = it
+                        viewModel.setCuisine(it)
                     },
                     stringResource(R.string.cuisine)
                 )
@@ -158,7 +200,7 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
             }
 
             Button(onClick = {
-                if (viewModel.title.trim().isEmpty()) {
+                if (viewModel.title.value.trim().isEmpty()) {
                     Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
                 } else if (viewModel.typeOfMealIndex == 0) {
                     Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
@@ -167,8 +209,8 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
                     if (success) {
                         Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
 
-                        title = ""
-                        cuisine = ""
+                        //title = ""
+                        //cuisine = ""
                         typeOfMealIndex = 0
                         servings = 2
                         prepTime = 5

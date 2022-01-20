@@ -31,4 +31,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
     fun getRecipe(id: Long): LiveData<Recipe>
+
+    @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
+    fun getRecipeStatic(id: Long): Recipe
 }
