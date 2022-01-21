@@ -92,13 +92,6 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
 
     addViewModel = viewModel
 
-    var title by remember { mutableStateOf(viewModel.title.value) }
-    var cuisine by remember { mutableStateOf(viewModel.cuisine.value) }
-    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex.value) }
-    var servings by remember { mutableStateOf(viewModel.servings.value) }
-    var prepTime by remember { mutableStateOf(viewModel.prepTime.value) }
-    var cookTime by remember { mutableStateOf(viewModel.cookTime.value) }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -190,18 +183,11 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                 } else if (viewModel.typeOfMealIndex.value == 0) {
                     Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
-                    val success = viewModel.saveRecipe(context)
-                    if (success) {
-                        Toast.makeText(context, "Recipe $title saved successfully", Toast.LENGTH_SHORT).show()
-
-                        //title = ""
-                        //cuisine = ""
-                        typeOfMealIndex = 0
-                        servings = 2
-                        prepTime = 5
-                        cookTime = 5
+                    val savedRecipe = viewModel.saveRecipe(context)
+                    if (savedRecipe != null) {
+                        Toast.makeText(context, "Recipe $savedRecipe saved successfully", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Error: Recipe $title could not be saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Error: Recipe could not be saved", Toast.LENGTH_SHORT).show()
                     }
 
                     if (viewMode == RecipeViewMode.EDIT) {

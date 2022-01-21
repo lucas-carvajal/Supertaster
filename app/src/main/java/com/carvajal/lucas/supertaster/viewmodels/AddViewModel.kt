@@ -129,7 +129,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
 
-    fun saveRecipe(context: Context): Boolean {
+    fun saveRecipe(context: Context): String? {
         //TODO try catch ?
         val mealTypes = getMealTypes()
 
@@ -146,12 +146,12 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val savedSteps = steps.toList()
 
         // cleanup vars for new recipe
-        title = mutableStateOf<String>("")
-        cuisine = mutableStateOf<String>("")
-        typeOfMealIndex = mutableStateOf(0)
-        servings = mutableStateOf(2)
-        prepTime = mutableStateOf(5)
-        cookTime = mutableStateOf(5)
+        title.value = ""
+        cuisine.value = ""
+        typeOfMealIndex.value = 0
+        servings.value = 2
+        prepTime.value = 5
+        cookTime.value = 5
         clearRecipePhotos()
         clearIngredients()
         clearSteps()
@@ -183,7 +183,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                 repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId, step.sequence, step.description, step.extraNote))
             }
         }
-        return true
+        return savedTitle
     }
 
     @Throws(IOException::class)
