@@ -90,20 +90,14 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-//    val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
-
-//    if (recipeId.toInt() != -1) {
-//        viewModel.loadData(recipeId)
-//    }
-
     addViewModel = viewModel
 
     var title by remember { mutableStateOf(viewModel.title.value) }
     var cuisine by remember { mutableStateOf(viewModel.cuisine.value) }
-    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex) }
-    var servings by remember { mutableStateOf(viewModel.servings) }
-    var prepTime by remember { mutableStateOf(viewModel.prepTime) }
-    var cookTime by remember { mutableStateOf(viewModel.cookTime) }
+    var typeOfMealIndex by remember { mutableStateOf(viewModel.typeOfMealIndex.value) }
+    var servings by remember { mutableStateOf(viewModel.servings.value) }
+    var prepTime by remember { mutableStateOf(viewModel.prepTime.value) }
+    var cookTime by remember { mutableStateOf(viewModel.cookTime.value) }
 
     Box(
         modifier = Modifier
@@ -120,9 +114,8 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             )
             Section(title = stringResource(R.string.title)) {
                 SingleInputField(
-                    title,
+                    viewModel.title.value,
                     {
-                        title = it
                         viewModel.setTitle(it)
                     },
                     stringResource(R.string.title)
@@ -133,9 +126,8 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             }
             Section(title = stringResource(R.string.cuisine)) {
                 SingleInputField(
-                    cuisine,
+                    viewModel.cuisine.value,
                     {
-                        cuisine = it
                         viewModel.setCuisine(it)
                     },
                     stringResource(R.string.cuisine)
@@ -143,51 +135,44 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             }
             Section(title = stringResource(R.string.type_of_meal)) {
                 ChooseTypeOfMealButton(
-                    typeOfMealIndex,
+                    viewModel.typeOfMealIndex.value,
                     { index ->
-                        typeOfMealIndex = index
-                        viewModel.typeOfMealIndex = index
+                        viewModel.setTypeOfMealIndex(index)
                     },
                     viewModel)
             }
             Section(title = stringResource(R.string.servings)) {
-                ServingsRow(servings,
+                ServingsRow(viewModel.servings.value,
                     {
-                        servings++
-                        viewModel.servings++
+                        viewModel.setServings(viewModel.servings.value + 1)
                     },
                     {
-                        if (servings != 1) {
-                            servings--
-                            viewModel.servings--
+                        if (viewModel.servings.value != 1) {
+                            viewModel.setServings(viewModel.servings.value - 1)
                         }
                     }
                 )
             }
             Section(title = stringResource(R.string.prep_time)) {
-                PrepTimeRow(prepTime,
+                PrepTimeRow(viewModel.prepTime.value,
                     {
-                        prepTime += 5
-                        viewModel.prepTime += 5
+                        viewModel.setPrepTime(viewModel.prepTime.value + 5)
                     },
                     {
-                        if (prepTime != 0) {
-                            prepTime -= 5
-                            viewModel.prepTime -= 5
+                        if (viewModel.prepTime.value != 0) {
+                            viewModel.setPrepTime(viewModel.prepTime.value - 5)
                         }
                     }
                 )
             }
             Section(title = stringResource(R.string.cook_time)) {
-                CookTimeRow(cookTime,
+                CookTimeRow(viewModel.cookTime.value,
                     {
-                        cookTime += 5
-                        viewModel.cookTime += 5
+                        viewModel.setCookTime(viewModel.cookTime.value + 5)
                     },
                     {
-                        if (cookTime != 0) {
-                            cookTime -= 5
-                            viewModel.cookTime -= 5
+                        if (viewModel.cookTime.value != 0) {
+                            viewModel.setCookTime(viewModel.cookTime.value - 5)
                         }
                     }
                 )
@@ -202,7 +187,7 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             Button(onClick = {
                 if (viewModel.title.value.trim().isEmpty()) {
                     Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
-                } else if (viewModel.typeOfMealIndex == 0) {
+                } else if (viewModel.typeOfMealIndex.value == 0) {
                     Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
                     val success = viewModel.saveRecipe(context)

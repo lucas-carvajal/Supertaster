@@ -11,6 +11,7 @@ import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -24,19 +25,35 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     var isLoading: MutableState<Boolean> = mutableStateOf(false)
 
-    var title: State<String> = mutableStateOf<String>("")
-    var cuisine: State<String> = mutableStateOf<String>("")
-    var typeOfMealIndex: Int = 0
-    var servings: Int = 2
-    var prepTime: Int = 5
-    var cookTime: Int = 5
+    var title: MutableState<String> = mutableStateOf("")
+    var cuisine: MutableState<String> = mutableStateOf("")
+    var typeOfMealIndex: MutableState<Int> = mutableStateOf(0)
+    var servings: MutableState<Int> = mutableStateOf(2)
+    var prepTime: MutableState<Int> = mutableStateOf(5)
+    var cookTime: MutableState<Int> = mutableStateOf(5)
 
     fun setTitle(newTitle: String) {
-        title = mutableStateOf(newTitle)
+        title.value = newTitle
     }
 
     fun setCuisine(newCuisine: String) {
-        cuisine = mutableStateOf(newCuisine)
+        cuisine.value = newCuisine
+    }
+
+    fun setTypeOfMealIndex(newTypeOfMealIndex: Int) {
+        typeOfMealIndex.value = newTypeOfMealIndex
+    }
+
+    fun setServings(newServings: Int) {
+        servings.value = newServings
+    }
+
+    fun setPrepTime(newPrepTime: Int) {
+        prepTime.value = newPrepTime
+    }
+
+    fun setCookTime(newCookTime: Int) {
+        cookTime.value = newCookTime
     }
 
     val recipePhotos = mutableStateListOf<Bitmap>()
@@ -94,9 +111,9 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
             cuisine = mutableStateOf(recipe.cuisine)
             //TODO cast typeOfMeal to Int
             //typeOfMealIndex = recipe.typeOfMeal
-            servings = recipe.servings
-            prepTime = recipe.prepTime
-            cookTime = recipe.cookTime
+            servings = mutableStateOf(recipe.servings)
+            prepTime = mutableStateOf(recipe.prepTime)
+            cookTime = mutableStateOf(recipe.cookTime)
 
             viewModelScope.launch(Dispatchers.Main) {
                 isLoading.value = false
@@ -119,10 +136,10 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         // save all variables
         val savedTitle = title.value
         val savedCuisine = cuisine.value
-        val savedTypeOfMealIndex = typeOfMealIndex
-        val savedServings = servings
-        val savedPrepTime = prepTime
-        val savedCookTime = cookTime
+        val savedTypeOfMealIndex = typeOfMealIndex.value
+        val savedServings = servings.value
+        val savedPrepTime = prepTime.value
+        val savedCookTime = cookTime.value
 
         val savedRecipePhotos = recipePhotos.toList()
         val savedIngredients = ingredients.toList()
@@ -131,10 +148,10 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         // cleanup vars for new recipe
         title = mutableStateOf<String>("")
         cuisine = mutableStateOf<String>("")
-        typeOfMealIndex = 0
-        servings = 2
-        prepTime = 5
-        cookTime = 5
+        typeOfMealIndex = mutableStateOf(0)
+        servings = mutableStateOf(2)
+        prepTime = mutableStateOf(5)
+        cookTime = mutableStateOf(5)
         clearRecipePhotos()
         clearIngredients()
         clearSteps()
