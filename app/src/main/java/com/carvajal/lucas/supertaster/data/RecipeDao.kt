@@ -26,8 +26,8 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE cuisine LIKE :cuisine")
     fun filterRecipesByCuisine(cuisine: String) : LiveData<List<Recipe>>
 
-    @Query("SELECT * FROM recipes WHERE type_of_meal = :typeOfMeal LIMIT 5")
-    fun getRecipeByType(typeOfMeal: String): LiveData<List<Recipe>>
+    @Query("SELECT * FROM recipes WHERE type_of_meal_index = :typeOfMealIndex LIMIT 5")
+    fun getRecipeByType(typeOfMealIndex: Int): LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
     fun getRecipe(id: Long): LiveData<Recipe>

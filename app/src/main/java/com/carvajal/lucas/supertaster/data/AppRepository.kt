@@ -34,7 +34,7 @@ class AppRepository(
         return recipeDao.filterRecipesByCuisine(cuisine)
     }
 
-    fun getRecipeByType(typeOfMeal: String): LiveData<List<Recipe>> {
+    fun getRecipeByType(typeOfMeal: Int): LiveData<List<Recipe>> {
         return recipeDao.getRecipeByType(typeOfMeal)
     }
 

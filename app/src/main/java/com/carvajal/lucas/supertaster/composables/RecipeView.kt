@@ -28,6 +28,7 @@ import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.data.RecipeStep
+import com.carvajal.lucas.supertaster.util.getTypeOfMeal
 import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
 
 
@@ -162,7 +163,7 @@ fun TypeAndCuisineRow(recipe: State<Recipe?>) {
     Row {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = recipe.value?.typeOfMeal ?: "",
+            text = getTypeOfMeal(recipe.value?.typeOfMealIndex ?: -1) ?: "",
             fontSize = MaterialTheme.typography.h6.fontSize,
             fontWeight = FontWeight.Bold
         )

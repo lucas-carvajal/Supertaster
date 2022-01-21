@@ -69,14 +69,14 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
         val hour: Int = format.format(Date()).toInt()
 
         val suggestions = when(hour) {
-            in 0..4 -> repository.getRecipeByType("Snack")
-            in 5..9 -> repository.getRecipeByType("Breakfast")
-            in 10..11 -> repository.getRecipeByType("Brunch")
-            in 12..14 -> repository.getRecipeByType("Lunch")
-            in 15..17 -> repository.getRecipeByType("Tea")
-            in 18..20 -> repository.getRecipeByType("Dinner")
-            in 21..24 -> repository.getRecipeByType("Snack")
-            else -> repository.getRecipeByType("Other")
+            in 0..4 -> repository.getRecipeByType(6) // Snack
+            in 5..9 -> repository.getRecipeByType(1) // Breakfast
+            in 10..11 -> repository.getRecipeByType(2) // Brunch
+            in 12..14 -> repository.getRecipeByType(3) // Lunch
+            in 15..17 -> repository.getRecipeByType(4) // Tea
+            in 18..20 -> repository.getRecipeByType(5) // Dinner
+            in 21..24 -> repository.getRecipeByType(6) // Snack
+            else -> repository.getRecipeByType(8) // Other
         }
 
         return suggestions

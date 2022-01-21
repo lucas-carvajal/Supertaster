@@ -35,6 +35,8 @@ import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.util.RecipeViewMode
+import com.carvajal.lucas.supertaster.util.getTypeOfMeal
+import com.carvajal.lucas.supertaster.util.typeOfMealMap
 import com.carvajal.lucas.supertaster.viewmodels.AddViewModel
 import com.carvajal.lucas.supertaster.viewmodels.Ingredient
 import com.carvajal.lucas.supertaster.viewmodels.Step
@@ -312,8 +314,6 @@ fun addRecipeImage(bitmap: Bitmap) {
 fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int) -> Unit, viewModel: AddViewModel) {
     var expanded by remember { mutableStateOf(false) }
 
-    val mealTypes = viewModel.getMealTypes()
-
     Card(
         elevation = nestedCardElevation,
         modifier = Modifier
@@ -321,7 +321,7 @@ fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int
             .padding(top = 10.dp)
     ) {
         Text(
-            mealTypes[typeOfMealIndex],
+            getTypeOfMeal(typeOfMealIndex) ?: "",
             modifier = Modifier
                 .clickable { expanded = true }
                 .padding(10.dp)
@@ -331,18 +331,27 @@ fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int
             onDismissRequest = { expanded = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            mealTypes.forEachIndexed { index, mealType ->
+            for ((index, mealType) in typeOfMealMap) {
                 DropdownMenuItem(
                     onClick = {
                         setTypeOfMealIndex(index)
-//                        typeOfMealIndex = index
-//                        viewModel.typeOfMealIndex = index
                         expanded = false
                     }
                 ) {
                     Text(text = mealType)
                 }
             }
+
+//            typeOfMealMap.forEach { index, mealType ->
+//                DropdownMenuItem(
+//                    onClick = {
+//                        setTypeOfMealIndex(index)
+//                        expanded = false
+//                    }
+//                ) {
+//                    Text(text = mealType)
+//                }
+//            }
         }
     }
 }

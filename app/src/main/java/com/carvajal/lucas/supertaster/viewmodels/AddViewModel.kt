@@ -96,11 +96,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         steps.clear()
     }
 
-
-    fun getMealTypes(): List<String> {
-        return listOf("-", "Breakfast", "Brunch", "Lunch", "Tea", "Dinner", "Snack", "Drink", "Other")
-    }
-
     fun loadData(recipeId: Long) {
         isLoading.value = true
 
@@ -110,7 +105,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
             title = mutableStateOf(recipe.title)
             cuisine = mutableStateOf(recipe.cuisine)
             //TODO cast typeOfMeal to Int
-            //typeOfMealIndex = recipe.typeOfMeal
+            typeOfMealIndex = mutableStateOf(recipe.typeOfMealIndex)
             servings = mutableStateOf(recipe.servings)
             prepTime = mutableStateOf(recipe.prepTime)
             cookTime = mutableStateOf(recipe.cookTime)
@@ -131,7 +126,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun saveRecipe(context: Context): String? {
         //TODO try catch ?
-        val mealTypes = getMealTypes()
+        //val mealTypes = getMealTypes()
 
         // save all variables
         val savedTitle = title.value
@@ -163,7 +158,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                     UniqueIdGenerator.generateLongId(),
                     savedTitle,
                     savedCuisine,
-                    mealTypes[savedTypeOfMealIndex],
+                    savedTypeOfMealIndex,
                     savedServings,
                     savedPrepTime,
                     savedCookTime
