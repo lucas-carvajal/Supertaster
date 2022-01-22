@@ -124,9 +124,8 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
     }
 
 
-    fun saveRecipe(context: Context): String? {
+    fun saveRecipe(context: Context, recipeIdInput: Long?): String? {
         //TODO try catch ?
-        //val mealTypes = getMealTypes()
 
         // save all variables
         val savedTitle = title.value
@@ -153,9 +152,15 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
         // submit recipe
         viewModelScope.launch(Dispatchers.IO) {
-            val recipeId = repository.addRecipe(
+
+
+
+            var recipeId: Long = recipeIdInput ?: UniqueIdGenerator.generateLongId()
+
+
+            recipeId = repository.addRecipe(
                 Recipe(
-                    UniqueIdGenerator.generateLongId(),
+                    recipeId,
                     savedTitle,
                     savedCuisine,
                     savedTypeOfMealIndex,
@@ -164,6 +169,11 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                     savedCookTime
                 )
             )
+
+
+            if (recipeIdInput != null) {
+                //TODO delete all photos ingredients etc.
+            }
 
             savedRecipePhotos.forEach { photo ->
                 val photoLocation = savePhoto(photo, savedTitle, context)
@@ -178,6 +188,10 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
                 repository.addRecipeStep(RecipeStep(UniqueIdGenerator.generateLongId(), recipeId, step.sequence, step.description, step.extraNote))
             }
         }
+
+
+
+
         return savedTitle
     }
 

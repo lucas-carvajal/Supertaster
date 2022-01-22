@@ -54,18 +54,18 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
     if (recipeId.toInt() != -1) {
         viewModel.loadData(recipeId)
 
-        AddScreenLoadingManager(viewModel, viewMode, navController, backStackEntry)
+        AddScreenLoadingManager(viewModel, viewMode, navController, recipeId)
     } else {
-        AddScreenContent(viewModel, viewMode, navController, backStackEntry)
+        AddScreenContent(viewModel, viewMode, navController, null)
     }
 }
 
 @Composable
-fun AddScreenLoadingManager(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
+fun AddScreenLoadingManager(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, recipeId: Long?) {
     if (viewModel.isLoading.value){
         LoadingScreen()
     } else {
-        AddScreenContent(viewModel, viewMode, navController, backStackEntry)
+        AddScreenContent(viewModel, viewMode, navController, recipeId)
     }
 }
 
@@ -88,7 +88,7 @@ fun LoadingScreen() {
 }
 
 @Composable
-fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
+fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, recipeId: Long?) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -185,7 +185,13 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                 } else if (viewModel.typeOfMealIndex.value == 0) {
                     Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
-                    val savedRecipe = viewModel.saveRecipe(context)
+
+                    var savedRecipe: String? = if (recipeId != null) {
+                        viewModel.saveRecipe(context, recipeId)
+                    } else {
+                        viewModel.saveRecipe(context, null)
+                    }
+
                     if (savedRecipe != null) {
                         Toast.makeText(context, "Recipe $savedRecipe saved successfully", Toast.LENGTH_SHORT).show()
                     } else {
