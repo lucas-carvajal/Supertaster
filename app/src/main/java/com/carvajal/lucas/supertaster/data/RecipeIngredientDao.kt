@@ -13,4 +13,7 @@ interface RecipeIngredientDao {
 
     @Query("SELECT * FROM recipe_ingredients WHERE recipe_id = :recipeId")
     fun getAllRecipeIngredients(recipeId: Long): LiveData<List<RecipeIngredient>>
+
+    @Query("SELECT * FROM recipe_ingredients WHERE recipe_id = :recipeId")
+    fun getAllRecipeIngredientsStatic(recipeId: Long): List<RecipeIngredient>
 }

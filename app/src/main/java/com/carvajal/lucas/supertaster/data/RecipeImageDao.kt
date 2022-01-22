@@ -16,4 +16,7 @@ interface RecipeImageDao {
 
     @Query("SELECT * FROM recipe_images WHERE recipe_id = :recipeId")
     fun getRecipeImages(recipeId: Long): LiveData<List<RecipeImage>>
+
+    @Query("SELECT * FROM recipe_images WHERE recipe_id = :recipeId")
+    fun getRecipeImagesStatic(recipeId: Long): List<RecipeImage>
 }

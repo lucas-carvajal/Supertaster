@@ -13,4 +13,7 @@ interface RecipeStepDao {
 
     @Query("SELECT * FROM recipe_steps WHERE recipe_id = :recipeId")
     fun getAllRecipeSteps(recipeId: Long): LiveData<List<RecipeStep>>
+
+    @Query("SELECT * FROM recipe_steps WHERE recipe_id = :recipeId")
+    fun getAllRecipeStepsStatic(recipeId: Long): List<RecipeStep>
 }

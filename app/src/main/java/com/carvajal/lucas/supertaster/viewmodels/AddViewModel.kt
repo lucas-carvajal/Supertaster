@@ -2,7 +2,9 @@ package com.carvajal.lucas.supertaster.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -110,17 +112,24 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
             prepTime = mutableStateOf(recipe.prepTime)
             cookTime = mutableStateOf(recipe.cookTime)
 
+            val retrievedRecipePhotos = repository.getRecipeImagesStatic(recipeId)
+            val retrievedIngredients = repository.getAllRecipeIngredientsStatic(recipeId)
+            val retrievedSteps = repository.getAllRecipeStepsStatic(recipeId)
+
             viewModelScope.launch(Dispatchers.Main) {
+                retrievedRecipePhotos.forEach {
+                    addRecipePhotos(BitmapFactory.decodeFile(it.location))
+                }
+                retrievedIngredients.forEach {
+                    addIngredient(Ingredient(it.ingredient, it.amount))
+                }
+                retrievedSteps.forEach {
+                    addStep(Step(it.sequence, it.description, it.extraNotes))
+                }
+
                 isLoading.value = false
             }
         }
-
-
-
-        //TODO
-        //recipePhotos = repository.getRecipeImages(recipeId)
-        //ingredients
-        //steps = mutableStateListOf<Step>()
     }
 
 
@@ -152,9 +161,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
         // submit recipe
         viewModelScope.launch(Dispatchers.IO) {
-
-
-
             var recipeId: Long = recipeIdInput ?: UniqueIdGenerator.generateLongId()
 
 

@@ -60,6 +60,10 @@ class AppRepository(
         return recipeImageDao.getRecipeImages(recipeId)
     }
 
+    fun getRecipeImagesStatic(recipeId: Long): List<RecipeImage> {
+        return recipeImageDao.getRecipeImagesStatic(recipeId)
+    }
+
 
     fun addRecipeImage(recipeImage: RecipeImage): Long {
         return recipeImageDao.addRecipeImage(recipeImage)
@@ -71,6 +75,10 @@ class AppRepository(
         return recipeIngredientDao.getAllRecipeIngredients(id)
     }
 
+    fun getAllRecipeIngredientsStatic(id: Long): List<RecipeIngredient> {
+        return recipeIngredientDao.getAllRecipeIngredientsStatic(id)
+    }
+
     fun addRecipeIngredient(recipeIngredient: RecipeIngredient): Long {
         return recipeIngredientDao.addRecipeIngredient(recipeIngredient)
     }
@@ -79,6 +87,10 @@ class AppRepository(
     // RecipeStep
     fun getAllRecipeSteps(id: Long): LiveData<List<RecipeStep>> {
         return recipeStepDao.getAllRecipeSteps(id)
+    }
+
+    fun getAllRecipeStepsStatic(id: Long): List<RecipeStep> {
+        return recipeStepDao.getAllRecipeStepsStatic(id)
     }
 
     fun addRecipeStep(recipeStep: RecipeStep): Long {
