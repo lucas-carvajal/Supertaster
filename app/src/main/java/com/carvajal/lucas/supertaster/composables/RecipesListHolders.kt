@@ -76,10 +76,11 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel, navController: NavCo
                 val recipesList = Transformations.map(viewModel.listRecipes) {
                     if (!recipesInCookbook.value.isNullOrEmpty()) {
                         it.filter { recipe ->
+                            println("T E S T : : : ${recipe.title} : : ${recipesInCookbook.value!!.contains(recipe.id)}")
                             recipesInCookbook.value!!.contains(recipe.id)
                         }
                     } else {
-                        it
+                        listOf()
                     }
                 }.observeAsState()
 
