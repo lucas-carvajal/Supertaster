@@ -133,8 +133,8 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                     viewModel.typeOfMealIndex.value,
                     { index ->
                         viewModel.setTypeOfMealIndex(index)
-                    },
-                    viewModel)
+                    }
+                )
             }
             Section(title = stringResource(R.string.servings)) {
                 ServingsRow(viewModel.servings.value,
@@ -186,7 +186,7 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                     Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
                 } else {
 
-                    var savedRecipe: String? = if (recipeId != null) {
+                    val savedRecipe: String? = if (recipeId != null) {
                         viewModel.saveRecipe(context, recipeId)
                     } else {
                         viewModel.saveRecipe(context, null)
@@ -317,7 +317,7 @@ fun addRecipeImage(bitmap: Bitmap) {
 
 
 @Composable
-fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int) -> Unit, viewModel: AddViewModel) {
+fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -347,17 +347,6 @@ fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int
                     Text(text = mealType)
                 }
             }
-
-//            typeOfMealMap.forEach { index, mealType ->
-//                DropdownMenuItem(
-//                    onClick = {
-//                        setTypeOfMealIndex(index)
-//                        expanded = false
-//                    }
-//                ) {
-//                    Text(text = mealType)
-//                }
-//            }
         }
     }
 }

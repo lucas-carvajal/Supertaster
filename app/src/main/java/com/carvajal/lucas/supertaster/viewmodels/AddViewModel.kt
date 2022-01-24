@@ -4,16 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.carvajal.lucas.supertaster.data.*
 import com.carvajal.lucas.supertaster.util.UniqueIdGenerator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -177,7 +173,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
 
             if (recipeIdInput != null) {
-                //TODO delete all photos ingredients etc.
                 repository.deleteRecipeImagesByRecipeId(recipeId)
                 repository.deleteRecipeIngredientsByRecipeId(recipeId)
                 repository.deleteRecipeStepsByRecipeId(recipeId)
@@ -210,7 +205,7 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(Date())
         val storageDir: File = context.filesDir
         val trimmedRecipeTitle = recipeTitle.filter { !it.isWhitespace() }
-        var file = File.createTempFile(
+        val file = File.createTempFile(
             "JPEG_${timeStamp}_${trimmedRecipeTitle}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
