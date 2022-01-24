@@ -19,4 +19,7 @@ interface RecipeImageDao {
 
     @Query("SELECT * FROM recipe_images WHERE recipe_id = :recipeId")
     fun getRecipeImagesStatic(recipeId: Long): List<RecipeImage>
+
+    @Query("DELETE FROM recipe_images WHERE recipe_id = :recipeId")
+    fun deleteRecipeImagesByRecipeId(recipeId: Long)
 }

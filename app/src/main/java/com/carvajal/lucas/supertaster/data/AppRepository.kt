@@ -69,6 +69,10 @@ class AppRepository(
         return recipeImageDao.addRecipeImage(recipeImage)
     }
 
+    fun deleteRecipeImagesByRecipeId(recipeId: Long) {
+        return recipeImageDao.deleteRecipeImagesByRecipeId(recipeId)
+    }
+
 
     // RecipeIngredient
     fun getAllRecipeIngredients(id: Long): LiveData<List<RecipeIngredient>> {
@@ -81,6 +85,10 @@ class AppRepository(
 
     fun addRecipeIngredient(recipeIngredient: RecipeIngredient): Long {
         return recipeIngredientDao.addRecipeIngredient(recipeIngredient)
+    }
+
+    fun deleteRecipeIngredientsByRecipeId(recipeId: Long) {
+        return recipeIngredientDao.deleteRecipeIngredientsByRecipeId(recipeId)
     }
 
 
@@ -97,6 +105,9 @@ class AppRepository(
         return recipeStepDao.addRecipeStep(recipeStep)
     }
 
+    fun deleteRecipeStepsByRecipeId(recipeId: Long) {
+        return recipeStepDao.deleteRecipeStepsByRecipeId(recipeId)
+    }
 
     // Cookbook
     fun getAllCookbooks(): LiveData<List<Cookbook>> {

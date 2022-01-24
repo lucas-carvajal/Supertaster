@@ -163,7 +163,6 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             var recipeId: Long = recipeIdInput ?: UniqueIdGenerator.generateLongId()
 
-
             recipeId = repository.addRecipe(
                 Recipe(
                     recipeId,
@@ -179,6 +178,9 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
 
             if (recipeIdInput != null) {
                 //TODO delete all photos ingredients etc.
+                repository.deleteRecipeImagesByRecipeId(recipeId)
+                repository.deleteRecipeIngredientsByRecipeId(recipeId)
+                repository.deleteRecipeStepsByRecipeId(recipeId)
             }
 
             savedRecipePhotos.forEach { photo ->

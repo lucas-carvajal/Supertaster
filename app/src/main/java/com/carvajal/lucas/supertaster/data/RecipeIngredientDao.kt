@@ -16,4 +16,7 @@ interface RecipeIngredientDao {
 
     @Query("SELECT * FROM recipe_ingredients WHERE recipe_id = :recipeId")
     fun getAllRecipeIngredientsStatic(recipeId: Long): List<RecipeIngredient>
+
+    @Query("DELETE FROM recipe_ingredients WHERE recipe_id = :recipeId")
+    fun deleteRecipeIngredientsByRecipeId(recipeId: Long)
 }

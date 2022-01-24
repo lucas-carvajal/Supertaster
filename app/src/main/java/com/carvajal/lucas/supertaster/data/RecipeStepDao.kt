@@ -16,4 +16,7 @@ interface RecipeStepDao {
 
     @Query("SELECT * FROM recipe_steps WHERE recipe_id = :recipeId")
     fun getAllRecipeStepsStatic(recipeId: Long): List<RecipeStep>
+
+    @Query("DELETE FROM recipe_steps WHERE recipe_id = :recipeId")
+    fun deleteRecipeStepsByRecipeId(recipeId: Long)
 }
