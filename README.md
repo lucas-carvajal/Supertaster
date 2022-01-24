@@ -26,10 +26,6 @@ After the class I continued development of the app.
 
 ### TODOS
 
-* Make edit button in **RecipeView** work
-  1. Navigate to Add screen & fill in all data
-  2. Save all new data by updating the data in the database 
-* After adding an item in the **Add** screen, clear all fields
 * Make search by ingredients on **Dashboard** work
 * Make 'add' button work in **RecipesList**
 * Fix Images in **Add**: proper resolution, view function, delete function
