@@ -37,8 +37,8 @@ class SupertasterApp {
         BottomBarScreen.Dashboard,
         BottomBarScreen.Cookbooks,
         BottomBarScreen.Add,
-        BottomBarScreen.WeeklySchedule,
-        BottomBarScreen.ShoppingList
+//        BottomBarScreen.WeeklySchedule,
+//        BottomBarScreen.ShoppingList
     )
 
     @Composable

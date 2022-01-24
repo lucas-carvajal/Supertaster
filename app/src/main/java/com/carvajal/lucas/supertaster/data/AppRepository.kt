@@ -50,6 +50,10 @@ class AppRepository(
         return recipeDao.addRecipe(recipe)
     }
 
+    fun deleteRecipeById(recipeId: Long) {
+        return recipeDao.deleteRecipeById(recipeId)
+    }
+
 
     // RecipeImage
     fun getAllRecipeImages(): LiveData<List<RecipeImage>> {
@@ -130,6 +134,10 @@ class AppRepository(
 
     fun addCookbookRecipe(cookbookRecipe: CookbookRecipe): Long {
         return cookbookRecipeDao.addCookbookRecipe(cookbookRecipe)
+    }
+
+    fun deleteCookbookRecipesById(recipeId: Long) {
+        return cookbookRecipeDao.deleteCookbookRecipesById(recipeId)
     }
 
 }

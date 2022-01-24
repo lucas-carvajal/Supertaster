@@ -100,30 +100,33 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val recipe = repository.getRecipeStatic(recipeId)
 
-            title = mutableStateOf(recipe.title)
-            cuisine = mutableStateOf(recipe.cuisine)
-            //TODO cast typeOfMeal to Int
-            typeOfMealIndex = mutableStateOf(recipe.typeOfMealIndex)
-            servings = mutableStateOf(recipe.servings)
-            prepTime = mutableStateOf(recipe.prepTime)
-            cookTime = mutableStateOf(recipe.cookTime)
+            if (recipe != null) {
+                title = mutableStateOf(recipe.title)
+                cuisine = mutableStateOf(recipe.cuisine)
+                typeOfMealIndex = mutableStateOf(recipe.typeOfMealIndex)
+                servings = mutableStateOf(recipe.servings)
+                prepTime = mutableStateOf(recipe.prepTime)
+                cookTime = mutableStateOf(recipe.cookTime)
+            }
 
             val retrievedRecipePhotos = repository.getRecipeImagesStatic(recipeId)
             val retrievedIngredients = repository.getAllRecipeIngredientsStatic(recipeId)
             val retrievedSteps = repository.getAllRecipeStepsStatic(recipeId)
 
-            viewModelScope.launch(Dispatchers.Main) {
-                retrievedRecipePhotos.forEach {
-                    addRecipePhotos(BitmapFactory.decodeFile(it.location))
-                }
-                retrievedIngredients.forEach {
-                    addIngredient(Ingredient(it.ingredient, it.amount))
-                }
-                retrievedSteps.forEach {
-                    addStep(Step(it.sequence, it.description, it.extraNotes))
-                }
+            if (retrievedIngredients != null && retrievedRecipePhotos != null && retrievedSteps != null) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    retrievedRecipePhotos.forEach {
+                        addRecipePhotos(BitmapFactory.decodeFile(it.location))
+                    }
+                    retrievedIngredients.forEach {
+                        addIngredient(Ingredient(it.ingredient, it.amount))
+                    }
+                    retrievedSteps.forEach {
+                        addStep(Step(it.sequence, it.description, it.extraNotes))
+                    }
 
-                isLoading.value = false
+                    isLoading.value = false
+                }
             }
         }
     }
@@ -219,5 +222,17 @@ class AddViewModel(private val repository: AppRepository) : ViewModel() {
         out.close()
 
         return photoPath
+    }
+
+    fun deleteRecipe(recipeId: Long?) {
+        if (recipeId != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.deleteRecipeImagesByRecipeId(recipeId)
+                repository.deleteRecipeIngredientsByRecipeId(recipeId)
+                repository.deleteRecipeStepsByRecipeId(recipeId)
+                repository.deleteCookbookRecipesById(recipeId)
+                repository.deleteRecipeById(recipeId)
+            }
+        }
     }
 }

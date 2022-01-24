@@ -91,8 +91,13 @@ fun LoadingScreen() {
 fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, recipeId: Long?) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val openDeleteContextMenu = remember { mutableStateOf(false) }
 
     addViewModel = viewModel
+
+    if (openDeleteContextMenu.value) {
+        DeleteRecipeContextMenu(viewModel, openDeleteContextMenu, navController, recipeId)
+    }
 
     Box(
         modifier = Modifier
@@ -130,11 +135,10 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             }
             Section(title = stringResource(R.string.type_of_meal)) {
                 ChooseTypeOfMealButton(
-                    viewModel.typeOfMealIndex.value,
-                    { index ->
-                        viewModel.setTypeOfMealIndex(index)
-                    }
-                )
+                    viewModel.typeOfMealIndex.value
+                ) { index ->
+                    viewModel.setTypeOfMealIndex(index)
+                }
             }
             Section(title = stringResource(R.string.servings)) {
                 ServingsRow(viewModel.servings.value,
@@ -217,6 +221,21 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                         },
                     color = Color.White
                 )
+            }
+            if (recipeId != null) {
+                Button(onClick = {
+                    openDeleteContextMenu.value = true
+                },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                ) {
+                    Text(
+                        text = "Delete Recipe",
+                        color = Color.White
+                    )
+                }
             }
         }
     }
@@ -597,6 +616,56 @@ fun StepsSection(viewModel: AddViewModel) {
             Text(text = "+")
         }
     }
+}
+
+@Composable
+fun DeleteRecipeContextMenu(
+    viewModel: AddViewModel,
+    openDeleteContextMenu: MutableState<Boolean>,
+    navController: NavController,
+    recipeId: Long?
+) {
+    AlertDialog(
+        onDismissRequest = { openDeleteContextMenu.value = false },
+        title = {
+            Text(
+                text = "Delete Recipe?",
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        text = {
+            Text(text = "Do you want to delete ${viewModel.title.value}?")
+        },
+        buttons = {
+            Row (modifier = Modifier.padding(5.dp, 5.dp, 5.dp, 15.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        openDeleteContextMenu.value = false
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.dismiss),
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        navController.popBackStack()
+                        navController.popBackStack()
+                        viewModel.deleteRecipe(recipeId)
+                    },
+                ) {
+                    Text(
+                        text = "Delete",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+    )
 }
 
 

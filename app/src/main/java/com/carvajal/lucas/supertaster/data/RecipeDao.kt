@@ -34,4 +34,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes WHERE id = :id LIMIT 1")
     fun getRecipeStatic(id: Long): Recipe
+
+    @Query("DELETE FROM recipes WHERE id = :id")
+    fun deleteRecipeById(id: Long)
 }

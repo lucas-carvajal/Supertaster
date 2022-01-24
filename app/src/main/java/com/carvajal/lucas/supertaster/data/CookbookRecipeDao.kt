@@ -13,4 +13,7 @@ interface CookbookRecipeDao {
 
     @Query("SELECT * FROM cookbook_recipes WHERE cookbook_id = :cookbookId")
     fun getAllCookbookRecipes(cookbookId: Long): LiveData<List<CookbookRecipe>>
+
+    @Query("DELETE FROM cookbook_recipes WHERE recipe_id = :recipeId")
+    fun deleteCookbookRecipesById(recipeId: Long)
 }
