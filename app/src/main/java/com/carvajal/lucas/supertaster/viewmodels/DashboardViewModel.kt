@@ -55,6 +55,18 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
         listRecipes = repository.filterRecipesByTime(time)
     }
 
+    fun filterRecipesByIngredients(ingredient: String) {
+        val targetRecipes = repository.getRecipeIdsByIngredient(ingredient)
+
+        listRecipes = Transformations.switchMap(targetRecipes) {
+            if(it.isNullOrEmpty()) {
+                repository.getRecipes(listOf(-1))
+            } else {
+                repository.getRecipes(it)
+            }
+        }
+    }
+
     fun filterRecipesByCuisine(cuisine: String) {
         listRecipes = repository.filterRecipesByCuisine(cuisine)
     }

@@ -49,10 +49,15 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     val scrollState = rememberScrollState()
 
     val openFilterByTimeDialog = remember { mutableStateOf(false) }
+    val openFilterByIngredientsDialog = remember { mutableStateOf(false) }
     val openFilterByCuisineDialog = remember { mutableStateOf(false) }
 
     if (openFilterByTimeDialog.value) {
         FilterByTime(viewModel, openFilterByTimeDialog, navController)
+    }
+
+    if (openFilterByIngredientsDialog.value) {
+        FilterByIngredients(viewModel, openFilterByIngredientsDialog, navController)
     }
 
     if (openFilterByCuisineDialog.value) {
@@ -76,7 +81,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
             SuggestionsCard(recipeSuggestions, recipeImages, viewModel, navController)
-            SearchCard(viewModel, navController, openFilterByTimeDialog, openFilterByCuisineDialog)
+            SearchCard(viewModel, navController, openFilterByTimeDialog, openFilterByIngredientsDialog, openFilterByCuisineDialog)
             AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
             Spacer(Modifier.padding(5.dp))
         }
@@ -174,6 +179,7 @@ fun SearchCard(
     viewModel: DashboardViewModel,
     navController: NavController,
     openFilterByTimeDialog: MutableState<Boolean>,
+    openFilterByIngredientsDialog: MutableState<Boolean>,
     openFilterByCuisineDialog: MutableState<Boolean>
 ) {
     Card(modifier = Modifier
@@ -196,7 +202,7 @@ fun SearchCard(
                         .weight(1f)
                         .padding(10.dp),stringResource(R.string.ingredients), Icons.Filled.LunchDining)
                 {
-                    //TODO make it search by ingredients
+                    openFilterByIngredientsDialog.value = true
                 }
                 SearchButton(
                     Modifier
@@ -347,6 +353,7 @@ fun FilterByTime(
     navController: NavController
 ){
     var searchTime by remember{ mutableStateOf("") }
+
     AlertDialog(
         onDismissRequest = { openFilterByTimeDialog.value = false },
         title = {
@@ -409,6 +416,74 @@ fun FilterByTime(
     )
 }
 
+@Composable
+fun FilterByIngredients(
+    viewModel: DashboardViewModel,
+    openFilterByIngredientsDialog: MutableState<Boolean>,
+    navController: NavController
+) {
+   var filterIngredient by remember { mutableStateOf("") }
+
+   AlertDialog(
+       onDismissRequest = { openFilterByIngredientsDialog.value = false },
+       title = {
+               Text(
+                   text = "Filter recipes by ingredient",
+                   fontWeight = FontWeight.Bold
+               )
+       },
+       text = {
+              Box {
+                  Column {
+                      TextField(
+                          value = filterIngredient,
+                          onValueChange = { newFilterIngredient ->
+                              filterIngredient = newFilterIngredient
+                          },
+                          singleLine = true,
+                          placeholder = { Text("Enter an ingredient") },
+                          colors = TextFieldDefaults.textFieldColors(
+                              backgroundColor = MaterialTheme.colors.surface
+                          ),
+                          keyboardOptions = KeyboardOptions(
+                              imeAction = ImeAction.Search
+                          )
+                      )
+                  }
+              }
+       },
+       buttons = {
+           Row (modifier = Modifier.padding(5.dp)) {
+               Spacer(modifier = Modifier.weight(1f))
+               Button(
+                   onClick = {
+                       openFilterByIngredientsDialog.value = false
+                   },
+               ) {
+                   Text(
+                       text = stringResource(R.string.dismiss),
+                       textAlign = TextAlign.Center
+                   )
+               }
+               Spacer(modifier = Modifier.weight(1f))
+               Button(
+                   onClick = {
+                       viewModel.listTitle = filterIngredient
+                       viewModel.filterRecipesByIngredients(filterIngredient)
+                       navController.navigate("recipe_list_all")
+                   },
+               ) {
+                   Text(
+                       text = stringResource(R.string.search),
+                       textAlign = TextAlign.Center
+                   )
+               }
+               Spacer(modifier = Modifier.weight(1f))
+           }
+       }
+   )
+}
+
 
 @Composable
 fun FilterByCuisine(
@@ -417,6 +492,7 @@ fun FilterByCuisine(
     navController: NavController
 ){
     var searchTerm by remember{ mutableStateOf("") }
+
     AlertDialog(
         onDismissRequest = { openFilterByCuisineDialog.value = false },
         title = {

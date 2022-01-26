@@ -19,4 +19,7 @@ interface RecipeIngredientDao {
 
     @Query("DELETE FROM recipe_ingredients WHERE recipe_id = :recipeId")
     fun deleteRecipeIngredientsByRecipeId(recipeId: Long)
+
+    @Query("SELECT DISTINCT recipe_id FROM recipe_ingredients WHERE ingredient LIKE :ingredient")
+    fun getRecipeIdsByIngredient(ingredient: String): LiveData<List<Long>>
 }

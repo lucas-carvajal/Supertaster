@@ -1,7 +1,6 @@
 package com.carvajal.lucas.supertaster.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Query
 
 
 class AppRepository(
@@ -30,6 +29,10 @@ class AppRepository(
         return recipeDao.filterRecipesByTime(time)
     }
 
+    fun getRecipeIdsByIngredient(ingredient: String) : LiveData<List<Long>> {
+        return recipeIngredientDao.getRecipeIdsByIngredient(ingredient)
+    }
+
     fun filterRecipesByCuisine(cuisine: String) : LiveData<List<Recipe>> {
         return recipeDao.filterRecipesByCuisine(cuisine)
     }
@@ -40,6 +43,10 @@ class AppRepository(
 
     fun getRecipe(id: Long): LiveData<Recipe> {
         return recipeDao.getRecipe(id)
+    }
+
+    fun getRecipes(id: List<Long>): LiveData<List<Recipe>> {
+        return recipeDao.getRecipes(*id.toLongArray())
     }
 
     fun getRecipeStatic(id: Long): Recipe {
