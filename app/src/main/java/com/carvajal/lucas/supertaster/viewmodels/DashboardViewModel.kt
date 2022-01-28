@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeListViewViewModel {
+class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewListViewModel {
 
     override var listTitle: String? = null
 

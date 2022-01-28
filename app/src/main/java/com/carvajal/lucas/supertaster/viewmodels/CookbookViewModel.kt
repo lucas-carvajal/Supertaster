@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.carvajal.lucas.supertaster.data.*
 import kotlinx.coroutines.*
 
-class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeListViewViewModel {
+class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewListViewModel {
 
     override var listTitle: String? = null
 
@@ -17,7 +17,7 @@ class CookbookViewModel(private val repository: AppRepository) : ViewModel(), Re
     override lateinit var viewRecipeSteps: LiveData<List<RecipeStep>>
 
     private var currentCookbookId: Long = -1
-        set(newId: Long) {
+        set(newId) {
             field = newId
             currentCookbook = repository.getCookbook(currentCookbookId)
             recipesInCookbookRaw = repository.getAllCookbookRecipes(currentCookbookId)

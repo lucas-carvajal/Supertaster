@@ -3,7 +3,7 @@ package com.carvajal.lucas.supertaster.viewmodels
 import androidx.lifecycle.LiveData
 import com.carvajal.lucas.supertaster.data.*
 
-interface RecipeListViewViewModel {
+interface RecipeViewListViewModel {
 
     var viewRecipe: LiveData<Recipe>
     var viewRecipeImages: LiveData<List<RecipeImage>>

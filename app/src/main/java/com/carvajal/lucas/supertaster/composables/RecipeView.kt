@@ -1,6 +1,5 @@
 package com.carvajal.lucas.supertaster.composables
 
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -24,16 +23,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.utils.AddToCookbook
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.data.RecipeStep
 import com.carvajal.lucas.supertaster.util.getTypeOfMeal
-import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeViewListViewModel
 
 
 @Composable
-fun RecipeView(viewModel: RecipeListViewViewModel, navController: NavController) {
+fun RecipeView(viewModel: RecipeViewListViewModel, navController: NavController) {
     val context = LocalContext.current
 
     val recipe = viewModel.viewRecipe.observeAsState()
@@ -287,66 +287,5 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
     }
 }
 
-//TODO put in own utility file
-@Composable
-fun AddToCookbook(
-    viewModel: RecipeListViewViewModel,
-    openDialog: MutableState<Boolean>,
-    recipe: Recipe,
-    context: Context
-){
-    val scrollState = rememberScrollState()
-    val cookbooks = viewModel.allCookbooks.observeAsState().value
 
-    AlertDialog(
-        onDismissRequest = { openDialog.value = false },
-        title = {
-            Text(
-                text = stringResource(R.string.add_new_cookbook),
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        text = {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier
-                    .verticalScroll(scrollState)
-                ) {
-                    Divider()
-                    cookbooks?.forEach{ cookbook ->
-                        Text(
-                            text = cookbook.name,
-                            fontSize = MaterialTheme.typography.h5.fontSize,
-                            modifier = Modifier.clickable{
-                                viewModel.addRecipeToCookbook(cookbook.id, recipe.id ?: 0)
-                                openDialog.value = false
-                                Toast.makeText(
-                                    context,
-                                    "${recipe.title} added to ${cookbook.name}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
-                        Divider()
-                    }
-                }
-            }
-
-        },
-        buttons = {
-            Row {
-                Button(
-                    onClick = {
-                        openDialog.value = false
-                    },
-                ) {
-                    Text(
-                        text = stringResource(R.string.dismiss),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        },
-    )
-}
 

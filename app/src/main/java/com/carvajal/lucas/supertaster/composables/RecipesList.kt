@@ -1,7 +1,6 @@
 package com.carvajal.lucas.supertaster.composables
 
 import android.graphics.BitmapFactory
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,23 +20,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.utils.AddToCookbook
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
-import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeViewListViewModel
 
 @Composable
 fun RecipesList(
     recipesList: State<List<Recipe>?>,
     recipesImageList: State<List<RecipeImage>?>,
-    viewModel: RecipeListViewViewModel,
+    viewModel: RecipeViewListViewModel,
     navController: NavController
 ) {
     val context = LocalContext.current
 
     val addRecipeDialog = remember { mutableStateOf(false) }
-    var selectedRecipe: MutableState<Recipe?> = remember { mutableStateOf(null) }
+    val selectedRecipe: MutableState<Recipe?> = remember { mutableStateOf(null) }
 
     if (addRecipeDialog.value && selectedRecipe.value != null) {
         AddToCookbook(viewModel, addRecipeDialog, selectedRecipe.value!!, context)
@@ -55,7 +55,7 @@ fun RecipesList(
 fun RecipeListItem(
     recipe: Recipe,
     recipeImages: List<RecipeImage>?,
-    viewModel: RecipeListViewViewModel,
+    viewModel: RecipeViewListViewModel,
     navController: NavController,
     selectedRecipe: MutableState<Recipe?>,
     addRecipeDialog: MutableState<Boolean>
@@ -84,7 +84,7 @@ fun RecipeListItem(
             Row {
                 if (!recipeImages.isNullOrEmpty()) {
                     Image(
-                        bitmap = BitmapFactory.decodeFile(recipeImages!!.first().location).asImageBitmap(),
+                        bitmap = BitmapFactory.decodeFile(recipeImages.first().location).asImageBitmap(),
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -118,7 +118,6 @@ fun RecipeListItem(
                             .fillMaxWidth()
                     )
                     ActionButtonsRow {
-                        //TODO 'add' button functionality
                         selectedRecipe.value = recipe
                         addRecipeDialog.value = true
                     }

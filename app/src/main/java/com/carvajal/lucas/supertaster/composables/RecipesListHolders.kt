@@ -22,10 +22,10 @@ import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
-import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeViewListViewModel
 
 @Composable
-fun AllRecipesListHolder(viewModel: RecipeListViewViewModel, navController: NavController) {
+fun AllRecipesListHolder(viewModel: RecipeViewListViewModel, navController: NavController) {
     val scrollState = rememberScrollState()
 
     Box(
@@ -75,7 +75,6 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel, navController: NavCo
                 val recipesList = Transformations.map(viewModel.listRecipes) {
                     if (!recipesInCookbook.value.isNullOrEmpty()) {
                         it.filter { recipe ->
-                            println("T E S T : : : ${recipe.title} : : ${recipesInCookbook.value!!.contains(recipe.id)}")
                             recipesInCookbook.value!!.contains(recipe.id)
                         }
                     } else {
