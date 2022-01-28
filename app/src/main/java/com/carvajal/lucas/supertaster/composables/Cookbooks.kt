@@ -1,6 +1,5 @@
 package com.carvajal.lucas.supertaster.composables
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.utils.TopRow
 import com.carvajal.lucas.supertaster.data.Cookbook
 import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) {
@@ -39,7 +38,7 @@ fun CookbooksScreen(viewModel: CookbookViewModel, navController: NavController) 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column (modifier = Modifier
             .verticalScroll(scrollState),

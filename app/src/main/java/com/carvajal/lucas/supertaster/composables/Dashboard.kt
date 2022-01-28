@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.utils.TopRow
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.ui.ProfileActivity
 
@@ -72,7 +73,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column (modifier = Modifier
             .verticalScroll(scrollState)

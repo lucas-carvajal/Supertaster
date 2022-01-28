@@ -45,7 +45,7 @@ fun AddToCookbook(
                 )
                 Divider()
                 Box(modifier = Modifier
-                    .height(250.dp)
+                    .height(500.dp)
                     .padding(10.dp, 0.dp)
                 ) {
                     Column(modifier = Modifier

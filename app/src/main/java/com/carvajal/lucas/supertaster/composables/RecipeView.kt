@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.composables.utils.AddToCookbook
+import com.carvajal.lucas.supertaster.composables.utils.TopRow
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient

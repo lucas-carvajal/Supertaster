@@ -74,7 +74,7 @@ fun LoadingScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -102,7 +102,7 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column(
             modifier = Modifier.verticalScroll(scrollState)
@@ -110,7 +110,8 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
             Text(
                 text = stringResource(R.string.add_a_recipe_caps),
                 fontSize = MaterialTheme.typography.h5.fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 10.dp)
             )
             Section(title = stringResource(R.string.title)) {
                 SingleInputField(
@@ -354,7 +355,8 @@ fun ChooseTypeOfMealButton(typeOfMealIndex: Int, setTypeOfMealIndex: (index: Int
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             for ((index, mealType) in typeOfMealMap) {
                 DropdownMenuItem(

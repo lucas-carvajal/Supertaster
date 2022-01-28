@@ -1,8 +1,9 @@
-package com.carvajal.lucas.supertaster.composables
+package com.carvajal.lucas.supertaster.composables.utils
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -17,7 +18,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TopRow(heading: String, icon: ImageVector, action: () -> Unit) {
-    Row (verticalAlignment = Alignment.CenterVertically) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 10.dp)
+    ) {
         Text(
             text = heading,
             fontSize = MaterialTheme.typography.h5.fontSize,

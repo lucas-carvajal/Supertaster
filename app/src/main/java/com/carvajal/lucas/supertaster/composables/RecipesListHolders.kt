@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.utils.TopRow
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.RecipeViewListViewModel
 
@@ -31,20 +32,19 @@ fun AllRecipesListHolder(viewModel: RecipeViewListViewModel, navController: NavC
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
-        Column {
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            val recipesList = viewModel.listRecipes.observeAsState()
+            val listRecipeImages = viewModel.listRecipeImages.observeAsState()
+
             Text(
                 text = viewModel.listTitle ?: stringResource(R.string.all_recipes),
                 fontSize = MaterialTheme.typography.h5.fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 10.dp)
             )
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                val recipesList = viewModel.listRecipes.observeAsState()
-                val listRecipeImages = viewModel.listRecipeImages.observeAsState()
-
-                RecipesList(recipesList, listRecipeImages, viewModel, navController)
-            }
+            RecipesList(recipesList, listRecipeImages, viewModel, navController)
         }
 
     }
@@ -61,7 +61,7 @@ fun CookbookRecipesListHolder(viewModel: CookbookViewModel, navController: NavCo
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column {
             TopRow(heading = cookbook.value?.name ?: stringResource(R.string.error), icon = Icons.Default.Edit) {
