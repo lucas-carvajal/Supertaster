@@ -26,8 +26,6 @@ After the class I continued development of the app.
 
 ### TODOS
 
-* Make search by ingredients on **Dashboard** work
-* Make 'add' button work in **RecipesList**
 * Fix Images in **Add**: proper resolution, view function, delete function
 * Fix Images in **RecipeView**: make them bigger, view function
 
