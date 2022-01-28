@@ -66,9 +66,9 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
     }
 
 
-    val sampleRecipes = viewModel.sampleRecipes.observeAsState(listOf()).value
-    val recipeImages = viewModel.recipeImages.observeAsState(listOf()).value
-    val recipeSuggestions = viewModel.getSuggestions().observeAsState(listOf()).value
+    val sampleRecipes = viewModel.sampleRecipes.observeAsState(listOf())
+    val recipeImages = viewModel.recipeImages.observeAsState(listOf())
+    val recipeSuggestions = viewModel.getSuggestions().observeAsState(listOf())
 
     Box(
         modifier = Modifier
@@ -81,9 +81,11 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
             TopRow(heading = viewModel.getGreeting(), icon = Icons.Default.Person) {
                 context.startActivity(Intent(context, ProfileActivity::class.java))
             }
-            SuggestionsCard(recipeSuggestions, recipeImages, viewModel, navController)
+            SuggestionsCard(recipeSuggestions, recipeImages.value, viewModel, navController)
             SearchCard(viewModel, navController, openFilterByTimeDialog, openFilterByIngredientsDialog, openFilterByCuisineDialog)
-            AllRecipesCard(sampleRecipes, recipeImages, viewModel, navController)
+            if (sampleRecipes.value.isNotEmpty()) {
+                AllRecipesCard(sampleRecipes.value, recipeImages.value, viewModel, navController)
+            }
             Spacer(Modifier.padding(5.dp))
         }
     }
@@ -92,7 +94,7 @@ fun DashboardScreen(viewModel: DashboardViewModel, navController: NavController)
 
 @Composable
 fun SuggestionsCard(
-    recipeSuggestions: List<Recipe>,
+    recipeSuggestions: State<List<Recipe>>,
     recipeImages: List<RecipeImage>,
     viewModel: DashboardViewModel,
     navController: NavController
@@ -111,25 +113,36 @@ fun SuggestionsCard(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp, 5.dp)
             )
-            Row (
-                modifier = Modifier
-                    .horizontalScroll(scrollState)
-            ) {
-                recipeSuggestions.forEachIndexed { index, recipe ->
-                    RecipeCard(
-                        recipe = recipe,
-                        if (recipeImages.any { it.recipeId == recipe.id }) {
-                            BitmapFactory.decodeFile(
-                                recipeImages.first { it.recipeId == recipe.id }.location
-                            )
-                        } else {
-                            null
+            if (recipeSuggestions.value.isNotEmpty()) {
+                Row (
+                    modifier = Modifier
+                        .horizontalScroll(scrollState)
+                ) {
+                    recipeSuggestions.value.forEachIndexed { index, recipe ->
+                        RecipeCard(
+                            recipe = recipe,
+                            if (recipeImages.any { it.recipeId == recipe.id }) {
+                                BitmapFactory.decodeFile(
+                                    recipeImages.first { it.recipeId == recipe.id }.location
+                                )
+                            } else {
+                                null
+                            }
+                        ) {
+                            val recipeId = recipeSuggestions.value[index].id
+                            viewModel.setRecipeId(recipeId)
+                            navController.navigate("recipe_view_dashboard")
                         }
-                    ) {
-                        val recipeId = recipeSuggestions[index].id
-                        viewModel.setRecipeId(recipeId)
-                        navController.navigate("recipe_view_dashboard")
                     }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp, 60.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Add more recipes to get suggestions :)")
                 }
             }
         }
