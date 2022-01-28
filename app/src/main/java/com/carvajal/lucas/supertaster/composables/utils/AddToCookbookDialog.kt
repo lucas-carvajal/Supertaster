@@ -14,7 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.mainCardElevation
+import com.carvajal.lucas.supertaster.composables.nestedCardElevation
 import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.viewmodels.RecipeViewListViewModel
 
@@ -26,15 +30,23 @@ fun AddToCookbook(
     context: Context
 ){
     val scrollState = rememberScrollState()
-    val cookbooks = viewModel.allCookbooks.observeAsState().value
+    val cookbooks = viewModel.allCookbooks.observeAsState()
 
+    /*
     AlertDialog(
+        modifier = Modifier.padding(0.dp, 30.dp),
         onDismissRequest = { openDialog.value = false },
         title = {
-            Text(
-                text = stringResource(R.string.add_new_cookbook),
-                fontWeight = FontWeight.Bold,
-            )
+            Row(
+                modifier = Modifier.padding(10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.add_new_cookbook),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.h6,
+                )
+            }
         },
         text = {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -42,7 +54,7 @@ fun AddToCookbook(
                     .verticalScroll(scrollState)
                 ) {
                     Divider()
-                    cookbooks?.forEach{ cookbook ->
+                    cookbooks.value?.forEach{ cookbook ->
                         Text(
                             text = cookbook.name,
                             fontSize = MaterialTheme.typography.h5.fontSize,
@@ -63,7 +75,10 @@ fun AddToCookbook(
 
         },
         buttons = {
-            Row {
+            Row(
+                modifier = Modifier.padding(10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Button(
                     onClick = {
                         openDialog.value = false
@@ -78,4 +93,71 @@ fun AddToCookbook(
             }
         },
     )
+    */
+    ///////////////////////
+    ///*
+
+    //TODO fix bug: not showing whole dialog on first attempt after launch
+    Dialog(onDismissRequest = { openDialog.value = false }) {
+        Card(
+            elevation = mainCardElevation
+        ) {
+            Column(Modifier.padding(5.dp)) {
+                Text(
+                    text = stringResource(R.string.add_to_cookbook),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Divider()
+                Column(modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(10.dp, 0.dp)
+                ) {
+                    cookbooks.value?.forEach{ cookbook ->
+                        Card(
+                            elevation = nestedCardElevation,
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .fillMaxWidth()
+                                .clickable{
+                                viewModel.addRecipeToCookbook(cookbook.id, recipe.id)
+                                openDialog.value = false
+                                Toast.makeText(
+                                    context,
+                                    "${recipe.title} added to ${cookbook.name}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(5.dp),
+                                text = cookbook.name,
+                                fontSize = MaterialTheme.typography.h5.fontSize,
+                            )
+                        }
+                    }
+                }
+                Divider()
+                Row(
+                    modifier = Modifier.padding(10.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                        },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.dismiss),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        }
+    }
+    //*/
+
 }

@@ -36,4 +36,5 @@
     <string name="error">Error</string>
     <string name="no_ingredients_available">No ingredients available</string>
     <string name="no_steps_available">No steps available</string>
+    <string name="add_to_cookbook">Add to Cookbook</string>
 </resources>
