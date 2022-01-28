@@ -22,11 +22,10 @@ import androidx.lifecycle.Transformations
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
-import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
-import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
 
 @Composable
-fun AllRecipesListHolder(viewModel: RecipesListViewModel, navController: NavController) {
+fun AllRecipesListHolder(viewModel: RecipeListViewViewModel, navController: NavController) {
     val scrollState = rememberScrollState()
 
     Box(

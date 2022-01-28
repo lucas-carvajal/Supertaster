@@ -29,11 +29,11 @@ import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.data.RecipeIngredient
 import com.carvajal.lucas.supertaster.data.RecipeStep
 import com.carvajal.lucas.supertaster.util.getTypeOfMeal
-import com.carvajal.lucas.supertaster.viewmodels.RecipeViewViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
 
 
 @Composable
-fun RecipeView(viewModel: RecipeViewViewModel, navController: NavController) {
+fun RecipeView(viewModel: RecipeListViewViewModel, navController: NavController) {
     val context = LocalContext.current
 
     val recipe = viewModel.viewRecipe.observeAsState()
@@ -45,8 +45,8 @@ fun RecipeView(viewModel: RecipeViewViewModel, navController: NavController) {
 
     val openDialog = remember { mutableStateOf(false) }
 
-    if (openDialog.value) {
-        AddToCookbook(viewModel, openDialog, recipe, context)
+    if (openDialog.value && recipe.value != null) {
+        AddToCookbook(viewModel, openDialog, recipe.value!!, context)
     }
 
     Box(
@@ -287,11 +287,12 @@ fun StepsList(steps: State<List<RecipeStep>?>) {
     }
 }
 
+//TODO put in own utility file
 @Composable
 fun AddToCookbook(
-    viewModel: RecipeViewViewModel,
+    viewModel: RecipeListViewViewModel,
     openDialog: MutableState<Boolean>,
-    recipe: State<Recipe?>,
+    recipe: Recipe,
     context: Context
 ){
     val scrollState = rememberScrollState()
@@ -316,11 +317,11 @@ fun AddToCookbook(
                             text = cookbook.name,
                             fontSize = MaterialTheme.typography.h5.fontSize,
                             modifier = Modifier.clickable{
-                                viewModel.addRecipeToCookbook(cookbook.id, recipe.value?.id ?: 0)
+                                viewModel.addRecipeToCookbook(cookbook.id, recipe.id ?: 0)
                                 openDialog.value = false
                                 Toast.makeText(
                                     context,
-                                    "${recipe.value?.title} added to ${cookbook.name}",
+                                    "${recipe.title} added to ${cookbook.name}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

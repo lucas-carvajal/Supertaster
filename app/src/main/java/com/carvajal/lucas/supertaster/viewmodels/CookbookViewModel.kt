@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.carvajal.lucas.supertaster.data.*
 import kotlinx.coroutines.*
 
-class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
+class CookbookViewModel(private val repository: AppRepository) : ViewModel(), RecipeListViewViewModel {
 
     override var listTitle: String? = null
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeViewViewModel, RecipesListViewModel {
+class DashboardViewModel(private val repository: AppRepository) : ViewModel(), RecipeListViewViewModel {
 
     override var listTitle: String? = null
 
@@ -72,8 +72,16 @@ class DashboardViewModel(private val repository: AppRepository) : ViewModel(), R
     }
 
     fun getGreeting() : String {
-        //TODO
-        return "GOOD MORNING"
+        val format = SimpleDateFormat("HH", Locale.US)
+        val hour: Int = format.format(Date()).toInt()
+
+        return when(hour) {
+            in 0..3 -> "GOOD NIGHT"
+            in 4..12 -> "GOOD MORNING"
+            in 13..17 -> "GOOD AFTERNOON"
+            in 18..24 -> "GOOD EVENING"
+            else -> "HELLO!"
+        }
     }
 
     fun getSuggestions(): LiveData<List<Recipe>> {

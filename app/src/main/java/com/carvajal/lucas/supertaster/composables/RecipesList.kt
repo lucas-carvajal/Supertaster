@@ -9,8 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -26,19 +25,28 @@ import com.carvajal.lucas.supertaster.data.Recipe
 import com.carvajal.lucas.supertaster.data.RecipeImage
 import com.carvajal.lucas.supertaster.viewmodels.CookbookViewModel
 import com.carvajal.lucas.supertaster.viewmodels.DashboardViewModel
-import com.carvajal.lucas.supertaster.viewmodels.RecipesListViewModel
+import com.carvajal.lucas.supertaster.viewmodels.RecipeListViewViewModel
 
 @Composable
 fun RecipesList(
     recipesList: State<List<Recipe>?>,
     recipesImageList: State<List<RecipeImage>?>,
-    viewModel: RecipesListViewModel,
+    viewModel: RecipeListViewViewModel,
     navController: NavController
 ) {
+    val context = LocalContext.current
+
+    val addRecipeDialog = remember { mutableStateOf(false) }
+    var selectedRecipe: MutableState<Recipe?> = remember { mutableStateOf(null) }
+
+    if (addRecipeDialog.value && selectedRecipe.value != null) {
+        AddToCookbook(viewModel, addRecipeDialog, selectedRecipe.value!!, context)
+    }
+
     Column(modifier = Modifier.padding(bottom = 10.dp)) {
         recipesList.value?.forEach { recipe ->
             val recipeImages = recipesImageList.value?.filter { it.recipeId == recipe.id }
-            RecipeListItem(recipe, recipeImages, viewModel, navController)
+            RecipeListItem(recipe, recipeImages, viewModel, navController, selectedRecipe, addRecipeDialog)
         }
     }
 }
@@ -47,12 +55,14 @@ fun RecipesList(
 fun RecipeListItem(
     recipe: Recipe,
     recipeImages: List<RecipeImage>?,
-    viewModel: RecipesListViewModel,
-    navController: NavController
+    viewModel: RecipeListViewViewModel,
+    navController: NavController,
+    selectedRecipe: MutableState<Recipe?>,
+    addRecipeDialog: MutableState<Boolean>
 ) {
     Card(modifier = Modifier
         .fillMaxWidth()
-        .clickable{
+        .clickable {
             viewModel.setRecipeId(recipe.id)
 
             if (viewModel is DashboardViewModel) {
@@ -109,6 +119,8 @@ fun RecipeListItem(
                     )
                     ActionButtonsRow {
                         //TODO 'add' button functionality
+                        selectedRecipe.value = recipe
+                        addRecipeDialog.value = true
                     }
                 }
             }
