@@ -32,72 +32,6 @@ fun AddToCookbook(
     val scrollState = rememberScrollState()
     val cookbooks = viewModel.allCookbooks.observeAsState()
 
-    /*
-    AlertDialog(
-        modifier = Modifier.padding(0.dp, 30.dp),
-        onDismissRequest = { openDialog.value = false },
-        title = {
-            Row(
-                modifier = Modifier.padding(10.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.add_new_cookbook),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h6,
-                )
-            }
-        },
-        text = {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier
-                    .verticalScroll(scrollState)
-                ) {
-                    Divider()
-                    cookbooks.value?.forEach{ cookbook ->
-                        Text(
-                            text = cookbook.name,
-                            fontSize = MaterialTheme.typography.h5.fontSize,
-                            modifier = Modifier.clickable{
-                                viewModel.addRecipeToCookbook(cookbook.id, recipe.id)
-                                openDialog.value = false
-                                Toast.makeText(
-                                    context,
-                                    "${recipe.title} added to ${cookbook.name}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
-                        Divider()
-                    }
-                }
-            }
-
-        },
-        buttons = {
-            Row(
-                modifier = Modifier.padding(10.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        openDialog.value = false
-                    },
-                ) {
-                    Text(
-                        text = stringResource(R.string.dismiss),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        },
-    )
-    */
-    ///////////////////////
-    ///*
-
-    //TODO fix bug: not showing whole dialog on first attempt after launch
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Card(
             elevation = mainCardElevation
@@ -110,31 +44,35 @@ fun AddToCookbook(
                     modifier = Modifier.padding(10.dp)
                 )
                 Divider()
-                Column(modifier = Modifier
-                    .verticalScroll(scrollState)
+                Box(modifier = Modifier
+                    .height(250.dp)
                     .padding(10.dp, 0.dp)
                 ) {
-                    cookbooks.value?.forEach{ cookbook ->
-                        Card(
-                            elevation = nestedCardElevation,
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .fillMaxWidth()
-                                .clickable{
-                                viewModel.addRecipeToCookbook(cookbook.id, recipe.id)
-                                openDialog.value = false
-                                Toast.makeText(
-                                    context,
-                                    "${recipe.title} added to ${cookbook.name}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                    Column(modifier = Modifier
+                        .verticalScroll(scrollState)
+                    ) {
+                        cookbooks.value?.forEach{ cookbook ->
+                            Card(
+                                elevation = nestedCardElevation,
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .fillMaxWidth()
+                                    .clickable{
+                                        viewModel.addRecipeToCookbook(cookbook.id, recipe.id)
+                                        openDialog.value = false
+                                        Toast.makeText(
+                                            context,
+                                            "${recipe.title} added to ${cookbook.name}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(5.dp),
+                                    text = cookbook.name,
+                                    fontSize = MaterialTheme.typography.h5.fontSize,
+                                )
                             }
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(5.dp),
-                                text = cookbook.name,
-                                fontSize = MaterialTheme.typography.h5.fontSize,
-                            )
                         }
                     }
                 }
@@ -158,6 +96,4 @@ fun AddToCookbook(
             }
         }
     }
-    //*/
-
 }
