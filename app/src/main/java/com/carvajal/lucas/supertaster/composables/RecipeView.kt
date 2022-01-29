@@ -53,7 +53,7 @@ fun RecipeView(viewModel: RecipeViewListViewModel, navController: NavController)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(10.dp, 0.dp)
     ) {
         Column(modifier = Modifier
             .verticalScroll(scrollState)
