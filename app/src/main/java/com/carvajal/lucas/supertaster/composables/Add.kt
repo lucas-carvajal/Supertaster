@@ -311,6 +311,11 @@ fun PhotoRow(viewModel: AddViewModel, context: Context) {
 }
 
 private fun addPhoto(context: Context) {
+    //TODO new with CameraX
+}
+
+
+private fun addPhoto1(context: Context) {
     val packageManager = context.packageManager
     val hasCamera = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
 

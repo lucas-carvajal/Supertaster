@@ -94,10 +94,12 @@ fun PhotoSlideshow(photos: State<List<RecipeImage>?>) {
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxWidth()
+//                        .padding(10.dp)
                         .clip(RoundedCornerShape(5.dp))
                         .aspectRatio(1f)
-                        .padding(10.dp)
+                        .fillMaxWidth()
+
+//                        .weight(0.1f) ???
                 )
             }
 
