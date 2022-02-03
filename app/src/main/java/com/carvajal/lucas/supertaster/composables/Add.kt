@@ -8,6 +8,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,16 +28,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
-import com.carvajal.lucas.supertaster.ui.theme.SupertasterTheme
 import com.carvajal.lucas.supertaster.util.RecipeViewMode
 import com.carvajal.lucas.supertaster.util.getTypeOfMeal
 import com.carvajal.lucas.supertaster.util.typeOfMealMap
@@ -48,7 +53,6 @@ private lateinit var addViewModel: AddViewModel
 
 @Composable
 fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, backStackEntry: NavBackStackEntry?) {
-
     val recipeId: Long = backStackEntry?.arguments?.getLong("recipeId") ?: -1
 
     if (recipeId.toInt() != -1) {
@@ -61,7 +65,12 @@ fun AddScreen(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: 
 }
 
 @Composable
-fun AddScreenLoadingManager(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, recipeId: Long?) {
+fun AddScreenLoadingManager(
+    viewModel: AddViewModel,
+    viewMode: RecipeViewMode,
+    navController: NavController,
+    recipeId: Long?
+) {
     if (viewModel.isLoading.value){
         LoadingScreen()
     } else {
@@ -88,12 +97,22 @@ fun LoadingScreen() {
 }
 
 @Composable
-fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navController: NavController, recipeId: Long?) {
+fun AddScreenContent(
+    viewModel: AddViewModel,
+    viewMode: RecipeViewMode,
+    navController: NavController,
+    recipeId: Long?
+) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val openDeleteContextMenu = remember { mutableStateOf(false) }
+    val showCameraView = remember { mutableStateOf(false) }
 
     addViewModel = viewModel
+
+    if (showCameraView.value) {
+        CameraView()
+    }
 
     if (openDeleteContextMenu.value) {
         DeleteRecipeContextMenu(viewModel, openDeleteContextMenu, navController, recipeId)
@@ -123,7 +142,7 @@ fun AddScreenContent(viewModel: AddViewModel, viewMode: RecipeViewMode, navContr
                 )
             }
             Section(title = stringResource(R.string.photos)) {
-                PhotoRow(viewModel, context)
+                PhotoRow(viewModel, context, showCameraView)
             }
             Section(title = stringResource(R.string.cuisine)) {
                 SingleInputField(
@@ -269,7 +288,7 @@ fun SingleInputField(value: String, onValueChange: (String) -> Unit, label: Stri
 }
 
 @Composable
-fun PhotoRow(viewModel: AddViewModel, context: Context) {
+fun PhotoRow(viewModel: AddViewModel, context: Context, showCameraView: MutableState<Boolean>) {
     val photos = viewModel.recipePhotos
 
     LazyRow {
@@ -303,7 +322,10 @@ fun PhotoRow(viewModel: AddViewModel, context: Context) {
                         .clip(RoundedCornerShape(5.dp))
                         .width(80.dp)
                         .aspectRatio(1f)
-                        .clickable { addPhoto(context) }
+                        .clickable {
+                            showCameraView.value = true
+                            println("it's T R U E now")
+                        }
                 )
             }
         }
@@ -675,11 +697,37 @@ fun DeleteRecipeContextMenu(
     )
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun AddScreenPreview() {
-    SupertasterTheme {
-        //AddScreen(AddViewModel())
-    }
+fun CameraView() {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+
+    AndroidView(
+        factory = { ctx ->
+            val previewView = PreviewView(ctx)
+            val executor = ContextCompat.getMainExecutor(ctx)
+            cameraProviderFuture.addListener({
+                val cameraProvider = cameraProviderFuture.get()
+                val preview = Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+
+                val cameraSelector = CameraSelector.Builder()
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                    .build()
+
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    preview
+                )
+            }, executor)
+            previewView
+        },
+        modifier = Modifier.fillMaxSize(),
+    )
 }
+
+
