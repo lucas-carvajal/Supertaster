@@ -38,6 +38,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.carvajal.lucas.supertaster.R
+import com.carvajal.lucas.supertaster.composables.camera.CameraView
 import com.carvajal.lucas.supertaster.ui.theme.RedPink85
 import com.carvajal.lucas.supertaster.util.RecipeViewMode
 import com.carvajal.lucas.supertaster.util.getTypeOfMeal
@@ -110,141 +111,128 @@ fun AddScreenContent(
 
     addViewModel = viewModel
 
-    if (showCameraView.value) {
-        CameraView()
-    }
-
     if (openDeleteContextMenu.value) {
         DeleteRecipeContextMenu(viewModel, openDeleteContextMenu, navController, recipeId)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp, 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.verticalScroll(scrollState)
+    if (showCameraView.value) {
+        CameraView(
+            showCameraView,
+            onImageCaptured = { uri, fromGallery ->
+                // TODO add uri to viewModel
+            }, onError = { imageCaptureException ->
+                Toast.makeText(context, "An error occured while trying to take a picture", Toast.LENGTH_SHORT).show()
+            }
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp, 0.dp)
         ) {
-            Text(
-                text = stringResource(R.string.add_a_recipe_caps),
-                fontSize = MaterialTheme.typography.h5.fontSize,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 10.dp)
-            )
-            Section(title = stringResource(R.string.title)) {
-                SingleInputField(
-                    viewModel.title.value,
-                    {
-                        viewModel.setTitle(it)
-                    },
-                    stringResource(R.string.title)
-                )
-            }
-            Section(title = stringResource(R.string.photos)) {
-                PhotoRow(viewModel, context, showCameraView)
-            }
-            Section(title = stringResource(R.string.cuisine)) {
-                SingleInputField(
-                    viewModel.cuisine.value,
-                    {
-                        viewModel.setCuisine(it)
-                    },
-                    stringResource(R.string.cuisine)
-                )
-            }
-            Section(title = stringResource(R.string.type_of_meal)) {
-                ChooseTypeOfMealButton(
-                    viewModel.typeOfMealIndex.value
-                ) { index ->
-                    viewModel.setTypeOfMealIndex(index)
-                }
-            }
-            Section(title = stringResource(R.string.servings)) {
-                ServingsRow(viewModel.servings.value,
-                    {
-                        viewModel.setServings(viewModel.servings.value + 1)
-                    },
-                    {
-                        if (viewModel.servings.value != 1) {
-                            viewModel.setServings(viewModel.servings.value - 1)
-                        }
-                    }
-                )
-            }
-            Section(title = stringResource(R.string.prep_time)) {
-                PrepTimeRow(viewModel.prepTime.value,
-                    {
-                        viewModel.setPrepTime(viewModel.prepTime.value + 5)
-                    },
-                    {
-                        if (viewModel.prepTime.value != 0) {
-                            viewModel.setPrepTime(viewModel.prepTime.value - 5)
-                        }
-                    }
-                )
-            }
-            Section(title = stringResource(R.string.cook_time)) {
-                CookTimeRow(viewModel.cookTime.value,
-                    {
-                        viewModel.setCookTime(viewModel.cookTime.value + 5)
-                    },
-                    {
-                        if (viewModel.cookTime.value != 0) {
-                            viewModel.setCookTime(viewModel.cookTime.value - 5)
-                        }
-                    }
-                )
-            }
-            Section(title = stringResource(R.string.ingredients)) {
-                IngredientsSection(viewModel)
-            }
-            Section(title = stringResource(R.string.steps)) {
-                StepsSection(viewModel)
-            }
-
-            Button(onClick = {
-                if (viewModel.title.value.trim().isEmpty()) {
-                    Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
-                } else if (viewModel.typeOfMealIndex.value == 0) {
-                    Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
-                } else {
-
-                    val savedRecipe: String? = if (recipeId != null) {
-                        viewModel.saveRecipe(context, recipeId)
-                    } else {
-                        viewModel.saveRecipe(context, null)
-                    }
-
-                    if (savedRecipe != null) {
-                        Toast.makeText(context, "Recipe $savedRecipe saved successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Error: Recipe could not be saved", Toast.LENGTH_SHORT).show()
-                    }
-
-                    if (viewMode == RecipeViewMode.EDIT) {
-                        navController.popBackStack()
-                    }
-                }
-            },
-                colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
+            Column(
+                modifier = Modifier.verticalScroll(scrollState)
             ) {
                 Text(
-                    text =
-                        if (viewMode == RecipeViewMode.ADD) {
-                            stringResource(R.string.save_recipe)
-                        } else {
-                            "Save Changes"
-                        },
-                    color = Color.White
+                    text = stringResource(R.string.add_a_recipe_caps),
+                    fontSize = MaterialTheme.typography.h5.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
-            }
-            if (recipeId != null) {
+                Section(title = stringResource(R.string.title)) {
+                    SingleInputField(
+                        viewModel.title.value,
+                        {
+                            viewModel.setTitle(it)
+                        },
+                        stringResource(R.string.title)
+                    )
+                }
+                Section(title = stringResource(R.string.photos)) {
+                    PhotoRow(viewModel, context, showCameraView)
+                }
+                Section(title = stringResource(R.string.cuisine)) {
+                    SingleInputField(
+                        viewModel.cuisine.value,
+                        {
+                            viewModel.setCuisine(it)
+                        },
+                        stringResource(R.string.cuisine)
+                    )
+                }
+                Section(title = stringResource(R.string.type_of_meal)) {
+                    ChooseTypeOfMealButton(
+                        viewModel.typeOfMealIndex.value
+                    ) { index ->
+                        viewModel.setTypeOfMealIndex(index)
+                    }
+                }
+                Section(title = stringResource(R.string.servings)) {
+                    ServingsRow(viewModel.servings.value,
+                        {
+                            viewModel.setServings(viewModel.servings.value + 1)
+                        },
+                        {
+                            if (viewModel.servings.value != 1) {
+                                viewModel.setServings(viewModel.servings.value - 1)
+                            }
+                        }
+                    )
+                }
+                Section(title = stringResource(R.string.prep_time)) {
+                    PrepTimeRow(viewModel.prepTime.value,
+                        {
+                            viewModel.setPrepTime(viewModel.prepTime.value + 5)
+                        },
+                        {
+                            if (viewModel.prepTime.value != 0) {
+                                viewModel.setPrepTime(viewModel.prepTime.value - 5)
+                            }
+                        }
+                    )
+                }
+                Section(title = stringResource(R.string.cook_time)) {
+                    CookTimeRow(viewModel.cookTime.value,
+                        {
+                            viewModel.setCookTime(viewModel.cookTime.value + 5)
+                        },
+                        {
+                            if (viewModel.cookTime.value != 0) {
+                                viewModel.setCookTime(viewModel.cookTime.value - 5)
+                            }
+                        }
+                    )
+                }
+                Section(title = stringResource(R.string.ingredients)) {
+                    IngredientsSection(viewModel)
+                }
+                Section(title = stringResource(R.string.steps)) {
+                    StepsSection(viewModel)
+                }
+
                 Button(onClick = {
-                    openDeleteContextMenu.value = true
+                    if (viewModel.title.value.trim().isEmpty()) {
+                        Toast.makeText(context, "Title cannot be empty", Toast.LENGTH_SHORT).show()
+                    } else if (viewModel.typeOfMealIndex.value == 0) {
+                        Toast.makeText(context, "Please select a type of meal", Toast.LENGTH_SHORT).show()
+                    } else {
+
+                        val savedRecipe: String? = if (recipeId != null) {
+                            viewModel.saveRecipe(context, recipeId)
+                        } else {
+                            viewModel.saveRecipe(context, null)
+                        }
+
+                        if (savedRecipe != null) {
+                            Toast.makeText(context, "Recipe $savedRecipe saved successfully", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Error: Recipe could not be saved", Toast.LENGTH_SHORT).show()
+                        }
+
+                        if (viewMode == RecipeViewMode.EDIT) {
+                            navController.popBackStack()
+                        }
+                    }
                 },
                     colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
                     modifier = Modifier
@@ -252,9 +240,29 @@ fun AddScreenContent(
                         .padding(10.dp)
                 ) {
                     Text(
-                        text = "Delete Recipe",
+                        text =
+                        if (viewMode == RecipeViewMode.ADD) {
+                            stringResource(R.string.save_recipe)
+                        } else {
+                            "Save Changes"
+                        },
                         color = Color.White
                     )
+                }
+                if (recipeId != null) {
+                    Button(onClick = {
+                        openDeleteContextMenu.value = true
+                    },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = RedPink85),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = "Delete Recipe",
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
@@ -697,37 +705,37 @@ fun DeleteRecipeContextMenu(
     )
 }
 
-@Composable
-fun CameraView() {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
-    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
-
-    AndroidView(
-        factory = { ctx ->
-            val previewView = PreviewView(ctx)
-            val executor = ContextCompat.getMainExecutor(ctx)
-            cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
-                val preview = Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-
-                val cameraSelector = CameraSelector.Builder()
-                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                    .build()
-
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    cameraSelector,
-                    preview
-                )
-            }, executor)
-            previewView
-        },
-        modifier = Modifier.fillMaxSize(),
-    )
-}
+//@Composable
+//fun CameraView() {
+//    val lifecycleOwner = LocalLifecycleOwner.current
+//    val context = LocalContext.current
+//    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+//
+//    AndroidView(
+//        factory = { ctx ->
+//            val previewView = PreviewView(ctx)
+//            val executor = ContextCompat.getMainExecutor(ctx)
+//            cameraProviderFuture.addListener({
+//                val cameraProvider = cameraProviderFuture.get()
+//                val preview = Preview.Builder().build().also {
+//                    it.setSurfaceProvider(previewView.surfaceProvider)
+//                }
+//
+//                val cameraSelector = CameraSelector.Builder()
+//                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+//                    .build()
+//
+//                cameraProvider.unbindAll()
+//                cameraProvider.bindToLifecycle(
+//                    lifecycleOwner,
+//                    cameraSelector,
+//                    preview
+//                )
+//            }, executor)
+//            previewView
+//        },
+//        modifier = Modifier.fillMaxSize(),
+//    )
+//}
 
 
